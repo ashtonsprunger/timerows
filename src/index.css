@@ -1,0 +1,165 @@
+/* TimeRows - Design System & CSS Custom Properties */
+
+:root {
+  /* Concentric Geometry Tokens (Outer = Inner + Padding) */
+  --radius-card: 28px;
+  --card-padding: 12px;
+  --radius-surface: calc(var(--radius-card) - var(--card-padding)); /* 16px */
+  --surface-padding: 6px;
+  --radius-slot: calc(var(--radius-surface) - var(--surface-padding)); /* 10px */
+  --radius-pill: 9999px;
+
+  /* Typography */
+  --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  /* Transitions */
+  --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-smooth: 250ms cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-spring: 300ms cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* Track Geometry */
+  --city-card-width: 260px;
+  --slot-width: 52px;
+  --row-height: 72px;
+}
+
+/* Light Theme Variables */
+[data-theme='light'] {
+  --bg-app: #f8fafc;
+  --bg-surface: #ffffff;
+  --bg-surface-elevated: #ffffff;
+  --bg-surface-subtle: #f1f5f9;
+  
+  --border-subtle: #e2e8f0;
+  --border-strong: #cbd5e1;
+
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #94a3b8;
+
+  /* Phase Colors - Light Mode */
+  --phase-sleep-bg: #e2e8f0;
+  --phase-sleep-border: #cbd5e1;
+  --phase-sleep-text: #64748b;
+  --phase-sleep-icon: #94a3b8;
+
+  --phase-awake-bg: #fef3c7;
+  --phase-awake-border: #fde68a;
+  --phase-awake-text: #92400e;
+  --phase-awake-icon: #d97706;
+
+  --phase-work-bg: #e0f2fe;
+  --phase-work-border: #bae6fd;
+  --phase-work-text: #0369a1;
+  --phase-work-icon: #0284c7;
+
+  /* Golden Overlap - Radiant Emerald */
+  --golden-glow: rgba(16, 185, 129, 0.18);
+  --golden-border: #10b981;
+  --golden-text: #065f46;
+  --golden-badge-bg: #d1fae5;
+
+  /* Scrubber & Hover */
+  --scrubber-line: #6366f1;
+  --scrubber-shadow: rgba(99, 102, 241, 0.25);
+  --scrubber-bubble-bg: #1e293b;
+  --scrubber-bubble-text: #ffffff;
+
+  --shadow-card: 0 4px 20px -2px rgba(15, 23, 42, 0.05), 0 2px 6px -1px rgba(15, 23, 42, 0.03);
+  --shadow-elevation: 0 10px 30px -4px rgba(15, 23, 42, 0.08);
+}
+
+/* Dark Theme Variables (Default) */
+[data-theme='dark'] {
+  --bg-app: #090d16;
+  --bg-surface: #0f172a;
+  --bg-surface-elevated: #1e293b;
+  --bg-surface-subtle: #141e33;
+  
+  --border-subtle: #1e293b;
+  --border-strong: #334155;
+
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+
+  /* Phase Colors - Dark Mode */
+  --phase-sleep-bg: #0b1120;
+  --phase-sleep-border: #172033;
+  --phase-sleep-text: #475569;
+  --phase-sleep-icon: #334155;
+
+  --phase-awake-bg: #272115;
+  --phase-awake-border: #4d3d1b;
+  --phase-awake-text: #fde68a;
+  --phase-awake-icon: #f59e0b;
+
+  --phase-work-bg: #0c2b48;
+  --phase-work-border: #1d4ed8;
+  --phase-work-text: #bae6fd;
+  --phase-work-icon: #38bdf8;
+
+  /* Golden Overlap - Radiant Emerald */
+  --golden-glow: rgba(16, 185, 129, 0.22);
+  --golden-border: #34d399;
+  --golden-text: #a7f3d0;
+  --golden-badge-bg: rgba(16, 185, 129, 0.2);
+
+  /* Scrubber & Hover */
+  --scrubber-line: #818cf8;
+  --scrubber-shadow: rgba(129, 140, 248, 0.4);
+  --scrubber-bubble-bg: #312e81;
+  --scrubber-bubble-text: #ffffff;
+
+  --shadow-card: 0 8px 32px 0 rgba(0, 0, 0, 0.36);
+  --shadow-elevation: 0 16px 48px -8px rgba(0, 0, 0, 0.5);
+}
+
+/* Base Resets */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  width: 100%;
+  min-height: 100vh;
+  background-color: var(--bg-app);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: auto;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  outline: none;
+}
+
+input {
+  font-family: inherit;
+  border: none;
+  outline: none;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-app);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: var(--radius-pill);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
