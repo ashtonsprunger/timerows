@@ -1,46 +1,71 @@
 import React from 'react';
-import { SparklesIcon } from './Icons.jsx';
-import { OVERLAP_QUALITY } from '../engine/overlapEngine.js';
 
 export function TimeScrubber({
-  activeIndex,
-  timelineOverlaps,
-  slotWidth = 52,
-  cityCardWidth = 260,
+  startIndex,
+  endIndex,
+  isLocked = false,
+  slotWidth = 32,
+  cityCardWidth = 296,
+  totalColumns = 24,
+  rangeLabel,
+  onResizeStart,
 }) {
-  if (activeIndex === null || activeIndex === undefined || activeIndex < 0) {
+  if (startIndex === null || startIndex === undefined || startIndex < 0) {
     return null;
   }
 
-  const columnData = timelineOverlaps?.[activeIndex];
-  const isGolden = columnData?.quality === OVERLAP_QUALITY.GOLDEN;
-  const isGood = columnData?.quality === OVERLAP_QUALITY.GOOD;
-
-  // Calculate pixel position of the vertical magnetic guide
-  const leftPosition = cityCardWidth + activeIndex * slotWidth + slotWidth / 2;
+  const maxCol = Math.max(1, totalColumns);
+  const clampedStart = Math.min(startIndex, maxCol - 0.5);
+  const rawEnd = Math.min(endIndex ?? clampedStart, maxCol - 0.5);
+  const isReversed = rawEnd < clampedStart - 0.5;
+  const startEdge = Math.max(0, Math.min(maxCol - 0.5, isReversed ? rawEnd : clampedStart));
+  const endEdge = Math.min(
+    maxCol,
+    Math.max(startEdge + 0.5, (isReversed ? clampedStart : rawEnd) + 1)
+  );
+  const spanHours = endEdge - startEdge;
 
   return (
     <div
-      className="magnetic-scrubber-container"
-      style={{ left: `${leftPosition}px` }}
+      className={`wtb-lens-scrubber ${isLocked ? 'is-locked' : ''}`}
+      style={{
+        left: `calc(var(--city-col-width, ${cityCardWidth}px) + ${startEdge} * var(--slot-width, ${slotWidth}px))`,
+        width: `calc(${spanHours} * var(--slot-width, ${slotWidth}px))`,
+      }}
       aria-hidden="true"
     >
-      {/* Top Floating Time Bubble */}
-      <div className={`scrubber-bubble ${isGolden ? 'bubble-golden' : isGood ? 'bubble-good' : ''}`}>
-        {isGolden ? (
-          <div className="scrubber-bubble-header golden-text">
-            <SparklesIcon size={12} />
-            <span>Golden Overlap</span>
-          </div>
-        ) : (
-          <div className="scrubber-bubble-header">
-            <span>{columnData?.workingCount || 0}/{columnData?.totalCities || 0} Working</span>
-          </div>
-        )}
-      </div>
-
-      {/* Vertical Laser Guideline */}
-      <div className={`scrubber-line ${isGolden ? 'line-golden' : ''}`} />
+      <div className="wtb-lens-box" />
+      {isLocked && (
+        <>
+          <div className="wtb-lens-badge">{rangeLabel || `${spanHours}h`}</div>
+          <div
+            className="wtb-scrubber-handle handle-left"
+            onMouseDown={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              if (onResizeStart) onResizeStart('left', e);
+            }}
+            onTouchStart={(e) => {
+              e.stopPropagation();
+              if (onResizeStart) onResizeStart('left', e);
+            }}
+            title="Drag to adjust start time (0.5h increments)"
+          />
+          <div
+            className="wtb-scrubber-handle handle-right"
+            onMouseDown={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              if (onResizeStart) onResizeStart('right', e);
+            }}
+            onTouchStart={(e) => {
+              e.stopPropagation();
+              if (onResizeStart) onResizeStart('right', e);
+            }}
+            title="Drag to adjust end time (0.5h increments)"
+          />
+        </>
+      )}
     </div>
   );
 }

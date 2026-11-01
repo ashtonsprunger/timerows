@@ -68,7 +68,7 @@ export function generateMeetingIcs({
   endTimestamp,
   description = '',
   citySummaries = [],
-  url = 'https://www.timerows.com',
+  url = 'https://timerows.com',
   uid = null,
 }) {
   if (!startTimestamp || !endTimestamp) {

@@ -1,0 +1,789 @@
+/* TimeRows - Material 3 Borderless Continuous Ribbon & 3-Column City Row Styles */
+
+.wtb-board-body {
+  position: relative;
+  padding: 22px 8px 8px;
+  overflow-x: auto;
+  user-select: none;
+}
+
+.wtb-rows-canvas {
+  position: relative;
+  width: max-content;
+  min-width: calc(var(--city-col-width) + 24 * var(--slot-width));
+}
+
+.wtb-rows-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+/* Individual City Row - Tighter 56px Height & Borderless Concentric Surface */
+.wtb-row {
+  display: flex;
+  align-items: center;
+  min-height: 56px;
+  padding: 2px 10px;
+  margin: 0 -10px;
+  border-radius: var(--radius-surface);
+  transition: background var(--spring-snappy);
+}
+
+.wtb-row:hover {
+  background: var(--bg-row-hover);
+}
+
+.wtb-row.is-dragging-row {
+  opacity: 0.5;
+}
+
+.wtb-row.is-drag-over-row {
+  background: var(--bg-row-hover);
+}
+
+.wtb-city-col[draggable='true'] {
+  cursor: grab;
+}
+
+.wtb-city-col[draggable='true']:active {
+  cursor: grabbing;
+}
+
+/* ==========================================================================
+   Left 3-Part City Column (296px Fixed Width)
+   1. Action & Offset Gutter (60px)
+   2. City Name + Country (138px)
+   3. Big Live Time + Date (98px)
+   ========================================================================== */
+.wtb-city-col {
+  width: var(--city-col-width);
+  min-width: var(--city-col-width);
+  flex: 0 0 var(--city-col-width);
+  height: 52px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding-right: 16px;
+}
+
+.wtb-gutter {
+  width: 64px;
+  flex: 0 0 64px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.wtb-row-hover-tools {
+  width: 22px;
+  height: 50px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
+  opacity: 0;
+  transform: translateX(-3px);
+  transition: opacity var(--spring-snappy), transform var(--spring-snappy);
+}
+
+.wtb-row:hover .wtb-row-hover-tools,
+.wtb-row:focus-within .wtb-row-hover-tools {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.wtb-micro-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 16px;
+  border-radius: var(--radius-pill);
+  color: var(--text-secondary);
+  transition: background var(--spring-snappy), color var(--spring-snappy), transform var(--spring-snappy);
+}
+
+.wtb-micro-btn:hover {
+  color: var(--text-primary);
+  background: var(--bg-tonal-pill);
+  transform: scale(1.08);
+}
+
+.wtb-micro-btn:active {
+  transform: scale(0.9);
+}
+
+.wtb-micro-btn.btn-remove:hover {
+  color: var(--text-primary);
+  background: var(--bg-tonal-pill-hover);
+}
+
+.wtb-offset-cell {
+  min-width: 38px;
+  width: auto;
+  height: 22px;
+  padding: 0 5px;
+  border-radius: var(--radius-pill);
+  background: var(--bg-tonal-pill);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10.5px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+  transition: background var(--spring-snappy), color var(--spring-snappy);
+}
+
+.wtb-offset-cell.is-home-badge {
+  background: var(--accent-subtle-bg);
+  color: var(--text-primary);
+}
+
+.wtb-home-icon {
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+}
+
+/* Middle: City Name + TZ Badge + Country */
+.wtb-place-info {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2px;
+}
+
+.wtb-place-title-line {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+.wtb-city-name {
+  font-size: 14.5px;
+  font-weight: 700;
+  line-height: 1.15;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  letter-spacing: -0.015em;
+}
+
+.wtb-country-line {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  min-width: 0;
+  min-height: 16px;
+}
+
+.wtb-country-sub {
+  font-size: 11.5px;
+  line-height: 1.15;
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.wtb-city-work-btn {
+  display: none;
+  flex-shrink: 0;
+  font-size: 9.5px;
+  font-weight: 700;
+  padding: 1.5px 6px;
+  border-radius: var(--radius-pill);
+  background: var(--bg-tonal-pill);
+  color: var(--text-secondary);
+  transition: background var(--spring-snappy), color var(--spring-snappy), transform var(--spring-snappy);
+}
+
+.wtb-row:hover .wtb-city-work-btn,
+.wtb-row:focus-within .wtb-city-work-btn,
+.wtb-city-work-btn.is-custom {
+  display: inline-flex;
+  align-items: center;
+}
+
+.wtb-city-work-btn.is-custom {
+  background: var(--accent-subtle-bg);
+  color: var(--text-primary);
+}
+
+.wtb-city-work-btn:hover {
+  background: var(--bg-tonal-pill-hover);
+  color: var(--text-primary);
+}
+
+.wtb-city-work-btn:active {
+  transform: scale(0.94);
+}
+
+.wtb-city-work-popover {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  z-index: 70;
+  background: var(--bg-input);
+  border-radius: var(--radius-surface);
+  box-shadow: var(--shadow-dropdown);
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 196px;
+}
+
+.wtb-work-pop-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-secondary);
+}
+
+.wtb-work-reset-btn {
+  font-size: 10.5px;
+  font-weight: 700;
+  color: var(--accent-primary);
+}
+
+.wtb-work-pop-controls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+}
+
+/* Right: Live Clock + Local Date (+1d / -1d badge) (#9 & #12) */
+.wtb-live-clock-col {
+  width: 96px;
+  flex: 0 0 96px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 2px;
+}
+
+.wtb-live-time {
+  font-size: 14.5px;
+  font-weight: 500;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  font-variant-numeric: tabular-nums;
+}
+
+.wtb-live-ampm {
+  font-size: 9.5px;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin-left: 3px;
+}
+
+.wtb-live-date {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 16px;
+  font-size: 11px;
+  color: var(--text-muted);
+  line-height: 1.15;
+  white-space: nowrap;
+}
+
+.wtb-day-diff-tag {
+  font-size: 9.5px;
+  font-weight: 700;
+  padding: 1px 5px;
+  border-radius: var(--radius-pill);
+  background: var(--bg-tonal-pill);
+  color: var(--text-secondary);
+  letter-spacing: -0.01em;
+}
+
+/* ==========================================================================
+   Right 24-Hour Continuous Tonal Ribbon (24 * 32px = 768px, Continuous Rim)
+   ========================================================================== */
+.wtb-ribbon-wrap {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.wtb-ribbon-track {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: stretch;
+  height: var(--ribbon-height);
+  border-radius: var(--radius-ribbon);
+  overflow: hidden;
+}
+
+/* Subtle continuous outer capsule silhouette so pure white Work Hours stay framed */
+.wtb-ribbon-track::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-ribbon);
+  box-shadow: inset 0 0 0 1px var(--ribbon-rim);
+  pointer-events: none;
+  z-index: 4;
+}
+
+.wtb-hour-cell {
+  position: relative;
+  width: var(--slot-width);
+  min-width: var(--slot-width);
+  flex: 0 0 var(--slot-width);
+  height: var(--ribbon-height);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  line-height: 1.05;
+  font-variant-numeric: tabular-nums;
+}
+
+.wtb-hour-cell:hover .wtb-cell-num,
+.wtb-hour-cell:hover .wtb-cell-num-fractional {
+  transform: translateY(-1px) scale(1.08);
+  color: var(--accent-primary);
+}
+
+/* Flat Tonal Phase Fills (Zero Wireframe Borders) */
+.wtb-phase-sleep {
+  background-color: var(--ribbon-sleep-bg);
+  color: var(--ribbon-sleep-text);
+}
+.wtb-phase-sleep .wtb-cell-sub {
+  color: var(--ribbon-sleep-sub);
+}
+
+.wtb-phase-awake {
+  background-color: var(--ribbon-awake-bg);
+  color: var(--ribbon-awake-text);
+}
+.wtb-phase-awake .wtb-cell-sub {
+  color: var(--ribbon-awake-sub);
+}
+
+.wtb-phase-work {
+  background-color: var(--ribbon-work-bg);
+  color: var(--ribbon-work-text);
+}
+.wtb-phase-work .wtb-cell-sub {
+  color: var(--ribbon-work-sub);
+}
+
+/* Golden Working-Hour Overlap Column: Unified Emerald Tonal Column (#2) */
+.wtb-golden-col {
+  background-color: var(--ribbon-golden-bg);
+  color: var(--ribbon-golden-text);
+}
+.wtb-golden-col .wtb-cell-sub {
+  color: var(--ribbon-golden-sub);
+}
+
+/* Unified Vertical Golden Overlap Column Band (label lives in the answer row above) */
+.wtb-golden-band {
+  position: absolute;
+  top: 1px;
+  bottom: 1px;
+  background: transparent;
+  box-shadow: inset 0 3px 0 var(--golden-accent), inset 0 0 0 1.5px var(--golden-band-border);
+  border-radius: 11px;
+  pointer-events: none;
+  z-index: 6;
+  transition: opacity var(--spring-snappy);
+}
+
+.wtb-golden-band.is-dimmed {
+  opacity: 0.25;
+}
+
+/* Midnight Date Cell: Symmetrical 4-Corner Rounded Squircle Badge Inside the Track */
+.wtb-cell-midnight {
+  background-color: var(--ribbon-sleep-bg);
+  color: var(--ribbon-midnight-text);
+}
+
+.wtb-cell-midnight::before {
+  content: '';
+  position: absolute;
+  inset: 3px 2px;
+  border-radius: 9px;
+  background-color: var(--ribbon-midnight-bg);
+  z-index: 2;
+}
+
+/* Concentric Rounded Caps at Ribbon Start and Ribbon End */
+.wtb-cap-left {
+  border-top-left-radius: var(--radius-ribbon);
+  border-bottom-left-radius: var(--radius-ribbon);
+}
+
+.wtb-cap-right {
+  border-top-right-radius: var(--radius-ribbon);
+  border-bottom-right-radius: var(--radius-ribbon);
+}
+
+/* Clean Transparent Cell Typography (No background boxes) */
+.wtb-cell-num {
+  position: relative;
+  z-index: 5;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  transition: transform var(--spring-snappy), color var(--spring-snappy);
+}
+
+.wtb-cell-num-fractional {
+  position: relative;
+  z-index: 5;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  transition: transform var(--spring-snappy), color var(--spring-snappy);
+}
+
+.wtb-cell-sub {
+  position: relative;
+  z-index: 5;
+  font-size: 8.5px;
+  font-weight: 500;
+  margin-top: 1px;
+  opacity: 0.76;
+}
+
+.wtb-phase-sleep .wtb-cell-sub {
+  color: var(--ribbon-sleep-sub);
+  opacity: 0.62;
+}
+
+.wtb-midnight-month {
+  position: relative;
+  z-index: 5;
+  font-size: 7.5px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--ribbon-midnight-sub);
+}
+
+.wtb-midnight-day {
+  position: relative;
+  z-index: 5;
+  font-size: 11px;
+  font-weight: 800;
+  margin-top: 1px;
+  white-space: nowrap;
+  letter-spacing: -0.02em;
+}
+
+/* ==========================================================================
+   Magnetic Vertical Column Lens Scrubber (Spring Physics + Floating Pill)
+   ========================================================================== */
+.wtb-lens-scrubber {
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  pointer-events: none;
+  z-index: 20;
+  transition: left var(--spring-glide), width var(--spring-glide);
+}
+
+.wtb-lens-box {
+  position: absolute;
+  inset: 0;
+  border: 2px solid var(--lens-border);
+  background: var(--lens-fill);
+  border-radius: 14px;
+  pointer-events: none;
+  transition: box-shadow var(--spring-snappy), background var(--spring-snappy), border-color var(--spring-snappy);
+}
+
+.wtb-lens-scrubber.is-locked .wtb-lens-box {
+  border-color: var(--lens-locked-border);
+  background: var(--lens-locked-fill);
+  box-shadow: 0 8px 24px -4px var(--accent-shadow);
+}
+
+.wtb-lens-badge {
+  position: absolute;
+  top: -21px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 2.5px 10px;
+  border-radius: var(--radius-pill);
+  background: var(--lens-locked-border);
+  color: var(--accent-on-primary);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  box-shadow: 0 4px 12px var(--accent-shadow);
+  z-index: 30;
+}
+
+.wtb-scrubber-handle {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 12px;
+  pointer-events: auto;
+  touch-action: none;
+  cursor: ew-resize;
+  z-index: 25;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.wtb-scrubber-handle.handle-left {
+  left: -6px;
+}
+
+.wtb-scrubber-handle.handle-right {
+  right: -6px;
+}
+
+.wtb-scrubber-handle::after {
+  content: '';
+  width: 3px;
+  height: 14px;
+  border-radius: var(--radius-pill);
+  background: var(--lens-locked-border);
+  box-shadow: 0 0 0 1px var(--bg-board);
+  opacity: 0;
+  transition: opacity var(--spring-snappy), transform var(--spring-snappy);
+}
+
+.wtb-scrubber-handle:hover::after {
+  opacity: 0.85;
+  transform: scaleX(1.1);
+}
+
+/* Exact-Minute Current Time ("Now") Dot — no hairline, so nothing ever crosses the hour digits (#7) */
+.wtb-now-indicator {
+  position: absolute;
+  top: 5px;
+  height: 0;
+  width: 0;
+  z-index: 21;
+  pointer-events: none;
+  transition: opacity var(--spring-snappy);
+}
+
+.wtb-now-indicator.is-dimmed {
+  opacity: 0.35;
+}
+
+.wtb-now-indicator.is-dimmed .wtb-now-dot {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Current-hour column: red digits only in idle state; muted during active selection */
+.wtb-rows-canvas:not(.has-selection) .wtb-hour-cell.is-now-col .wtb-cell-num,
+.wtb-rows-canvas:not(.has-selection) .wtb-hour-cell.is-now-col .wtb-cell-num-fractional,
+.wtb-rows-canvas:not(.has-selection) .wtb-hour-cell.is-now-col .wtb-cell-sub {
+  color: var(--now-text);
+}
+
+.wtb-now-dot {
+  position: absolute;
+  top: -4px;
+  left: 0;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--now-accent);
+  box-shadow: 0 0 0 2px var(--bg-board);
+  transform: translateX(-50%);
+  pointer-events: auto;
+  z-index: 25;
+  transition: transform var(--spring-snappy), opacity var(--spring-snappy);
+}
+
+.wtb-now-dot:hover {
+  transform: translateX(-50%) scale(1.25);
+}
+
+.wtb-now-dot[data-tooltip]:hover::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 4px 8px;
+  background: #0f172a;
+  color: #ffffff;
+  font-size: 10.5px;
+  font-weight: 600;
+  white-space: nowrap;
+  border-radius: var(--radius-pill);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.22);
+  pointer-events: none;
+  z-index: 80;
+}
+
+/* ==========================================================================
+   Touch / Coarse Pointer & Responsive Mobile / Tablet Breakpoints
+   ========================================================================== */
+/* Phone-only compact clock (shown under the city name at <=480px) */
+.wtb-compact-clock {
+  display: none;
+}
+
+@media (hover: none), (pointer: coarse) {
+  .wtb-row-hover-tools {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  .wtb-city-work-btn {
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .wtb-scrubber-handle {
+    width: 22px;
+  }
+
+  .wtb-scrubber-handle.handle-left {
+    left: -11px;
+  }
+
+  .wtb-scrubber-handle.handle-right {
+    right: -11px;
+  }
+
+  .wtb-scrubber-handle::after {
+    opacity: 1;
+  }
+}
+
+@media (max-width: 768px) {
+  /* Sticky city column: hours scroll horizontally underneath it.
+     The solid -20px shadow covers the scroller's left padding strip so no ribbon peeks out. */
+  .wtb-city-col {
+    position: sticky;
+    left: 0;
+    z-index: 22;
+    background: var(--bg-board);
+    box-shadow: -20px 0 0 var(--bg-board), 10px 0 12px -10px rgba(15, 23, 42, 0.18);
+    padding-right: 10px;
+  }
+
+  [data-theme='dark'] .wtb-city-col {
+    box-shadow: -20px 0 0 var(--bg-board), 10px 0 12px -10px rgba(0, 0, 0, 0.7);
+  }
+
+  .wtb-row:hover {
+    background: transparent;
+  }
+
+  .wtb-gutter {
+    width: 64px;
+    flex: 0 0 64px;
+    gap: 4px;
+  }
+
+  .wtb-live-clock-col {
+    width: 80px;
+    flex: 0 0 80px;
+  }
+
+  .wtb-city-name {
+    font-size: 13.5px;
+  }
+
+  .wtb-live-time {
+    font-size: 13.5px;
+  }
+}
+
+@media (max-width: 480px) {
+  /* Compact phone layout: clock column folds into the second line under the city
+     ("9:50 pm +1d · EDT"), freeing ~70px for hours. */
+  .wtb-city-col {
+    padding-right: 8px;
+  }
+
+  .wtb-gutter {
+    width: 56px;
+    flex: 0 0 56px;
+    gap: 3px;
+  }
+
+  .wtb-row-hover-tools {
+    width: 20px;
+  }
+
+  .wtb-offset-cell {
+    width: 32px;
+    min-width: 32px;
+    padding: 0 2px;
+    font-size: 10.5px;
+  }
+
+  .wtb-live-clock-col {
+    display: none;
+  }
+
+  .wtb-compact-clock {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    flex-shrink: 0;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+
+  .wtb-compact-sep {
+    color: var(--text-muted);
+  }
+
+  .wtb-country-line {
+    gap: 4px;
+    overflow: hidden;
+  }
+
+  /* With a +1d / -1d tag there is no room for the timezone too: the day change wins */
+  .wtb-country-line.has-day-diff .wtb-compact-sep,
+  .wtb-country-line.has-day-diff .wtb-country-sub {
+    display: none;
+  }
+
+  /* Per-city work-hour chip only shows on phones when customized (header pill sets the default) */
+  .wtb-city-work-btn:not(.is-custom) {
+    display: none !important;
+  }
+
+  .wtb-city-name {
+    font-size: 13px;
+  }
+
+  .wtb-country-sub {
+    font-size: 11px;
+    min-width: 0;
+  }
+}
+

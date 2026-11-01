@@ -7,6 +7,10 @@ import {
   deserializeShareQuery,
   parseCompactMeetingPath,
   generateShareUrl,
+  generateCompactShareUrl,
+  resolveCityFromToken,
+  getCityUrlToken,
+  extractCityTokensFromUrl,
   SLUG_TO_TIMEZONE,
 } from './urlSync.js';
 
@@ -80,7 +84,7 @@ describe('urlSync', () => {
     });
 
     test('deserializes query back to timezone list and state parameters', () => {
-      const queryString = '?c=nyc,lon,tyo&d=2026-10-10&ref=nyc&slot=14';
+      const queryString = '?c=nyc,lon,tyo&d=2026-10-10&ref=nyc&slot=14&end=16';
       const state = deserializeShareQuery(queryString);
 
       expect(state.timezones).toEqual([
@@ -91,6 +95,7 @@ describe('urlSync', () => {
       expect(state.date).toBe('2026-10-10');
       expect(state.referenceTimezone).toBe('America/New_York');
       expect(state.selectedSlotIndex).toBe(14);
+      expect(state.selectedEndSlotIndex).toBe(16);
     });
 
     test('supports unmapped raw IANA timezones', () => {
@@ -139,22 +144,79 @@ describe('urlSync', () => {
     });
   });
 
+  describe('City Identity Resolution & Compact URLs', () => {
+    test('resolves distinct cities within the same timezone (San Francisco vs Los Angeles, Mumbai vs Bengaluru)', () => {
+      const sfo = resolveCityFromToken('sfo');
+      expect(sfo.name).toBe('San Francisco');
+      expect(sfo.timeZone).toBe('America/Los_Angeles');
+
+      const lax = resolveCityFromToken('lax');
+      expect(lax.name).toBe('Los Angeles');
+      expect(lax.timeZone).toBe('America/Los_Angeles');
+
+      const bom = resolveCityFromToken('bom');
+      expect(bom.name).toBe('Mumbai');
+      expect(bom.timeZone).toBe('Asia/Kolkata');
+
+      const blr = resolveCityFromToken('blr');
+      expect(blr.name).toBe('Bengaluru');
+      expect(blr.timeZone).toBe('Asia/Kolkata');
+
+      const seoLondon = resolveCityFromToken('london');
+      expect(seoLondon.name).toBe('London');
+      expect(seoLondon.timeZone).toBe('Europe/London');
+
+      const stJohns = resolveCityFromToken(slugify("St. John's"));
+      expect(stJohns).not.toBeNull();
+      expect(stJohns.name).toBe("St. John's");
+      expect(stJohns.timeZone).toBe('America/St_Johns');
+
+      const saoPaulo = resolveCityFromToken('sao-paulo-br');
+      expect(saoPaulo.name).toBe('São Paulo');
+      expect(getCityUrlToken(saoPaulo)).toBe('gru');
+    });
+
+    test('generates compact share URL preserving city tokens', () => {
+      const cities = [
+        { id: 'san-francisco-us', name: 'San Francisco', timeZone: 'America/Los_Angeles' },
+        { id: 'london-gb', name: 'London', timeZone: 'Europe/London' },
+        { id: 'mumbai-in', name: 'Mumbai', timeZone: 'Asia/Kolkata' },
+      ];
+      expect(generateCompactShareUrl('https://timerows.com', cities)).toBe(
+        'https://timerows.com/m/sfo+lon+bom'
+      );
+      expect(extractCityTokensFromUrl('/m/sfo+lon+bom', '')).toEqual(['sfo', 'lon', 'bom']);
+      expect(getCityUrlToken(cities[0])).toBe('sfo');
+    });
+  });
+
   describe('generateShareUrl', () => {
     test('generates full clean URL with query parameters', () => {
-      const url = generateShareUrl('https://www.timerows.com', {
+      const url = generateShareUrl('https://timerows.com', {
         cities: ['America/New_York', 'Europe/London'],
         date: '2026-10-10',
       });
 
-      expect(url).toContain('https://www.timerows.com/?c=nyc%2Clon&d=2026-10-10');
+      expect(url).toContain('https://timerows.com/?c=nyc%2Clon&d=2026-10-10');
     });
 
     test('handles trailing slashes on origin', () => {
-      const url = generateShareUrl('https://www.timerows.com/', {
+      const url = generateShareUrl('https://timerows.com/', {
         cities: ['America/New_York'],
       });
 
-      expect(url).toBe('https://www.timerows.com/?c=nyc');
+      expect(url).toBe('https://timerows.com/?c=nyc');
+    });
+
+    test('serializes and deserializes custom workingHours (wh) parameter', () => {
+      const query = serializeShareQuery({
+        cities: ['America/New_York', 'Europe/London'],
+        workingHours: { start: 8, end: 17 },
+      });
+      expect(query).toContain('wh=8-17');
+
+      const parsed = deserializeShareQuery(query);
+      expect(parsed.workingHours).toEqual({ start: 8, end: 17 });
     });
   });
 });

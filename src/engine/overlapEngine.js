@@ -6,7 +6,26 @@
  * Zero React dependencies.
  */
 
-import { PHASE_TYPES } from './timezoneEngine.js';
+import { PHASE_TYPES, getTimeParts } from './timezoneEngine.js';
+
+/**
+ * Computes how many local calendar days later `endTimestamp` falls compared to
+ * `startTimestamp` in `timeZone`. Uses `endTimestamp - 1` so an exact midnight
+ * boundary (00:00) at the end of an evening meeting stays on the same day,
+ * whereas any span continuing past midnight into the next day returns >= 1.
+ */
+function computeSpanDayDelta(startTimestamp, endTimestamp, timeZone) {
+  if (!startTimestamp || !endTimestamp || !timeZone) return 0;
+  try {
+    const startParts = getTimeParts(startTimestamp, timeZone);
+    const endParts = getTimeParts(Math.max(startTimestamp, endTimestamp - 1), timeZone);
+    const startUtcMidnight = Date.UTC(startParts.year, startParts.month - 1, startParts.day);
+    const endUtcMidnight = Date.UTC(endParts.year, endParts.month - 1, endParts.day);
+    return Math.max(0, Math.round((endUtcMidnight - startUtcMidnight) / 86400000));
+  } catch {
+    return 0;
+  }
+}
 
 export const OVERLAP_QUALITY = Object.freeze({
   GOLDEN: 'golden',        // All cities in core working hours
@@ -298,11 +317,19 @@ export function findBestMeetingWindows(evaluatedColumns, options = {}) {
       const startTime = cityStart.formattedTime12;
       
       // Calculate end time string (start of next hour after last slot)
-      const endLocalParts = new Intl.DateTimeFormat('en-US', {
+      const endLocalParts12 = new Intl.DateTimeFormat('en-US', {
         timeZone: cityStart.timeZone,
         hour: 'numeric',
         minute: '2-digit',
         hour12: true,
+      }).format(new Date(win.endTimestamp));
+
+      const endLocalParts24 = new Intl.DateTimeFormat('en-US', {
+        timeZone: cityStart.timeZone,
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false,
+        hourCycle: 'h23',
       }).format(new Date(win.endTimestamp));
 
       const isAllWorking = win.slots.every(
@@ -313,10 +340,14 @@ export function findBestMeetingWindows(evaluatedColumns, options = {}) {
         cityId: cityStart.cityId,
         cityName: cityStart.cityName,
         timeZone: cityStart.timeZone,
-        startTime,
-        endTime: endLocalParts,
+        startTime: startTime,
+        endTime: endLocalParts12,
+        startTime24: cityStart.formattedTime24 || startTime,
+        endTime24: endLocalParts24,
         dayRollover: cityStart.dayRollover,
+        endDayDelta: computeSpanDayDelta(win.startTimestamp, win.endTimestamp, cityStart.timeZone),
         isWorkingHours: isAllWorking,
+        phase: cityStart.phase,
       };
     });
 
@@ -336,23 +367,189 @@ export function findBestMeetingWindows(evaluatedColumns, options = {}) {
 }
 
 /**
+ * Builds a complete meeting window descriptor for any user-selected slot range [startIndex, endIndex].
+ * Works for both viable and compromise/off-hour selections so users can export any range.
+ *
+ * @param {Array<Object>} evaluatedColumns - Output from calculateTimelineOverlaps
+ * @param {number} startIndex - Starting column index
+ * @param {number} [endIndex=startIndex] - Ending column index (inclusive)
+ * @returns {Object|null} Complete meeting window object
+ */
+export function buildCustomMeetingWindow(evaluatedColumns, startIndex, endIndex = startIndex) {
+  if (!evaluatedColumns || evaluatedColumns.length === 0) return null;
+  if (typeof startIndex !== 'number' || startIndex < 0) return null;
+
+  const totalCols = evaluatedColumns.length;
+  const rawEndArg = endIndex ?? startIndex;
+
+  // Support both reversed integer calls (e.g. startIndex=5, endIndex=3) and 0.5h windows (startIndex=10, endIndex=9.5)
+  const isReversedRange = rawEndArg < startIndex - 0.5;
+  const rawStart = isReversedRange ? Math.min(startIndex, rawEndArg) : startIndex;
+  const rawEnd = isReversedRange ? Math.max(startIndex, rawEndArg) : rawEndArg;
+
+  const startEdge = Math.max(0, Math.min(totalCols - 0.5, Math.round(rawStart * 2) / 2));
+  const endEdge = Math.max(startEdge + 0.5, Math.min(totalCols, Math.round((rawEnd + 1) * 2) / 2));
+  const normStart = startEdge;
+  const normEnd = endEdge - 1;
+
+  const firstColIdx = Math.min(totalCols - 1, Math.floor(startEdge));
+  const lastColIdx = Math.min(totalCols - 1, Math.max(firstColIdx, Math.ceil(endEdge) - 1));
+
+  const windowSlots = evaluatedColumns.slice(firstColIdx, lastColIdx + 1);
+  if (windowSlots.length === 0) return null;
+
+  const dur = Math.round((endEdge - startEdge) * 100) / 100;
+  const hasSleep = windowSlots.some((s) => !s.isViable);
+  const allGolden = windowSlots.every((s) => s.isGolden);
+  const allGoodOrGolden = windowSlots.every(
+    (s) => s.isGolden || s.quality === OVERLAP_QUALITY.GOOD
+  );
+
+  let quality = OVERLAP_QUALITY.COMPROMISE;
+  if (hasSleep) {
+    quality = OVERLAP_QUALITY.POOR;
+  } else if (allGolden) {
+    quality = OVERLAP_QUALITY.GOLDEN;
+  } else if (allGoodOrGolden) {
+    quality = OVERLAP_QUALITY.GOOD;
+  }
+
+  const avgScore = windowSlots.reduce((sum, s) => sum + s.score, 0) / windowSlots.length;
+  const firstCol = evaluatedColumns[firstColIdx];
+  const lastCol = evaluatedColumns[lastColIdx];
+  const startTimestamp = firstCol.timestamp + (startEdge - firstColIdx) * 3600000;
+  const endTimestamp = lastCol.timestamp + (endEdge - lastColIdx) * 3600000;
+
+  const citySummaries = (firstCol.cityStatuses || []).map((cityStart, cIdx) => {
+    const startLocalParts12 =
+      startEdge === firstColIdx
+        ? cityStart.formattedTime12
+        : new Intl.DateTimeFormat('en-US', {
+            timeZone: cityStart.timeZone,
+            hour: 'numeric',
+            minute: '2-digit',
+            hour12: true,
+          }).format(new Date(startTimestamp));
+
+    const startLocalParts24 =
+      startEdge === firstColIdx
+        ? cityStart.formattedTime24 || cityStart.formattedTime12
+        : new Intl.DateTimeFormat('en-US', {
+            timeZone: cityStart.timeZone,
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: false,
+            hourCycle: 'h23',
+          }).format(new Date(startTimestamp));
+
+    const endLocalParts12 = new Intl.DateTimeFormat('en-US', {
+      timeZone: cityStart.timeZone,
+      hour: 'numeric',
+      minute: '2-digit',
+      hour12: true,
+    }).format(new Date(endTimestamp));
+
+    const endLocalParts24 = new Intl.DateTimeFormat('en-US', {
+      timeZone: cityStart.timeZone,
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false,
+      hourCycle: 'h23',
+    }).format(new Date(endTimestamp));
+
+    const isAllWorking = windowSlots.every((s) => s.cityStatuses[cIdx]?.isWorkingHour);
+
+    return {
+      cityId: cityStart.cityId,
+      cityName: cityStart.cityName,
+      timeZone: cityStart.timeZone,
+      startTime: startLocalParts12,
+      endTime: endLocalParts12,
+      startTime24: startLocalParts24,
+      endTime24: endLocalParts24,
+      dayRollover: cityStart.dayRollover,
+      endDayDelta: computeSpanDayDelta(startTimestamp, endTimestamp, cityStart.timeZone),
+      isWorkingHours: isAllWorking,
+      phase: cityStart.phase,
+    };
+  });
+
+  return {
+    id: `custom-window-${normStart}-${normEnd}`,
+    isCustom: true,
+    rank: 0,
+    startIndex: normStart,
+    endIndex: normEnd,
+    durationHours: dur,
+    startTimestamp,
+    endTimestamp,
+    quality,
+    score: Math.round(avgScore * 10) / 10,
+    citySummaries,
+  };
+}
+
+/**
+ * Finds the best compromise 1-hour window when a global team has zero sleep-free overlap.
+ * Maximizes working + awake cities and minimizes sleeping participants.
+ *
+ * @param {Array<Object>} evaluatedColumns
+ * @returns {Object|null}
+ */
+export function findBestCompromiseWindow(evaluatedColumns) {
+  if (!evaluatedColumns || evaluatedColumns.length === 0) return null;
+
+  let bestIdx = 0;
+  let bestMetric = -Infinity;
+
+  evaluatedColumns.forEach((col, idx) => {
+    const metric = col.workingCount * 30 + col.awakeCount * 15 - col.sleepCount * 25;
+    if (metric > bestMetric) {
+      bestMetric = metric;
+      bestIdx = idx;
+    }
+  });
+
+  return buildCustomMeetingWindow(evaluatedColumns, bestIdx, bestIdx);
+}
+
+/**
  * Format a meeting window into a clean multi-line Slack or Markdown snippet.
  * 
- * @param {Object} window - Window object from findBestMeetingWindows
+ * @param {Object} window - Window object from findBestMeetingWindows or buildCustomMeetingWindow
+ * @param {Object} [options]
+ * @param {string} [options.title] - Optional custom meeting title
+ * @param {boolean} [options.use24Hour=false] - Format times in 24h
+ * @param {string} [options.shareUrl] - Optional URL to append
  * @returns {string} Markdown/Slack formatted text
  */
-export function formatSlackSnippet(window) {
+export function formatSlackSnippet(window, options = {}) {
   if (!window || !window.citySummaries) return '';
 
+  const { title, use24Hour = false, shareUrl } = options;
   const durationStr = `${window.durationHours} ${window.durationHours === 1 ? 'hour' : 'hours'}`;
+  const headerTitle = title ? `*${title}*` : '*Proposed Meeting Time*';
   const lines = [
-    `*Proposed Meeting Time* (${durationStr})`,
+    `${headerTitle} (${durationStr})`,
   ];
 
   window.citySummaries.forEach((city) => {
-    const rollover = city.dayRollover ? ` (${city.dayRollover})` : '';
-    lines.push(`• *${city.cityName}*: ${city.startTime} – ${city.endTime}${rollover}`);
+    const rollover =
+      city.endDayDelta > 0
+        ? ` (+${city.endDayDelta}d)`
+        : city.dayRollover
+          ? ` (${city.dayRollover})`
+          : '';
+    const rawStart = use24Hour && city.startTime24 ? city.startTime24 : city.startTime;
+    const rawEnd = use24Hour && city.endTime24 ? city.endTime24 : city.endTime;
+    const start = use24Hour ? rawStart : String(rawStart || '').toLowerCase();
+    const end = use24Hour ? rawEnd : String(rawEnd || '').toLowerCase();
+    lines.push(`• *${city.cityName}*: ${start} – ${end}${rollover}`);
   });
+
+  if (shareUrl) {
+    lines.push(`🔗 ${shareUrl}`);
+  }
 
   return lines.join('\n');
 }

@@ -8,7 +8,7 @@
 
 **TimeRows** is a high-craft, visual timezone converter and team meeting overlap planner built with React 18, Vite (or modern CRA), and modern web standards. It modernizes the outdated, clunky incumbent (WorldTimeBuddy) with fluid interactive horizontal time rows, ambient day/night illumination, magnetic time scrubbing, instant working-hour overlap detection, and 1-click meeting schedule links.
 
-- **Brand & Domain:** **TimeRows** (`https://www.timerows.com`)
+- **Brand & Domain:** **TimeRows** (`https://timerows.com`)
 - **Core Value Proposition:** Eliminate timezone math for remote teams and global professionals through stacked 24-hour visual time rows with real-time solar gradients, working-hours overlap highlighting, and frictionless 1-click `.ics` calendar exports.
 - **Product-Led Growth (PLG):** Every time a user shares a meeting overlap link (`timerows.com/m/nyc+lon+tyo`), every recipient is seamlessly introduced to TimeRows.
 - **Monetization Engine:** High-volume programmatic SEO for city-pair queries (`/from/san-francisco/to/london`), non-intrusive zero-CLS Google AdSense slots, and Pro/Team presets.
@@ -40,11 +40,13 @@ AI agents working on this codebase **MUST** adhere strictly to the following rul
 ### Rule 4: Zero Cumulative Layout Shift (CLS)
 - Time tracks, city header cards, and ad placeholders must have explicitly locked aspect ratios and reserved dimensions so the page never shifts or jumps during render.
 
-### Rule 5: Google Material 3 Design System & Concentric Geometry
+### Rule 5: Google Material 3 Design System, Flat Tonal Surfaces & Micro-Interactions
 - Primary cards: `border-radius: var(--radius-card, 28px)`.
 - Nested surface cards: `border-radius: var(--radius-surface, 16px)`.
 - Action pills and inputs: `border-radius: var(--radius-pill, 9999px)`.
 - Follow strict concentric geometry: Outer card radius = Inner nested surface radius + Padding.
+- **Flat Tonal Surfaces (Zero Wireframe Borders):** Never use `1px solid` grid/table borders on hour cells, row dividers, inputs, or pills. Create visual hierarchy purely through Material 3 tonal surface layering while preserving ultra-compact 1-screen density.
+- **Tactile & Addictive Micro-Interactions:** Use spring physics (`cubic-bezier(0.22, 1, 0.36, 1)`), tactile press compression (`scale(0.96)`), and smooth surface transitions so scrubbing, sorting, and scheduling feel effortless and responsive.
 
 ### Rule 6: A question from the user doesn't mean to start building
 - If the user asks a question, answer the question. 
@@ -118,6 +120,14 @@ Each 24-hour time row is divided into 24 distinct hourly slots representing the 
 5. **Date Line Crossing Indicator:**
    - Clearly flags days that roll over into `+1 Day` (Tomorrow) or `-1 Day` (Yesterday) relative to the primary city.
 
+### Brand & Color Semantics (Non-Negotiable)
+
+- **Name casing:** The logo wordmark is always lowercase `timerows`. In prose, titles, meta tags, and copy, the product name is always `TimeRows`.
+- **Emerald (`#10b981`) means "overlap" only.** It appears in the logo's middle bar, the overlap band, and the best-overlap headline. Never use it for generic success states, toasts, or buttons.
+- **Red (`#ef4444`) means "now" only.** It marks the live current-hour column and dot. Never use it for errors, warnings, or destructive hovers.
+- **Solid ink (`--accent-primary`) is reserved** for the single primary CTA (Share) and the current selection (selected date, locked lens). Toggles and secondary active states use tonal fills.
+- **Five color roles total:** ink (actions), slate (night), warm sand (off-hours), emerald (overlap), red (now). Do not introduce new accent hues.
+
 ---
 
 ## 5. Development Workflow & Scripts
@@ -137,3 +147,7 @@ Each 24-hour time row is divided into 24 distinct hourly slots representing the 
 - [x] **Milestone 4:** Overlap Calculation & Summary Bar — Automatically calculate and highlight the top 3 best meeting windows.
 - [x] **Milestone 5:** Sharing & Calendar Export — 1-click shareable URL generation, Slack markdown format, and RFC 5545 `.ics` export.
 - [x] **Milestone 6:** Polish & Craft — Concentric geometry, keyboard navigation, fluid hover states, and zero-CLS ad slots.
+
+users summarized goals:
+1. earn max money through adsense. (all goals and objectives listed below are ultimately to achieve this primary goal.) this doesn't mean it is annoying with ads, but rather it is user friendly and has a lot of traffic which causes a high volume of return viewers and volume.
+2. rank WELL on google and other search tools including chatgpt, gemini, claude, etc.

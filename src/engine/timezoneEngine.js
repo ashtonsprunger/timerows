@@ -232,6 +232,30 @@ export function formatTimezoneOffset(offsetMinutes) {
   return `${sign}${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
 }
 
+/**
+ * Format relative minute offset from the primary/reference city into a compact badge string.
+ * Whole hours -> "+5h", "-3h", "0h"
+ * 30-min offsets -> "+5.5h", "-3.5h"
+ * 15/45-min offsets (e.g. Asia/Kathmandu UTC+5:45) -> "+5:45", "+9:45" (never rounds 5.75 to "+5.8h")
+ *
+ * @param {number} diffMins
+ * @returns {string}
+ */
+export function formatRelativeOffset(diffMins) {
+  if (!diffMins) return '0h';
+  const sign = diffMins > 0 ? '+' : '-';
+  const absMins = Math.abs(Math.round(diffMins));
+  const rem = absMins % 60;
+  if (rem === 0) {
+    return `${sign}${absMins / 60}h`;
+  }
+  if (rem === 30) {
+    return `${sign}${(absMins / 60).toFixed(1)}h`;
+  }
+  const wholeHours = Math.floor(absMins / 60);
+  return `${sign}${wholeHours}:${String(rem).padStart(2, '0')}`;
+}
+
 // Map of canonical timezone abbreviations for major global hubs
 const TIMEZONE_ABBREVIATIONS = {
   'America/New_York': { standard: 'EST', daylight: 'EDT' },
@@ -595,6 +619,8 @@ export function generateSlot({
     month: parts.month,
     day: parts.day,
     hour: parts.hour,
+    hour12: parts.hour12,
+    ampm: parts.ampm,
     minute: parts.minute,
     decimalHour,
     dayOfWeek: parts.dayOfWeek,

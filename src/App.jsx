@@ -1,97 +1,251 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, useRef, useCallback } from 'react';
 import './App.css';
 import { useTheme } from './hooks/useTheme.js';
 import { useLocalStorage } from './hooks/useLocalStorage.js';
 import { useKeyboardNav } from './hooks/useKeyboardNav.js';
-import { getDefaultCities } from './data/defaultPresets.js';
-import { generateDayIntervals, generateCityRowSlots } from './engine/timezoneEngine.js';
-import { calculateTimelineOverlaps, findBestMeetingWindows } from './engine/overlapEngine.js';
+import { getDefaultCities, TEAM_PRESETS } from './data/defaultPresets.js';
+import {
+  getUserLocalTimezone,
+  getTimeParts,
+  getTimezoneOffset,
+  generateDayIntervals,
+  generateCityRowSlots,
+  DEFAULT_WORKING_HOURS,
+} from './engine/timezoneEngine.js';
+import {
+  calculateTimelineOverlaps,
+  findBestMeetingWindows,
+  buildCustomMeetingWindow,
+  findBestCompromiseWindow,
+} from './engine/overlapEngine.js';
 import {
   deserializeShareQuery,
   parseCityPairPath,
-  parseCompactMeetingPath,
+  extractCityTokensFromUrl,
+  resolveCityFromToken,
   generateShareUrl,
 } from './engine/urlSync.js';
 
 import { Header } from './components/Header.jsx';
 import { TimelineGrid } from './components/TimelineGrid.jsx';
 import { OverlapSummary } from './components/OverlapSummary.jsx';
+import { AdSlot } from './components/AdSlot.jsx';
+import { SiteFooter } from './components/SiteFooter.jsx';
 import { CitySearchModal } from './components/CitySearchModal.jsx';
 import { ShareModal } from './components/ShareModal.jsx';
-import { AdSlot } from './components/AdSlot.jsx';
 import { Toast } from './components/Toast.jsx';
+
+function getTodayIsoInZone(timeZone) {
+  try {
+    return getTimeParts(Date.now(), timeZone || getUserLocalTimezone()).isoDate;
+  } catch {
+    return new Date().toISOString().split('T')[0];
+  }
+}
+
+function updateDocumentSeo({ title, description, canonicalPath }) {
+  if (typeof document === 'undefined') return;
+  if (title) {
+    document.title = title;
+  }
+  const cleanPath = canonicalPath && canonicalPath.startsWith('/') ? canonicalPath : `/${canonicalPath || ''}`;
+  const canonicalUrl = `https://timerows.com${cleanPath}`;
+
+  const canonicalEl = document.querySelector('link[rel="canonical"]');
+  if (canonicalEl) {
+    canonicalEl.setAttribute('href', canonicalUrl);
+  }
+  const ogUrlEl = document.querySelector('meta[property="og:url"]');
+  if (ogUrlEl) {
+    ogUrlEl.setAttribute('content', canonicalUrl);
+  }
+  if (title) {
+    const ogTitleEl = document.querySelector('meta[property="og:title"]');
+    if (ogTitleEl) ogTitleEl.setAttribute('content', title);
+    const twTitleEl = document.querySelector('meta[name="twitter:title"]');
+    if (twTitleEl) twTitleEl.setAttribute('content', title);
+  }
+  if (description) {
+    const descEl = document.querySelector('meta[name="description"]');
+    if (descEl) descEl.setAttribute('content', description);
+    const ogDescEl = document.querySelector('meta[property="og:description"]');
+    if (ogDescEl) ogDescEl.setAttribute('content', description);
+    const twDescEl = document.querySelector('meta[name="twitter:description"]');
+    if (twDescEl) twDescEl.setAttribute('content', description);
+  }
+}
 
 export default function App() {
   const { theme, toggleTheme } = useTheme();
 
-  // Selected calendar date ('YYYY-MM-DD')
-  const [selectedDate, setSelectedDate] = useState(() => {
-    return new Date().toISOString().split('T')[0];
-  });
+  // Persisted user preferences
+  const [cities, setCities] = useLocalStorage('timerows_pinned_cities_v2', getDefaultCities());
+  const [use24Hour, setUse24Hour] = useLocalStorage('timerows_use_24h', false);
+  const [workingHours, setWorkingHours] = useLocalStorage(
+    'timerows_working_hours',
+    DEFAULT_WORKING_HOURS
+  );
 
-  // Pinned cities state persisted in local storage
-  const [cities, setCities] = useLocalStorage('timerows_pinned_cities', getDefaultCities());
+  const referenceCity =
+    cities.find((c) => c.isPrimary) ||
+    cities[0] || { id: 'utc-gmt', name: 'UTC', timeZone: 'UTC' };
 
-  // Interactive UI state
-  const [activeHoverIndex, setActiveHoverIndex] = useState(null);
-  const [selectedWindowId, setSelectedWindowId] = useState(null);
+  const [selectedDate, setSelectedDate] = useState(() =>
+    getTodayIsoInZone(referenceCity.timeZone)
+  );
+
+  const [hoveredIndex, setHoveredIndex] = useState(null);
+  const [selectedRange, setSelectedRange] = useState(null);
+
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isShareOpen, setIsShareOpen] = useState(false);
   const [toastMessage, setToastMessage] = useState(null);
+  const toastTimerRef = useRef(null);
 
-  // Initialize and sync state from URL (support ?c=..., /m/..., /from/:a/to/:b)
+  useEffect(() => {
+    return () => {
+      if (toastTimerRef.current) {
+        clearTimeout(toastTimerRef.current);
+      }
+    };
+  }, []);
+
+  // Live ticking clock timestamp (updates every 30 seconds)
+  const [liveTimestamp, setLiveTimestamp] = useState(() => Date.now());
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setLiveTimestamp(Date.now());
+    }, 30000);
+    return () => clearInterval(intervalId);
+  }, []);
+
+  // Initialize state from URL routes (/m/..., /from/:a/to/:b, ?c=...)
   useEffect(() => {
     const pathname = window.location.pathname;
     const search = window.location.search;
+    const queryState = search ? deserializeShareQuery(search) : null;
 
-    // Check compact meeting path (/m/nyc+lon+tyo)
-    const compactTzs = parseCompactMeetingPath(pathname);
-    if (compactTzs && compactTzs.length > 0) {
-      const restored = compactTzs.map((tz, i) => ({
-        id: `url-city-${i}`,
-        name: tz.split('/').pop().replace(/_/g, ' '),
-        timeZone: tz,
-        isPrimary: i === 0,
-      }));
-      setCities(restored);
-      return;
-    }
-
-    // Check city pair path (/from/:cityA/to/:cityB)
     const cityPair = parseCityPairPath(pathname);
     if (cityPair) {
-      const pairRows = [
-        { id: 'city-pair-1', name: cityPair.fromName, timeZone: 'America/Los_Angeles', isPrimary: true },
-        { id: 'city-pair-2', name: cityPair.toName, timeZone: 'Europe/London', isPrimary: false },
+      const fromResolved = resolveCityFromToken(cityPair.fromSlug, 0) || {
+        id: `pair-from-${cityPair.fromSlug}`,
+        name: cityPair.fromName,
+        country: '',
+        timeZone: 'America/New_York',
+      };
+      const toResolved = resolveCityFromToken(cityPair.toSlug, 1) || {
+        id: `pair-to-${cityPair.toSlug}`,
+        name: cityPair.toName,
+        country: '',
+        timeZone: 'Europe/London',
+      };
+
+      const isToPrimary =
+        queryState?.referenceTimezone &&
+        queryState.referenceTimezone === toResolved.timeZone &&
+        queryState.referenceTimezone !== fromResolved.timeZone;
+
+      const pairCities = [
+        { ...fromResolved, isPrimary: !isToPrimary },
+        { ...toResolved, isPrimary: Boolean(isToPrimary) },
       ];
-      setCities(pairRows);
+      const activePrimary = pairCities.find((c) => c.isPrimary) || pairCities[0];
+
+      setCities(pairCities);
+      setSelectedDate(queryState?.date || getTodayIsoInZone(activePrimary.timeZone));
+
+      if (queryState && typeof queryState.selectedSlotIndex === 'number') {
+        const startIdx = queryState.selectedSlotIndex;
+        const endIdx =
+          typeof queryState.selectedEndSlotIndex === 'number'
+            ? queryState.selectedEndSlotIndex
+            : startIdx;
+        setSelectedRange({ startIndex: startIdx, endIndex: endIdx });
+      }
+      if (queryState?.workingHours) {
+        setWorkingHours(queryState.workingHours);
+      }
+
+      const seoTitle = `${fromResolved.name} to ${toResolved.name} Time Converter — TimeRows`;
+      const seoDesc = `Convert time between ${fromResolved.name} (${fromResolved.timeZone}) and ${toResolved.name} (${toResolved.timeZone}). View 24-hour working overlap and schedule meetings in 1 click.`;
+      updateDocumentSeo({
+        title: seoTitle,
+        description: seoDesc,
+        canonicalPath: `/from/${cityPair.fromSlug}/to/${cityPair.toSlug}`,
+      });
       return;
     }
 
-    // Check search query parameters (?c=nyc,lon,tyo&d=2026-10-10)
-    if (search) {
-      const queryState = deserializeShareQuery(search);
-      if (queryState.timezones && queryState.timezones.length > 0) {
-        const restored = queryState.timezones.map((tz, i) => ({
-          id: `share-city-${i}`,
-          name: tz.split('/').pop().replace(/_/g, ' '),
-          timeZone: tz,
-          isPrimary: i === 0,
+    const tokens = extractCityTokensFromUrl(pathname, search);
+    if (tokens.length > 0) {
+      const restoredCities = tokens
+        .map((token, idx) => resolveCityFromToken(token, idx))
+        .filter(Boolean);
+
+      if (restoredCities.length > 0) {
+        let primaryIdx = 0;
+        if (queryState?.referenceTimezone) {
+          const matchedIdx = restoredCities.findIndex(
+            (c) => c.timeZone === queryState.referenceTimezone
+          );
+          if (matchedIdx !== -1) {
+            primaryIdx = matchedIdx;
+          }
+        }
+
+        const citiesWithPrimary = restoredCities.map((c, idx) => ({
+          ...c,
+          isPrimary: idx === primaryIdx,
         }));
-        setCities(restored);
+        const activePrimary = citiesWithPrimary[primaryIdx] || citiesWithPrimary[0];
+
+        setCities(citiesWithPrimary);
+        setSelectedDate(queryState?.date || getTodayIsoInZone(activePrimary.timeZone));
+
+        if (pathname.startsWith('/m/')) {
+          const namesList = citiesWithPrimary.map((c) => c.name).join(', ');
+          updateDocumentSeo({
+            title: `${namesList} Timezone Overlap — TimeRows`,
+            description: `Compare working hours and meeting overlap across ${namesList} on TimeRows.`,
+            canonicalPath: `/m/${tokens.join('+')}`,
+          });
+        }
       }
+    } else if (queryState?.referenceTimezone) {
+      setCities((prev) => {
+        const matchedIdx = prev.findIndex((c) => c.timeZone === queryState.referenceTimezone);
+        if (matchedIdx === -1) return prev;
+        return prev.map((c, idx) => ({ ...c, isPrimary: idx === matchedIdx }));
+      });
+      if (!queryState.date) {
+        setSelectedDate(getTodayIsoInZone(queryState.referenceTimezone));
+      }
+    }
+
+    if (queryState) {
       if (queryState.date) {
         setSelectedDate(queryState.date);
       }
       if (typeof queryState.selectedSlotIndex === 'number') {
-        setActiveHoverIndex(queryState.selectedSlotIndex);
+        const startIdx = queryState.selectedSlotIndex;
+        const endIdx =
+          typeof queryState.selectedEndSlotIndex === 'number'
+            ? queryState.selectedEndSlotIndex
+            : startIdx;
+        setSelectedRange({ startIndex: startIdx, endIndex: endIdx });
+      }
+      if (queryState.workingHours) {
+        setWorkingHours(queryState.workingHours);
       }
     }
   }, []);
 
-  const referenceCity = cities[0] || { id: 'ref', name: 'UTC', timeZone: 'UTC' };
+  const todayIso = useMemo(
+    () => getTodayIsoInZone(referenceCity.timeZone),
+    [referenceCity.timeZone, liveTimestamp]
+  );
+  const isToday = selectedDate === todayIso;
 
-  // Generate 24-hour timestamps aligned to the primary reference city's local date
   const referenceTimestamps = useMemo(() => {
     try {
       return generateDayIntervals(selectedDate, referenceCity.timeZone, { dstAware: true });
@@ -101,7 +255,6 @@ export default function App() {
     }
   }, [selectedDate, referenceCity.timeZone]);
 
-  // Generate rich slot objects for every pinned city
   const slotsByCity = useMemo(() => {
     const result = {};
     cities.forEach((city) => {
@@ -111,6 +264,7 @@ export default function App() {
           timestamps: referenceTimestamps,
           referenceDate: selectedDate,
           referenceTimezone: referenceCity.timeZone,
+          workingHours: city.workingHours || workingHours,
         });
       } catch (e) {
         console.error(`Error generating slots for ${city.timeZone}:`, e);
@@ -118,9 +272,8 @@ export default function App() {
       }
     });
     return result;
-  }, [cities, referenceTimestamps, selectedDate, referenceCity.timeZone]);
+  }, [cities, referenceTimestamps, selectedDate, referenceCity.timeZone, workingHours]);
 
-  // Compute multi-city overlap for every column
   const timelineOverlaps = useMemo(() => {
     const cityRows = cities.map((city) => ({
       id: city.id,
@@ -131,12 +284,72 @@ export default function App() {
     return calculateTimelineOverlaps(cityRows);
   }, [cities, slotsByCity]);
 
-  // Compute top meeting windows across all cities
+  // Clamp selectedRange and hoveredIndex when switching from a 25h Fall Back day to a 24h or 23h day
+  useEffect(() => {
+    const maxCols = timelineOverlaps.length;
+    if (!maxCols) return;
+    const maxIdx = maxCols - 1;
+
+    setSelectedRange((prev) => {
+      if (!prev) return null;
+      const clampedStart = Math.min(prev.startIndex, maxIdx);
+      const clampedEnd = Math.min(prev.endIndex ?? prev.startIndex, maxIdx);
+      if (clampedStart !== prev.startIndex || clampedEnd !== prev.endIndex) {
+        return { startIndex: clampedStart, endIndex: clampedEnd };
+      }
+      return prev;
+    });
+
+    setHoveredIndex((prev) => (prev !== null && prev > maxIdx ? maxIdx : prev));
+  }, [timelineOverlaps.length]);
+
   const meetingWindows = useMemo(() => {
-    return findBestMeetingWindows(timelineOverlaps, { maxResults: 3, minDurationHours: 1 });
+    return findBestMeetingWindows(timelineOverlaps, {
+      maxResults: 3,
+      minDurationHours: 1,
+    });
   }, [timelineOverlaps]);
 
-  // Date step helpers
+  // Full contiguous golden overlap windows (so a 5h or 6h overlap is shown in full)
+  const goldenWindows = useMemo(() => {
+    if (!Array.isArray(timelineOverlaps) || timelineOverlaps.length === 0) return [];
+    const spans = [];
+    let current = null;
+    for (let i = 0; i < timelineOverlaps.length; i++) {
+      if (timelineOverlaps[i]?.isGolden) {
+        if (!current) {
+          current = { startIndex: i, endIndex: i };
+        } else {
+          current.endIndex = i;
+        }
+      } else if (current) {
+        spans.push(current);
+        current = null;
+      }
+    }
+    if (current) spans.push(current);
+    return spans
+      .map((s) => buildCustomMeetingWindow(timelineOverlaps, s.startIndex, s.endIndex))
+      .filter(Boolean)
+      .sort((a, b) => b.durationHours - a.durationHours);
+  }, [timelineOverlaps]);
+
+  const customWindow = useMemo(() => {
+    if (!selectedRange) return null;
+    return buildCustomMeetingWindow(
+      timelineOverlaps,
+      selectedRange.startIndex,
+      selectedRange.endIndex
+    );
+  }, [timelineOverlaps, selectedRange]);
+
+  const compromiseWindow = useMemo(() => {
+    return findBestCompromiseWindow(timelineOverlaps);
+  }, [timelineOverlaps]);
+
+  const activeShareWindow =
+    customWindow || goldenWindows[0] || meetingWindows[0] || compromiseWindow || null;
+
   const handlePrevDay = () => {
     const current = new Date(`${selectedDate}T12:00:00Z`);
     current.setUTCDate(current.getUTCDate() - 1);
@@ -150,13 +363,14 @@ export default function App() {
   };
 
   const handleToday = () => {
-    setSelectedDate(new Date().toISOString().split('T')[0]);
+    setSelectedDate(getTodayIsoInZone(referenceCity.timeZone));
   };
 
-  // Keyboard navigation hook
   useKeyboardNav({
-    activeHoverIndex,
-    setActiveHoverIndex,
+    selectedRange,
+    setSelectedRange,
+    hoveredIndex,
+    setHoveredIndex,
     onPrevDay: handlePrevDay,
     onNextDay: handleNextDay,
     onToday: handleToday,
@@ -170,20 +384,34 @@ export default function App() {
     totalColumns: timelineOverlaps.length || 24,
   });
 
-  // City management handlers
+  const showToast = useCallback((message) => {
+    if (toastTimerRef.current) {
+      clearTimeout(toastTimerRef.current);
+    }
+    setToastMessage(message);
+    toastTimerRef.current = setTimeout(() => {
+      setToastMessage(null);
+      toastTimerRef.current = null;
+    }, 2800);
+  }, []);
+
   const handleAddCity = (newCity) => {
-    const exists = cities.some((c) => c.timeZone === newCity.timeZone && c.name === newCity.name);
+    const exists = cities.some(
+      (c) =>
+        c.id === newCity.id ||
+        (c.timeZone === newCity.timeZone &&
+          c.name.toLowerCase() === newCity.name.toLowerCase())
+    );
     if (exists) {
-      showToast(`${newCity.name} is already pinned.`);
+      showToast(`${newCity.name} is already on the board.`);
       return;
     }
 
     const cityEntry = {
-      id: `city-${Date.now()}-${Math.random().toString(36).substr(2, 5)}`,
+      id: newCity.id || `city-${Date.now()}`,
       name: newCity.name,
-      country: newCity.country,
+      country: newCity.country || '',
       timeZone: newCity.timeZone,
-      isPrimary: false,
     };
     setCities((prev) => [...prev, cityEntry]);
     showToast(`Added ${newCity.name}`);
@@ -194,109 +422,232 @@ export default function App() {
     setCities((prev) => prev.filter((c) => c.id !== cityId));
   };
 
-  const handleSelectMeetingWindow = (win) => {
-    setSelectedWindowId(win.id);
-    setActiveHoverIndex(win.startIndex);
+  const handleSetPrimaryCity = (cityId) => {
+    const target = cities.find((c) => c.id === cityId);
+    if (!target) return;
+    setCities((prev) =>
+      prev.map((c) => ({
+        ...c,
+        isPrimary: c.id === cityId,
+      }))
+    );
+    showToast(`${target.name} set as Home city`);
   };
 
-  const showToast = (message) => {
-    setToastMessage(message);
-    setTimeout(() => setToastMessage(null), 3000);
+  const handleMoveCity = (index, direction) => {
+    setCities((prev) => {
+      const targetIndex = index + direction;
+      if (targetIndex < 0 || targetIndex >= prev.length) return prev;
+      const currentPrimaryId = (prev.find((c) => c.isPrimary) || prev[0])?.id;
+      const copy = prev.map((c) => ({
+        ...c,
+        isPrimary: c.id === currentPrimaryId,
+      }));
+      const [moved] = copy.splice(index, 1);
+      copy.splice(targetIndex, 0, moved);
+      return copy;
+    });
+  };
+
+  const handleReorderCity = (fromIndex, toIndex) => {
+    setCities((prev) => {
+      if (
+        fromIndex === toIndex ||
+        fromIndex < 0 ||
+        toIndex < 0 ||
+        fromIndex >= prev.length ||
+        toIndex >= prev.length
+      ) {
+        return prev;
+      }
+      const currentPrimaryId = (prev.find((c) => c.isPrimary) || prev[0])?.id;
+      const copy = prev.map((c) => ({
+        ...c,
+        isPrimary: c.id === currentPrimaryId,
+      }));
+      const [moved] = copy.splice(fromIndex, 1);
+      copy.splice(toIndex, 0, moved);
+      return copy;
+    });
+  };
+
+  const handleSortCities = (direction) => {
+    setCities((prev) => {
+      if (prev.length <= 1) return prev;
+      const currentPrimaryId = (prev.find((c) => c.isPrimary) || prev[0])?.id;
+      const nowMs = liveTimestamp || Date.now();
+      const sorted = prev
+        .map((c, idx) => {
+          let offset = 0;
+          try {
+            offset = getTimezoneOffset(c.timeZone, nowMs);
+          } catch {
+            offset = 0;
+          }
+          return {
+            city: {
+              ...c,
+              isPrimary: c.id === currentPrimaryId,
+            },
+            offset,
+            idx,
+          };
+        })
+        .sort((a, b) => {
+          const diff = direction === 'desc' ? b.offset - a.offset : a.offset - b.offset;
+          if (diff !== 0) return diff;
+          return a.idx - b.idx;
+        })
+        .map((item) => item.city);
+
+      return sorted;
+    });
+  };
+
+  const handleUpdateCityWorkingHours = (cityId, customHours) => {
+    setCities((prev) =>
+      prev.map((c) => {
+        if (c.id !== cityId) return c;
+        if (!customHours) {
+          const { workingHours: _removed, ...rest } = c;
+          return rest;
+        }
+        return { ...c, workingHours: customHours };
+      })
+    );
+  };
+
+  const handleSelectMeetingWindow = (win) => {
+    setSelectedRange({ startIndex: win.startIndex, endIndex: win.endIndex });
   };
 
   const shareUrl = useMemo(() => {
-    if (typeof window === 'undefined') return 'https://www.timerows.com';
+    if (typeof window === 'undefined') return 'https://timerows.com';
     return generateShareUrl(window.location.origin, {
-      cities: cities.map((c) => c.timeZone),
+      cities,
       date: selectedDate,
-      selectedSlotIndex: activeHoverIndex,
+      selectedSlotIndex: selectedRange?.startIndex,
+      selectedEndSlotIndex: selectedRange?.endIndex,
       referenceTimezone: referenceCity.timeZone,
+      workingHours,
     });
-  }, [cities, selectedDate, activeHoverIndex, referenceCity.timeZone]);
+  }, [cities, selectedDate, selectedRange, referenceCity.timeZone, workingHours]);
+
+  // Keep the browser URL bar synchronized after initial mount when the user modifies their board
+  const hasHydratedUrlRef = useRef(false);
+  const initialBoardSignatureRef = useRef(null);
+  useEffect(() => {
+    if (typeof window === 'undefined' || !window.history?.replaceState) return;
+    const sig = JSON.stringify({
+      ids: cities.map((c) => c.id),
+      ref: referenceCity.timeZone,
+      date: selectedDate,
+      range: selectedRange,
+      wh: workingHours,
+    });
+    if (!hasHydratedUrlRef.current) {
+      hasHydratedUrlRef.current = true;
+      initialBoardSignatureRef.current = sig;
+      return;
+    }
+    if (sig === initialBoardSignatureRef.current) return;
+    try {
+      const parsed = new URL(shareUrl);
+      window.history.replaceState(null, '', `${parsed.pathname}${parsed.search}`);
+    } catch {
+      // Ignore history API errors in restricted environments
+    }
+  }, [shareUrl, cities, referenceCity.timeZone, selectedDate, selectedRange, workingHours]);
 
   return (
-    <div className="timerows-app-layout">
-      {/* Top Navigation & Controls */}
-      <Header
-        selectedDate={selectedDate}
-        onDateChange={setSelectedDate}
-        onAddCityClick={() => setIsSearchOpen(true)}
-        onShareClick={() => setIsShareOpen(true)}
-        theme={theme}
-        onToggleTheme={toggleTheme}
-      />
-
-      {/* Main Interactive 24-Hour Visual Timeline */}
-      <main className="timeline-main-content">
-        <TimelineGrid
-          cities={cities}
-          slotsByCity={slotsByCity}
-          timelineOverlaps={timelineOverlaps}
-          activeHoverIndex={activeHoverIndex}
-          onHoverIndex={setActiveHoverIndex}
-          onSelectSlot={(slotIdx) => setActiveHoverIndex(slotIdx)}
-          onRemoveCity={handleRemoveCity}
-          referenceCityId={referenceCity.id}
+    <div className="timerows-shell">
+      <div className="timerows-container">
+        {/* Minimal Top Brand & Format Bar */}
+        <Header
+          use24Hour={use24Hour}
+          onToggle24Hour={() => setUse24Hour((prev) => !prev)}
+          workingHours={workingHours}
+          onWorkingHoursChange={setWorkingHours}
+          theme={theme}
+          onToggleTheme={toggleTheme}
         />
-      </main>
 
-      {/* Overlap Summary & Top Meeting Windows */}
-      <OverlapSummary
-        meetingWindows={meetingWindows}
-        onSelectWindow={handleSelectMeetingWindow}
-        selectedWindowId={selectedWindowId}
-        onShowToast={showToast}
-        shareUrl={shareUrl}
-      />
+        {/* Unified Converter Board (Toolbar + Stacked 24h Ribbons + Integrated Footer) */}
+        <main className="wtb-board">
+          <TimelineGrid
+            cities={cities}
+            slotsByCity={slotsByCity}
+            timelineOverlaps={timelineOverlaps}
+            hoveredIndex={hoveredIndex}
+            onHoverIndex={setHoveredIndex}
+            selectedRange={selectedRange}
+            onSelectRange={setSelectedRange}
+            onAddCity={handleAddCity}
+            onSetPrimaryCity={handleSetPrimaryCity}
+            onMoveCity={handleMoveCity}
+            onReorderCity={handleReorderCity}
+            onSortCities={handleSortCities}
+            onRemoveCity={handleRemoveCity}
+            workingHours={workingHours}
+            onUpdateCityWorkingHours={handleUpdateCityWorkingHours}
+            selectedDate={selectedDate}
+            todayIso={todayIso}
+            onDateChange={setSelectedDate}
+            onToday={handleToday}
+            isToday={isToday}
+            customWindow={customWindow}
+            onShareClick={() => setIsShareOpen(true)}
+            referenceCityId={referenceCity.id}
+            liveTimestamp={liveTimestamp}
+            use24Hour={use24Hour}
+            teamPresets={TEAM_PRESETS}
+            onLoadPreset={(preset) => {
+              setCities(preset.cities);
+              setSelectedRange(null);
+              showToast(`Loaded ${preset.label}`);
+            }}
+            headline={
+              <OverlapSummary
+                customWindow={customWindow}
+                goldenWindows={goldenWindows}
+                meetingWindows={meetingWindows}
+                compromiseWindow={compromiseWindow}
+                referenceCityId={referenceCity.id}
+                onSelectWindow={handleSelectMeetingWindow}
+                onClearSelection={() => setSelectedRange(null)}
+                onShowToast={showToast}
+                shareUrl={shareUrl}
+                use24Hour={use24Hour}
+              />
+            }
+          />
+        </main>
 
-      {/* Zero-CLS Reserved AdSlot (Rule 4 Compliance) */}
-      <AdSlot slotId="footer-banner" format="horizontal" />
+        {/* Below-Board: ad (renders only when AdSense is configured) + thin text footer */}
+        <AdSlot slotId="below-board-leaderboard" format="horizontal" />
+        <SiteFooter />
+      </div>
 
-      {/* Keyboard Shortcuts Hint Pill */}
-      <footer className="keyboard-shortcuts-bar">
-        <div className="shortcut-item">
-          <span className="kbd-badge">←</span>
-          <span className="kbd-badge">→</span>
-          <span>Scrub Hours</span>
-        </div>
-        <div className="shortcut-item">
-          <span className="kbd-badge">[</span>
-          <span className="kbd-badge">]</span>
-          <span>Prev / Next Day</span>
-        </div>
-        <div className="shortcut-item">
-          <span className="kbd-badge">T</span>
-          <span>Today</span>
-        </div>
-        <div className="shortcut-item">
-          <span className="kbd-badge">/</span>
-          <span>Search City</span>
-        </div>
-        <div className="shortcut-item">
-          <span className="kbd-badge">S</span>
-          <span>Share</span>
-        </div>
-        <div className="shortcut-item">
-          <span className="kbd-badge">Esc</span>
-          <span>Clear</span>
-        </div>
-      </footer>
-
-      {/* Modals and Toasts */}
+      {/* Modals & Toast */}
       <CitySearchModal
         isOpen={isSearchOpen}
         onClose={() => setIsSearchOpen(false)}
         onSelectCity={handleAddCity}
-        currentCityIds={cities.map((c) => c.id)}
+        pinnedCities={cities}
+        liveTimestamp={liveTimestamp}
+        use24Hour={use24Hour}
       />
 
       <ShareModal
         isOpen={isShareOpen}
         onClose={() => setIsShareOpen(false)}
         cities={cities}
+        referenceTimezone={referenceCity.timeZone}
         selectedDate={selectedDate}
-        selectedSlotIndex={activeHoverIndex}
-        bestWindow={meetingWindows[0] || null}
+        selectedRange={selectedRange}
+        activeWindow={activeShareWindow}
+        workingHours={workingHours}
+        use24Hour={use24Hour}
         onShowToast={showToast}
       />
 

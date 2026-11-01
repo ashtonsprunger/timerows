@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>About — TimeRows Visual Timezone Converter &amp; Overlap Planner</title>
+    <meta
+      name="description"
+      content="Learn how TimeRows eliminates timezone math for distributed teams using stacked 24-hour visual tracks, official IANA timezone rules, and instant working-hours overlap detection."
+    />
+    <link rel="canonical" href="https://timerows.com/about.html" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="TimeRows" />
+    <meta property="og:title" content="About — TimeRows Visual Timezone Converter" />
+    <meta
+      property="og:description"
+      content="Stacked 24-hour visual time rows with automatic working-hours overlap detection and 1-click calendar exports."
+    />
+    <meta property="og:url" content="https://timerows.com/about.html" />
+    <meta property="og:image" content="https://timerows.com/og-image.png" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="About — TimeRows Visual Timezone Converter" />
+    <meta name="twitter:image" content="https://timerows.com/og-image.png" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=3" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <style>
+      :root { --bg: #eef2f7; --card: #ffffff; --surface: #f1f5f9; --ink: #0f172a; --muted: #64748b; --emerald: #10b981; }
+      @media (prefers-color-scheme: dark) {
+        :root { --bg: #090b10; --card: #12151f; --surface: #1a1f2e; --ink: #f8fafc; --muted: #94a3b8; }
+      }
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+      body { background: var(--bg); color: var(--ink); font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; -webkit-font-smoothing: antialiased; padding: 24px; }
+      .wrap { max-width: 720px; margin: 0 auto; }
+      .brand { display: inline-flex; align-items: center; gap: 8px; text-decoration: none; color: var(--ink); font-size: 19px; font-weight: 800; letter-spacing: -0.035em; margin-bottom: 20px; }
+      .brand .ink { fill: var(--ink); }
+      .card { background: var(--card); border-radius: 28px; padding: 38px 42px; }
+      h1 { font-size: 28px; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 14px; }
+      h2 { font-size: 17px; font-weight: 700; margin: 28px 0 8px; letter-spacing: -0.01em; }
+      p, li { font-size: 15px; line-height: 1.68; color: var(--muted); }
+      p + p { margin-top: 10px; }
+      ul { padding-left: 20px; }
+      li + li { margin-top: 6px; }
+      strong { color: var(--ink); }
+      a { color: var(--ink); }
+      code { background: var(--surface); color: var(--ink); padding: 2px 6px; border-radius: 6px; font-size: 13px; }
+      .cta { display: inline-block; margin-top: 28px; padding: 10px 20px; border-radius: 9999px; background: var(--ink); color: var(--card); text-decoration: none; font-weight: 700; font-size: 14px; }
+      footer { margin-top: 18px; padding: 0 12px; font-size: 12px; color: var(--muted); }
+      footer a { color: var(--muted); }
+      @media (max-width: 560px) { .card { padding: 26px 22px; border-radius: 22px; } }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <a class="brand" href="/" aria-label="TimeRows home">
+        <svg width="25" height="23" viewBox="0 0 26 24" fill="none" aria-hidden="true">
+          <rect x="2" y="2.2" width="17" height="5" rx="2.5" class="ink" />
+          <rect x="7" y="9.5" width="17" height="5" rx="2.5" fill="#10b981" />
+          <rect x="2" y="16.8" width="17" height="5" rx="2.5" class="ink" />
+        </svg>
+        timerows
+      </a>
+
+      <main class="card">
+        <h1>About TimeRows</h1>
+        <p>
+          TimeRows is a visual timezone converter and meeting overlap planner built for distributed
+          teams, remote engineers, and global organizations. Stack the cities your colleagues work in,
+          and TimeRows aligns every hour of the day horizontally so you can see at a glance when
+          everyone is awake and inside working hours.
+        </p>
+
+        <h2>How visual time rows work</h2>
+        <ul>
+          <li><strong>Stacked 24-hour tracks:</strong> Each pinned city is displayed as a 24-hour horizontal ribbon shaded into three intuitive daily phases: <strong>Night</strong> (11 pm–7 am), <strong>Off-hours</strong> (7–9 am and 5–11 pm), and <strong>Work hours</strong> (customizable, 8 am–5 pm or 9 am–5 pm).</li>
+          <li><strong>Automatic overlap detection:</strong> The <strong>emerald overlap frame</strong> highlights the contiguous columns where every city on your board is simultaneously within working hours, and summarizes the exact local time span at the top of the board.</li>
+          <li><strong>Drag-to-schedule lens:</strong> Click any hour or drag across multiple columns to lock a meeting window. Export a standard RFC 5545 <code>.ics</code> calendar file, open Google Calendar with all city times pre-filled, or copy a Slack snippet in one click.</li>
+        </ul>
+
+        <h2>Official IANA timezone &amp; Daylight Saving accuracy</h2>
+        <p>
+          Unlike basic calculators that rely on static UTC offsets, TimeRows computes every hour slot
+          against the official <strong>IANA Time Zone Database</strong> (such as
+          <code>America/New_York</code>, <code>Europe/London</code>, <code>Asia/Kolkata</code>, and
+          <code>Asia/Tokyo</code>) for the exact calendar date you select.
+        </p>
+        <p>
+          Because northern-hemisphere cities, southern-hemisphere cities, and non-DST regions shift on
+          different dates—or not at all—picking a future date on the date strip automatically adjusts
+          for upcoming Daylight Saving Time transitions, including 23-hour spring-forward days,
+          25-hour fall-back days, and 30-minute or 45-minute offset zones (India <code>+5:30</code>,
+          Adelaide <code>+9:30</code>, Kathmandu <code>+5:45</code>).
+        </p>
+
+        <h2>Keyboard shortcuts</h2>
+        <ul>
+          <li><code>/</code> or <code>Cmd/Ctrl + K</code> — Focus city &amp; timezone search</li>
+          <li><code>←</code> / <code>→</code> — Move selected time slot earlier or later</li>
+          <li><code>Shift + ←</code> / <code>Shift + →</code> — Extend or shrink selected meeting duration</li>
+          <li><code>[</code> / <code>]</code> — Previous or next calendar day (<code>T</code> jumps to Today)</li>
+          <li><code>S</code> — Open Share &amp; Calendar Export modal (<code>Esc</code> clears selection)</li>
+        </ul>
+
+        <h2>Contact</h2>
+        <p>
+          Have feedback, a bug report, or a question about TimeRows? Reach us at
+          <a href="mailto:contact@timerows.com">contact@timerows.com</a>.
+        </p>
+
+        <a class="cta" href="/">Open TimeRows</a>
+      </main>
+
+      <footer>
+        © TimeRows · <a href="/">Home</a> · <a href="/privacy.html">Privacy Policy</a>
+      </footer>
+    </div>
+  </body>
+</html>

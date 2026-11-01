@@ -48,7 +48,7 @@ describe('icsExport Engine', () => {
           { cityName: 'London', startTime: '3:00 PM', endTime: '5:00 PM', dayRollover: '' },
           { cityName: 'Tokyo', startTime: '11:00 PM', endTime: '1:00 AM', dayRollover: '+1 Day' },
         ],
-        url: 'https://www.timerows.com/?c=nyc,lon,tyo',
+        url: 'https://timerows.com/?c=nyc,lon,tyo',
         uid: 'test-event-12345@timerows.com',
       });
 
@@ -61,7 +61,7 @@ describe('icsExport Engine', () => {
       expect(ics).toContain('DTSTART:20261010T140000Z\r\n');
       expect(ics).toContain('DTEND:20261010T160000Z\r\n');
       expect(ics).toContain('SUMMARY:Q4 Strategy Sync\r\n');
-      expect(ics).toContain('URL:https://www.timerows.com/?c=nyc,lon,tyo\r\n');
+      expect(ics).toContain('URL:https://timerows.com/?c=nyc,lon,tyo\r\n');
       expect(ics).toContain('END:VEVENT\r\n');
       expect(ics).toContain('END:VCALENDAR\r\n');
 

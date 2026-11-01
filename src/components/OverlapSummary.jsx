@@ -1,139 +1,169 @@
 import React, { useState } from 'react';
-import { SparklesIcon, CopyIcon, CheckIcon, DownloadIcon } from './Icons.jsx';
-import { OVERLAP_QUALITY, formatSlackSnippet } from '../engine/overlapEngine.js';
-import { generateMeetingIcs, downloadIcsFile } from '../engine/icsExport.js';
+import {
+  CopyIcon,
+  CheckIcon,
+  DownloadIcon,
+  CalendarIcon,
+  CloseIcon,
+} from './Icons.jsx';
+import { BestOverlapHeadline } from './BestOverlapHeadline.jsx';
+import { formatSlackSnippet } from '../engine/overlapEngine.js';
+import { groupCitySummariesByTime } from '../engine/overlapFormat.js';
+import {
+  generateMeetingIcs,
+  downloadIcsFile,
+  generateGoogleCalendarUrl,
+} from '../engine/icsExport.js';
 
+const LEGEND_ITEMS = [
+  { key: 'golden', label: 'Overlap' },
+  { key: 'work', label: 'Work' },
+  { key: 'awake', label: 'Off-hours' },
+  { key: 'sleep', label: 'Night' },
+];
+
+function PhaseLegend() {
+  return (
+    <div className="wtb-legend" aria-label="Color legend">
+      {LEGEND_ITEMS.map((item) => (
+        <span key={item.key} className="wtb-legend-item">
+          <span className={`wtb-legend-swatch swatch-${item.key}`} />
+          <span>{item.label}</span>
+        </span>
+      ))}
+    </div>
+  );
+}
+
+/**
+ * Single answer row directly above the grid. One fixed-height row that swaps state
+ * (zero CLS, no footer):
+ *  - Idle:     ● Best overlap … 5h            ▢ Overlap ▢ Work ▢ Off-hours ▢ Night
+ *  - Selected: Selected 3h  9–12 pm New York …   [Google Cal] [.ics] [Copy] [✕]
+ */
 export function OverlapSummary({
-  meetingWindows,
+  customWindow,
+  goldenWindows = [],
+  meetingWindows = [],
+  compromiseWindow = null,
+  referenceCityId,
   onSelectWindow,
-  selectedWindowId,
+  onClearSelection,
   onShowToast,
-  shareUrl = 'https://www.timerows.com',
+  shareUrl = 'https://timerows.com',
+  use24Hour = false,
 }) {
-  const [copiedId, setCopiedId] = useState(null);
-  const [downloadedId, setDownloadedId] = useState(null);
+  const [copied, setCopied] = useState(false);
+  const [downloaded, setDownloaded] = useState(false);
 
-  if (!meetingWindows || meetingWindows.length === 0) {
-    return (
-      <div className="overlap-summary-container is-empty">
-        <div className="empty-overlap-card">
-          <p className="empty-overlap-text">
-            No mutual working-hour overlap detected across all selected cities. Try adjusting meeting duration or selecting alternative cities.
-          </p>
-        </div>
-      </div>
-    );
-  }
+  const activeWindow = customWindow || null;
 
-  const handleCopy = (window, e) => {
-    e.stopPropagation();
-    const snippet = formatSlackSnippet(window);
+  const handleCopySlack = (win) => {
+    if (!win) return;
+    const snippet = formatSlackSnippet(win, { use24Hour, shareUrl });
     navigator.clipboard.writeText(snippet).then(() => {
-      setCopiedId(window.id);
-      if (onShowToast) onShowToast('Meeting details copied to clipboard!');
-      setTimeout(() => setCopiedId(null), 2500);
+      setCopied(true);
+      if (onShowToast) onShowToast('Copied meeting times to clipboard');
+      setTimeout(() => setCopied(false), 2000);
     });
   };
 
-  const handleDownloadIcs = (window, e) => {
-    e.stopPropagation();
+  const handleDownloadIcs = (win) => {
+    if (!win) return;
     try {
       const icsString = generateMeetingIcs({
-        title: `Team Sync (${window.durationHours} hr)`,
-        startTimestamp: window.startTimestamp,
-        endTimestamp: window.endTimestamp,
-        citySummaries: window.citySummaries,
+        title: `Team Sync (${win.durationHours} hr)`,
+        startTimestamp: win.startTimestamp,
+        endTimestamp: win.endTimestamp,
+        citySummaries: win.citySummaries,
         url: shareUrl,
       });
-
       downloadIcsFile('team-sync.ics', icsString);
-      setDownloadedId(window.id);
-      if (onShowToast) onShowToast('Downloaded .ics calendar invite!');
-      setTimeout(() => setDownloadedId(null), 2500);
+      setDownloaded(true);
+      if (onShowToast) onShowToast('Downloaded .ics calendar invite');
+      setTimeout(() => setDownloaded(false), 2000);
     } catch (err) {
       console.error('Failed to download .ics:', err);
     }
   };
 
-  return (
-    <section className="overlap-summary-section">
-      <div className="overlap-section-header">
-        <div className="overlap-title-wrapper">
-          <span className="overlap-icon-emerald">
-            <SparklesIcon size={18} />
-          </span>
-          <div>
-            <h2 className="overlap-section-title">Best Meeting Windows</h2>
-            <p className="overlap-section-subtitle">
-              Calculated automatically across all pinned timezones without sleep disruption
-            </p>
-          </div>
+  if (activeWindow) {
+    const groupedSummaries = groupCitySummariesByTime(activeWindow.citySummaries, use24Hour);
+    const googleCalUrl = generateGoogleCalendarUrl({
+      title: `Team Sync (${activeWindow.durationHours} hr)`,
+      startTimestamp: activeWindow.startTimestamp,
+      endTimestamp: activeWindow.endTimestamp,
+      citySummaries: activeWindow.citySummaries,
+    });
+
+    return (
+      <div className="wtb-headline is-selection">
+        <div className="wtb-selection-summary">
+          <span className="wtb-selection-label">Selected {activeWindow.durationHours}h</span>
+          {groupedSummaries.map((grp, idx) => (
+            <React.Fragment key={`${grp.spanStr}-${idx}`}>
+              {idx > 0 && <span className="wtb-pill-sep">·</span>}
+              <span className="wtb-selection-city-item">
+                <strong>{grp.spanStr}</strong> {grp.cities.join(' / ')}
+              </span>
+            </React.Fragment>
+          ))}
+        </div>
+
+        <div className="wtb-selection-actions">
+          <a
+            href={googleCalUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="wtb-action-btn"
+          >
+            <CalendarIcon size={13} />
+            <span>Google Cal</span>
+          </a>
+
+          <button
+            type="button"
+            className="wtb-action-btn"
+            onClick={() => handleDownloadIcs(activeWindow)}
+          >
+            {downloaded ? <CheckIcon size={13} /> : <DownloadIcon size={13} />}
+            <span>.ics</span>
+          </button>
+
+          <button
+            type="button"
+            className="wtb-action-btn"
+            onClick={() => handleCopySlack(activeWindow)}
+          >
+            {copied ? <CheckIcon size={13} /> : <CopyIcon size={13} />}
+            <span>{copied ? 'Copied' : 'Copy'}</span>
+          </button>
+
+          <button
+            type="button"
+            className="wtb-action-btn is-icon"
+            onClick={onClearSelection}
+            title="Clear selection (Esc)"
+            aria-label="Clear selection"
+          >
+            <CloseIcon size={13} />
+          </button>
         </div>
       </div>
+    );
+  }
 
-      <div className="overlap-cards-grid">
-        {meetingWindows.map((win) => {
-          const isSelected = selectedWindowId === win.id;
-          const isGolden = win.quality === OVERLAP_QUALITY.GOLDEN;
-          const isCopied = copiedId === win.id;
-          const isDownloaded = downloadedId === win.id;
-
-          return (
-            <div
-              key={win.id}
-              className={`meeting-window-card ${isGolden ? 'card-golden' : 'card-standard'} ${
-                isSelected ? 'is-window-selected' : ''
-              }`}
-              onClick={() => onSelectWindow(win)}
-            >
-              <div className="card-top-bar">
-                <div className="window-badge-group">
-                  <span className={`quality-pill ${isGolden ? 'pill-golden' : 'pill-good'}`}>
-                    {isGolden ? 'Golden Overlap' : 'Viable Window'}
-                  </span>
-                  <span className="duration-pill">{win.durationHours} hr</span>
-                </div>
-
-                <div className="window-actions-group">
-                  <button
-                    type="button"
-                    className="copy-slack-btn"
-                    onClick={(e) => handleDownloadIcs(win, e)}
-                    title="Download .ics Calendar Invite"
-                  >
-                    {isDownloaded ? <CheckIcon size={13} /> : <DownloadIcon size={13} />}
-                    <span>{isDownloaded ? 'Downloaded' : '.ICS'}</span>
-                  </button>
-
-                  <button
-                    type="button"
-                    className="copy-slack-btn"
-                    onClick={(e) => handleCopy(win, e)}
-                    title="Copy Slack/Markdown Snippet"
-                  >
-                    {isCopied ? <CheckIcon size={13} /> : <CopyIcon size={13} />}
-                    <span>{isCopied ? 'Copied' : 'Slack'}</span>
-                  </button>
-                </div>
-              </div>
-
-              <div className="card-cities-list">
-                {win.citySummaries.map((city) => (
-                  <div key={city.cityId} className="city-time-entry">
-                    <span className="city-name-label">{city.cityName}</span>
-                    <span className="city-window-time">
-                      {city.startTime} – {city.endTime}
-                      {city.dayRollover && (
-                        <span className="window-rollover-tag">{city.dayRollover}</span>
-                      )}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          );
-        })}
-      </div>
-    </section>
+  return (
+    <div className="wtb-headline">
+      <BestOverlapHeadline
+        goldenWindows={goldenWindows}
+        meetingWindows={meetingWindows}
+        compromiseWindow={compromiseWindow}
+        referenceCityId={referenceCityId}
+        onSelectWindow={onSelectWindow}
+        use24Hour={use24Hour}
+      />
+      <PhaseLegend />
+    </div>
   );
 }

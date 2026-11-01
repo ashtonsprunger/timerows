@@ -1,0 +1,7 @@
+{
+  "rewrites": [
+    { "source": "/m/:path*", "destination": "/index.html" },
+    { "source": "/from/:cityA/to/:cityB", "destination": "/index.html" },
+    { "source": "/from/:cityA/to/:cityB/", "destination": "/index.html" }
+  ]
+}

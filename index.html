@@ -1,23 +1,106 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en" data-theme="light">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>TimeRows — Visual Timezone Converter & Team Meeting Overlap Planner</title>
+    <script>
+      (function () {
+        try {
+          var s = localStorage.getItem('timerows_theme');
+          var t =
+            s === 'light' || s === 'dark'
+              ? s
+              : window.matchMedia('(prefers-color-scheme: dark)').matches
+              ? 'dark'
+              : 'light';
+          document.documentElement.setAttribute('data-theme', t);
+        } catch (e) {}
+      })();
+    </script>
+    <title>TimeRows — Visual Timezone Converter &amp; Team Meeting Overlap Planner</title>
     <meta
       name="description"
-      content="Modern, visual timezone converter and team meeting overlap planner. Stacked 24-hour visual time rows with real-time solar illumination and instant overlap detection."
+      content="Eliminate timezone math for remote teams. Compare global cities on stacked 24-hour visual time rows with automatic working-hours overlap detection, IANA Daylight Saving Time accuracy, and 1-click calendar invites."
     />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="canonical" href="https://timerows.com/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="TimeRows" />
+    <meta property="og:title" content="TimeRows — Visual Timezone Converter &amp; Team Overlap Planner" />
+    <meta
+      property="og:description"
+      content="Compare global timezones effortlessly with stacked 24-hour tracks, working-hour overlap detection, and 1-click .ics &amp; Google Calendar invites."
+    />
+    <meta property="og:url" content="https://timerows.com/" />
+    <meta property="og:image" content="https://timerows.com/og-image.png" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="TimeRows visual timezone converter and team meeting overlap planner" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="TimeRows — Visual Timezone Converter &amp; Team Overlap Planner" />
+    <meta
+      name="twitter:description"
+      content="Stacked 24-hour visual time rows with working-hours overlap highlighting and 1-click calendar exports."
+    />
+    <meta name="twitter:image" content="https://timerows.com/og-image.png" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=3" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
       rel="stylesheet"
     />
+    <script type="application/ld+json" id="timerows-jsonld">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "TimeRows",
+        "url": "https://timerows.com/",
+        "applicationCategory": "BusinessApplication",
+        "operatingSystem": "Web",
+        "description": "Visual timezone converter and global team meeting overlap planner with stacked 24-hour tracks, IANA DST support, and RFC 5545 calendar export.",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        }
+      }
+    </script>
   </head>
   <body>
     <div id="root"></div>
+    <noscript>
+      <main style="max-width: 960px; margin: 40px auto; padding: 0 20px; font-family: system-ui, -apple-system, sans-serif;">
+        <h1>TimeRows — Visual Timezone Converter &amp; Team Meeting Overlap Planner</h1>
+        <p>
+          TimeRows eliminates timezone math for distributed teams and global professionals. Stack any combination of
+          cities and timezones on aligned 24-hour horizontal tracks to see sleep hours, off-hours, core working hours,
+          and golden meeting overlap windows at a glance.
+        </p>
+        <h2>Key Features for Remote Teams</h2>
+        <ul>
+          <li><strong>Stacked 24-Hour Visual Time Rows:</strong> Compare local hours side-by-side across New York, San Francisco, London, Berlin, Bengaluru, Singapore, Tokyo, Sydney, and global cities.</li>
+          <li><strong>Automatic Working-Hours Overlap Detection:</strong> Instantly highlights the best daily meeting window when all pinned cities are within their customizable working hours.</li>
+          <li><strong>Official IANA Timezone &amp; DST Accuracy:</strong> Handles Daylight Saving Time transitions (23-hour spring-forward and 25-hour fall-back days) as well as 30-minute and 45-minute offset zones (such as India IST +5:30 and Nepal +5:45).</li>
+          <li><strong>1-Click Calendar &amp; Slack Sharing:</strong> Drag across any hours on the timeline to export an RFC 5545 <code>.ics</code> invite, open a pre-filled Google Calendar event, or copy a formatted Slack/Teams snippet.</li>
+        </ul>
+        <nav aria-label="Popular timezone conversions">
+          <h2>Popular Timezone Comparisons</h2>
+          <ul>
+            <li><a href="/from/new-york/to/london">New York to London Time Converter</a></li>
+            <li><a href="/from/san-francisco/to/london">San Francisco to London Time Converter</a></li>
+            <li><a href="/from/new-york/to/tokyo">New York to Tokyo Time Converter</a></li>
+            <li><a href="/from/london/to/singapore">London to Singapore Time Converter</a></li>
+            <li><a href="/from/san-francisco/to/bengaluru">San Francisco to Bengaluru Time Converter</a></li>
+            <li><a href="/from/new-york/to/berlin">New York to Berlin Time Converter</a></li>
+            <li><a href="/from/london/to/sydney">London to Sydney Time Converter</a></li>
+            <li><a href="/about.html">About TimeRows</a></li>
+            <li><a href="/privacy.html">Privacy Policy</a></li>
+          </ul>
+        </nav>
+      </main>
+    </noscript>
     <script type="module" src="/src/index.jsx"></script>
   </body>
 </html>

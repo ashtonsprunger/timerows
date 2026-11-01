@@ -1,3 +1,4 @@
+import citiesData from '../data/cities.json';
 import {
   isValidTimezone,
   getUserLocalTimezone,
@@ -5,6 +6,7 @@ import {
   getTimeParts,
   getTimezoneOffset,
   formatTimezoneOffset,
+  formatRelativeOffset,
   getTimezoneAbbreviation,
   isDST,
   getTimePhase,
@@ -147,6 +149,16 @@ describe('timezoneEngine', () => {
       expect(formatTimezoneOffset(330)).toBe('+05:30');
       expect(formatTimezoneOffset(345)).toBe('+05:45');
       expect(formatTimezoneOffset(-210)).toBe('-03:30');
+    });
+
+    test('formats relative offsets accurately including 30-min and 45-min zones', () => {
+      expect(formatRelativeOffset(0)).toBe('0h');
+      expect(formatRelativeOffset(60)).toBe('+1h');
+      expect(formatRelativeOffset(-180)).toBe('-3h');
+      expect(formatRelativeOffset(330)).toBe('+5.5h');
+      expect(formatRelativeOffset(-210)).toBe('-3.5h');
+      expect(formatRelativeOffset(345)).toBe('+5:45');
+      expect(formatRelativeOffset(585)).toBe('+9:45');
     });
 
     test('retrieves correct timezone abbreviations', () => {
@@ -476,6 +488,19 @@ describe('timezoneEngine', () => {
     test('formatDateDifference handles multi-day offsets (>1 and <-1)', () => {
       expect(formatDateDifference(3)).toBe('+3 Days');
       expect(formatDateDifference(-3)).toBe('-3 Days');
+    });
+
+    test('validates all unique IANA timezones in cities.json across midnight and DST boundaries', () => {
+      const uniqueZones = Array.from(new Set(citiesData.map((c) => c.timeZone)));
+      expect(uniqueZones.length).toBeGreaterThanOrEqual(95);
+
+      for (const tz of uniqueZones) {
+        expect(isValidTimezone(tz)).toBe(true);
+        const midnightUtc = getZonedMidnight('2026-10-10', tz);
+        const parts = getTimeParts(midnightUtc, tz);
+        expect(parts.isoDate).toBe('2026-10-10');
+        expect(parts.hour).toBe(0);
+      }
     });
   });
 });

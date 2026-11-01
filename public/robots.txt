@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+
+# Programmatic SEO city-pair routes & meeting share links
+Allow: /from/
+Allow: /m/
+
+Sitemap: https://timerows.com/sitemap.xml

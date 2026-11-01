@@ -2,6 +2,8 @@ import {
   evaluateColumnOverlap,
   calculateTimelineOverlaps,
   findBestMeetingWindows,
+  buildCustomMeetingWindow,
+  findBestCompromiseWindow,
   formatSlackSnippet,
   formatCompactMeetingSummary,
   getPairwiseOverlapMetrics,
@@ -269,21 +271,35 @@ describe('overlapEngine', () => {
   });
 
   describe('Meeting Formatting & Slack Export', () => {
-    test('formatSlackSnippet generates clean markdown formatted text', () => {
+    test('formatSlackSnippet generates clean markdown formatted text with lowercase am/pm', () => {
       const mockWindow = {
         durationHours: 2,
         citySummaries: [
           { cityName: 'New York', startTime: '10:00 AM', endTime: '12:00 PM', dayRollover: '' },
           { cityName: 'London', startTime: '3:00 PM', endTime: '5:00 PM', dayRollover: '' },
-          { cityName: 'Tokyo', startTime: '11:00 PM', endTime: '1:00 AM', dayRollover: '+1 Day' },
+          { cityName: 'Tokyo', startTime: '11:00 PM', endTime: '1:00 AM', dayRollover: '+1 Day', endDayDelta: 1 },
         ],
       };
 
       const snippet = formatSlackSnippet(mockWindow);
       expect(snippet).toContain('*Proposed Meeting Time* (2 hours)');
-      expect(snippet).toContain('• *New York*: 10:00 AM – 12:00 PM');
-      expect(snippet).toContain('• *London*: 3:00 PM – 5:00 PM');
-      expect(snippet).toContain('• *Tokyo*: 11:00 PM – 1:00 AM (+1 Day)');
+      expect(snippet).toContain('• *New York*: 10:00 am – 12:00 pm');
+      expect(snippet).toContain('• *London*: 3:00 pm – 5:00 pm');
+      expect(snippet).toContain('• *Tokyo*: 11:00 pm – 1:00 am (+1d)');
+    });
+
+    test('formatSlackSnippet appends (+1d) when endDayDelta > 0 even if start dayRollover is empty', () => {
+      const mockWindow = {
+        durationHours: 18,
+        citySummaries: [
+          { cityName: 'New York', startTime: '3:30 AM', endTime: '9:30 PM', dayRollover: '', endDayDelta: 0 },
+          { cityName: 'London', startTime: '7:30 AM', endTime: '1:30 AM', dayRollover: '', endDayDelta: 1 },
+        ],
+      };
+
+      const snippet = formatSlackSnippet(mockWindow, { title: 'Team Sync' });
+      expect(snippet).toContain('• *New York*: 3:30 am – 9:30 pm');
+      expect(snippet).toContain('• *London*: 7:30 am – 1:30 am (+1d)');
     });
 
     test('formatCompactMeetingSummary produces single-line summary', () => {
@@ -355,6 +371,113 @@ describe('overlapEngine', () => {
       expect(metrics.hasGoldenOverlap).toBe(false);
       expect(metrics.overlapHours).toBe(0);
       expect(metrics.goldenSlotIndices.length).toBe(0);
+    });
+  });
+
+  describe('buildCustomMeetingWindow & findBestCompromiseWindow', () => {
+    test('builds a multi-hour custom meeting window regardless of reverse drag indices', () => {
+      const refDate = '2026-10-10';
+      const timestamps = generateDayIntervals(refDate, 'America/New_York');
+      const nySlots = generateCityRowSlots({
+        targetTimezone: 'America/New_York',
+        timestamps,
+        referenceDate: refDate,
+      });
+      const lonSlots = generateCityRowSlots({
+        targetTimezone: 'Europe/London',
+        timestamps,
+        referenceDate: refDate,
+      });
+
+      const timeline = calculateTimelineOverlaps([
+        { id: 'nyc', name: 'New York', timeZone: 'America/New_York', slots: nySlots },
+        { id: 'lon', name: 'London', timeZone: 'Europe/London', slots: lonSlots },
+      ]);
+
+      // Dragging backwards from 11 to 9 should normalize to 9..11 (3 hours)
+      const customWin = buildCustomMeetingWindow(timeline, 11, 9);
+      expect(customWin).not.toBeNull();
+      expect(customWin.isCustom).toBe(true);
+      expect(customWin.startIndex).toBe(9);
+      expect(customWin.endIndex).toBe(11);
+      expect(customWin.durationHours).toBe(3);
+      expect(customWin.quality).toBe(OVERLAP_QUALITY.GOLDEN);
+      expect(customWin.citySummaries[0].startTime24).toBe('09:00');
+      expect(customWin.citySummaries[0].endTime24).toBe('12:00');
+    });
+
+    test('finds best compromise window when no sleep-free overlap exists', () => {
+      const refDate = '2026-10-10';
+      const timestamps = generateDayIntervals(refDate, 'America/New_York');
+      const nySlots = generateCityRowSlots({ targetTimezone: 'America/New_York', timestamps, referenceDate: refDate });
+      const lonSlots = generateCityRowSlots({ targetTimezone: 'Europe/London', timestamps, referenceDate: refDate });
+      const tyoSlots = generateCityRowSlots({ targetTimezone: 'Asia/Tokyo', timestamps, referenceDate: refDate });
+      const sydSlots = generateCityRowSlots({ targetTimezone: 'Australia/Sydney', timestamps, referenceDate: refDate });
+
+      const timeline = calculateTimelineOverlaps([
+        { id: 'nyc', name: 'New York', timeZone: 'America/New_York', slots: nySlots },
+        { id: 'lon', name: 'London', timeZone: 'Europe/London', slots: lonSlots },
+        { id: 'tyo', name: 'Tokyo', timeZone: 'Asia/Tokyo', slots: tyoSlots },
+        { id: 'syd', name: 'Sydney', timeZone: 'Australia/Sydney', slots: sydSlots },
+      ]);
+
+      const compromise = findBestCompromiseWindow(timeline);
+      expect(compromise).not.toBeNull();
+      expect(compromise.durationHours).toBe(1);
+      expect(compromise.citySummaries.length).toBe(4);
+    });
+
+    test('supports 0.5h and 1.5h fractional custom meeting windows', () => {
+      const refDate = '2026-10-10';
+      const timestamps = generateDayIntervals(refDate, 'America/New_York');
+      const nySlots = generateCityRowSlots({
+        targetTimezone: 'America/New_York',
+        timestamps,
+        referenceDate: refDate,
+      });
+      const timeline = calculateTimelineOverlaps([
+        { id: 'nyc', name: 'New York', timeZone: 'America/New_York', slots: nySlots },
+      ]);
+
+      // 30-minute window: 9:00 to 9:30 (startIndex=9, endIndex=8.5)
+      const halfHourWin = buildCustomMeetingWindow(timeline, 9, 8.5);
+      expect(halfHourWin.durationHours).toBe(0.5);
+      expect(halfHourWin.citySummaries[0].startTime24).toBe('09:00');
+      expect(halfHourWin.citySummaries[0].endTime24).toBe('09:30');
+
+      // 1.5-hour window starting at half hour: 9:30 to 11:00 (startIndex=9.5, endIndex=10)
+      const oneAndHalfWin = buildCustomMeetingWindow(timeline, 9.5, 10);
+      expect(oneAndHalfWin.durationHours).toBe(1.5);
+      expect(oneAndHalfWin.citySummaries[0].startTime24).toBe('09:30');
+      expect(oneAndHalfWin.citySummaries[0].endTime24).toBe('11:00');
+      expect(oneAndHalfWin.citySummaries[0].endDayDelta).toBe(0);
+    });
+
+    test('computes endDayDelta when a window crosses midnight in a participant timezone', () => {
+      const refDate = '2026-10-31';
+      const timestamps = generateDayIntervals(refDate, 'America/New_York');
+      const nySlots = generateCityRowSlots({
+        targetTimezone: 'America/New_York',
+        timestamps,
+        referenceDate: refDate,
+      });
+      const lonSlots = generateCityRowSlots({
+        targetTimezone: 'Europe/London',
+        timestamps,
+        referenceDate: refDate,
+      });
+      const timeline = calculateTimelineOverlaps([
+        { id: 'nyc', name: 'New York', timeZone: 'America/New_York', slots: nySlots },
+        { id: 'lon', name: 'London', timeZone: 'Europe/London', slots: lonSlots },
+      ]);
+
+      // 3:30 AM to 9:30 PM EDT (18h): same day in NY (endDayDelta=0), wraps to 1:30 AM next day in London (endDayDelta=1)
+      const win = buildCustomMeetingWindow(timeline, 3.5, 20.5);
+      expect(win.durationHours).toBe(18);
+      const nySummary = win.citySummaries.find((c) => c.cityId === 'nyc');
+      const lonSummary = win.citySummaries.find((c) => c.cityId === 'lon');
+      expect(nySummary.endDayDelta).toBe(0);
+      expect(lonSummary.endDayDelta).toBe(1);
     });
   });
 });

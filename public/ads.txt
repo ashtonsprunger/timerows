@@ -1,0 +1,4 @@
+# Google AdSense authorized digital sellers (IAB ads.txt)
+# When VITE_ADSENSE_CLIENT=ca-pub-XXXXXXXXXXXXXXXX is set during `npm run build`,
+# scripts/prerender.js automatically populates this file with:
+# google.com, pub-XXXXXXXXXXXXXXXX, DIRECT, f08c47fec0942fa0

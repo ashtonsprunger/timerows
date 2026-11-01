@@ -37,18 +37,102 @@ describe('citySearch Engine', () => {
       expect(results[0].country).toBe('Japan');
     });
 
-    test('finds cities by common alias (NYC, SF, BLR, BOM)', () => {
+    test('finds cities by common alias and airport codes (NYC, SF, SFO, LAX, BLR, BOM, LHR, KEF)', () => {
       const nycResults = searchCities('NYC');
       expect(nycResults[0].name).toBe('New York');
 
       const sfResults = searchCities('SF');
       expect(sfResults[0].name).toBe('San Francisco');
 
+      const sfoResults = searchCities('SFO');
+      expect(sfoResults[0].name).toBe('San Francisco');
+
+      const laxResults = searchCities('LAX');
+      expect(laxResults[0].name).toBe('Los Angeles');
+
       const blrResults = searchCities('BLR');
       expect(blrResults[0].name).toBe('Bengaluru');
 
       const bomResults = searchCities('BOM');
       expect(bomResults[0].name).toBe('Mumbai');
+
+      const lhrResults = searchCities('LHR');
+      expect(lhrResults[0].name).toBe('London');
+
+      const kefResults = searchCities('KEF');
+      expect(kefResults[0].name).toBe('Reykjavik');
+    });
+
+    test('resolves timezone abbreviations (EST, PST, PDT, CST, MST, CET, CEST, BST, IST, JST, SGT, HKT, AEST, NZST) without false-positive substring or typo matches', () => {
+      const est = searchCities('EST');
+      expect(est[0].timeZone).toBe('America/New_York');
+      expect(est[0].name).toBe('New York');
+
+      const pst = searchCities('PST');
+      expect(pst[0].timeZone).toBe('America/Los_Angeles');
+
+      const pdt = searchCities('PDT');
+      expect(pdt[0].timeZone).toBe('America/Los_Angeles');
+
+      const cst = searchCities('CST');
+      expect(cst.some((c) => c.timeZone === 'America/Chicago')).toBe(true);
+
+      const mst = searchCities('MST');
+      expect(['America/Denver', 'America/Phoenix']).toContain(mst[0].timeZone);
+      expect(mst[0].name).not.toBe('Amsterdam');
+
+      const cet = searchCities('CET');
+      expect(cet.some((c) => c.name === 'Paris' || c.name === 'Berlin' || c.name === 'Madrid')).toBe(true);
+
+      const cest = searchCities('CEST');
+      expect(cest.some((c) => c.name === 'Paris' || c.name === 'Berlin')).toBe(true);
+      expect(cest[0].name).not.toBe('Austin');
+
+      const bst = searchCities('BST');
+      expect(bst[0].name).toBe('London');
+
+      const ist = searchCities('IST');
+      expect(ist.some((c) => c.timeZone === 'Asia/Kolkata')).toBe(true);
+      expect(['New Delhi', 'Mumbai', 'Bengaluru', 'Istanbul']).toContain(ist[0].name);
+
+      const jst = searchCities('JST');
+      expect(jst[0].name).toBe('Tokyo');
+
+      const sgt = searchCities('SGT');
+      expect(sgt[0].name).toBe('Singapore');
+
+      const hkt = searchCities('HKT');
+      expect(hkt[0].name).toBe('Hong Kong');
+
+      const aest = searchCities('AEST');
+      expect(aest[0].name).toBe('Sydney');
+
+      const nzst = searchCities('NZST');
+      expect(nzst[0].name).toBe('Auckland');
+    });
+
+    test('finds mid-sized global tech hubs (Raleigh, Boulder, Waterloo, Eindhoven, Pune, Fukuoka) and runtime IANA zones', () => {
+      expect(searchCities('Raleigh')[0].name).toBe('Raleigh');
+      expect(searchCities('Boulder')[0].name).toBe('Boulder');
+      expect(searchCities('Waterloo')[0].name).toBe('Waterloo');
+      expect(searchCities('Eindhoven')[0].name).toBe('Eindhoven');
+      expect(searchCities('Pune')[0].name).toBe('Pune');
+      expect(searchCities('Fukuoka')[0].name).toBe('Fukuoka');
+      expect(searchCities('Mauritius')[0].timeZone).toBe('Indian/Mauritius');
+    });
+
+    test("handles apostrophes, periods, and diacritics accurately (Xi'an, St. John's, Reykjavik, São Paulo)", () => {
+      const xian = searchCities("Xi'an");
+      expect(xian[0].name).toBe("Xi'an");
+
+      const stJohns = searchCities("St. John's");
+      expect(stJohns[0].name).toBe("St. John's");
+
+      const reykjavik = searchCities('Reykjavik');
+      expect(reykjavik[0].name).toBe('Reykjavik');
+
+      const saoPaulo = searchCities('São Paulo');
+      expect(saoPaulo[0].id).toBe('sao-paulo-br');
     });
 
     test('prioritizes major global metropolis over smaller homonyms by population', () => {

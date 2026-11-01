@@ -12,7 +12,10 @@
       "New York City",
       "Manhattan",
       "Brooklyn",
-      "Queens"
+      "Queens",
+      "JFK",
+      "LGA",
+      "EWR"
     ]
   },
   {
@@ -24,7 +27,8 @@
     "timeZone": "America/New_York",
     "population": 1603797,
     "aliases": [
-      "Philly"
+      "Philly",
+      "PHL"
     ]
   },
   {
@@ -38,7 +42,9 @@
     "aliases": [
       "DC",
       "Washington DC",
-      "District of Columbia"
+      "District of Columbia",
+      "IAD",
+      "DCA"
     ]
   },
   {
@@ -50,7 +56,8 @@
     "timeZone": "America/New_York",
     "population": 675647,
     "aliases": [
-      "Beantown"
+      "Beantown",
+      "BOS"
     ]
   },
   {
@@ -62,7 +69,8 @@
     "timeZone": "America/New_York",
     "population": 442241,
     "aliases": [
-      "South Beach"
+      "South Beach",
+      "MIA"
     ]
   },
   {
@@ -86,7 +94,8 @@
     "timeZone": "America/Detroit",
     "population": 639111,
     "aliases": [
-      "Motor City"
+      "Motor City",
+      "DTW"
     ]
   },
   {
@@ -110,7 +119,8 @@
     "timeZone": "America/New_York",
     "population": 467665,
     "aliases": [
-      "Research Triangle"
+      "Research Triangle",
+      "RDU"
     ]
   },
   {
@@ -122,7 +132,8 @@
     "timeZone": "America/New_York",
     "population": 307573,
     "aliases": [
-      "Disney"
+      "Disney",
+      "MCO"
     ]
   },
   {
@@ -133,7 +144,9 @@
     "state": "Florida",
     "timeZone": "America/New_York",
     "population": 384959,
-    "aliases": []
+    "aliases": [
+      "TPA"
+    ]
   },
   {
     "id": "pittsburgh-us",
@@ -144,7 +157,8 @@
     "timeZone": "America/New_York",
     "population": 300431,
     "aliases": [
-      "Steel City"
+      "Steel City",
+      "PIT"
     ]
   },
   {
@@ -155,7 +169,9 @@
     "state": "Maryland",
     "timeZone": "America/New_York",
     "population": 585708,
-    "aliases": []
+    "aliases": [
+      "BWI"
+    ]
   },
   {
     "id": "cleveland-us",
@@ -165,7 +181,9 @@
     "state": "Ohio",
     "timeZone": "America/New_York",
     "population": 372624,
-    "aliases": []
+    "aliases": [
+      "CLE"
+    ]
   },
   {
     "id": "columbus-us",
@@ -175,7 +193,9 @@
     "state": "Ohio",
     "timeZone": "America/New_York",
     "population": 905748,
-    "aliases": []
+    "aliases": [
+      "CMH"
+    ]
   },
   {
     "id": "cincinnati-us",
@@ -185,7 +205,9 @@
     "state": "Ohio",
     "timeZone": "America/New_York",
     "population": 309317,
-    "aliases": []
+    "aliases": [
+      "CVG"
+    ]
   },
   {
     "id": "indianapolis-us",
@@ -196,7 +218,8 @@
     "timeZone": "America/Indiana/Indianapolis",
     "population": 887642,
     "aliases": [
-      "Indy"
+      "Indy",
+      "IND"
     ]
   },
   {
@@ -207,7 +230,9 @@
     "state": "Florida",
     "timeZone": "America/New_York",
     "population": 949611,
-    "aliases": []
+    "aliases": [
+      "JAX"
+    ]
   },
   {
     "id": "richmond-us",
@@ -217,7 +242,9 @@
     "state": "Virginia",
     "timeZone": "America/New_York",
     "population": 226610,
-    "aliases": []
+    "aliases": [
+      "RIC"
+    ]
   },
   {
     "id": "chicago-us",
@@ -229,7 +256,10 @@
     "population": 2746388,
     "aliases": [
       "Chi-town",
-      "Windy City"
+      "Windy City",
+      "CHI",
+      "ORD",
+      "MDW"
     ]
   },
   {
@@ -241,7 +271,9 @@
     "timeZone": "America/Chicago",
     "population": 2304580,
     "aliases": [
-      "Space City"
+      "Space City",
+      "IAH",
+      "HOU"
     ]
   },
   {
@@ -253,7 +285,8 @@
     "timeZone": "America/Chicago",
     "population": 1304379,
     "aliases": [
-      "DFW"
+      "DFW",
+      "DAL"
     ]
   },
   {
@@ -266,7 +299,8 @@
     "population": 961855,
     "aliases": [
       "ATX",
-      "Silicon Hills"
+      "Silicon Hills",
+      "AUS"
     ]
   },
   {
@@ -277,7 +311,9 @@
     "state": "Texas",
     "timeZone": "America/Chicago",
     "population": 1434625,
-    "aliases": []
+    "aliases": [
+      "SAT"
+    ]
   },
   {
     "id": "fort-worth-us",
@@ -298,7 +334,8 @@
     "timeZone": "America/Chicago",
     "population": 689447,
     "aliases": [
-      "Music City"
+      "Music City",
+      "BNA"
     ]
   },
   {
@@ -309,7 +346,9 @@
     "state": "Tennessee",
     "timeZone": "America/Chicago",
     "population": 633104,
-    "aliases": []
+    "aliases": [
+      "MEM"
+    ]
   },
   {
     "id": "minneapolis-us",
@@ -320,7 +359,8 @@
     "timeZone": "America/Chicago",
     "population": 429954,
     "aliases": [
-      "Twin Cities"
+      "Twin Cities",
+      "MSP"
     ]
   },
   {
@@ -344,7 +384,8 @@
     "timeZone": "America/Chicago",
     "population": 508090,
     "aliases": [
-      "KC"
+      "KC",
+      "MCI"
     ]
   },
   {
@@ -356,7 +397,8 @@
     "timeZone": "America/Chicago",
     "population": 301578,
     "aliases": [
-      "Saint Louis"
+      "Saint Louis",
+      "STL"
     ]
   },
   {
@@ -367,7 +409,9 @@
     "state": "Wisconsin",
     "timeZone": "America/Chicago",
     "population": 577222,
-    "aliases": []
+    "aliases": [
+      "MKE"
+    ]
   },
   {
     "id": "new-orleans-us",
@@ -379,7 +423,8 @@
     "population": 383997,
     "aliases": [
       "NOLA",
-      "Big Easy"
+      "Big Easy",
+      "MSY"
     ]
   },
   {
@@ -402,7 +447,9 @@
     "state": "Nebraska",
     "timeZone": "America/Chicago",
     "population": 486051,
-    "aliases": []
+    "aliases": [
+      "OMA"
+    ]
   },
   {
     "id": "denver-us",
@@ -413,7 +460,8 @@
     "timeZone": "America/Denver",
     "population": 715522,
     "aliases": [
-      "Mile High City"
+      "Mile High City",
+      "DEN"
     ]
   },
   {
@@ -435,7 +483,8 @@
     "timeZone": "America/Phoenix",
     "population": 1608139,
     "aliases": [
-      "Valley of the Sun"
+      "Valley of the Sun",
+      "PHX"
     ]
   },
   {
@@ -446,7 +495,9 @@
     "state": "Arizona",
     "timeZone": "America/Phoenix",
     "population": 542629,
-    "aliases": []
+    "aliases": [
+      "TUS"
+    ]
   },
   {
     "id": "salt-lake-city-us",
@@ -480,7 +531,9 @@
     "state": "Idaho",
     "timeZone": "America/Boise",
     "population": 235684,
-    "aliases": []
+    "aliases": [
+      "BOI"
+    ]
   },
   {
     "id": "el-paso-us",
@@ -490,7 +543,9 @@
     "state": "Texas",
     "timeZone": "America/Denver",
     "population": 678815,
-    "aliases": []
+    "aliases": [
+      "ELP"
+    ]
   },
   {
     "id": "los-angeles-us",
@@ -503,7 +558,8 @@
     "aliases": [
       "LA",
       "City of Angels",
-      "Hollywood"
+      "Hollywood",
+      "LAX"
     ]
   },
   {
@@ -518,7 +574,8 @@
       "SF",
       "San Fran",
       "Bay Area",
-      "Silicon Valley"
+      "Silicon Valley",
+      "SFO"
     ]
   },
   {
@@ -530,7 +587,8 @@
     "timeZone": "America/Los_Angeles",
     "population": 1013240,
     "aliases": [
-      "Silicon Valley"
+      "Silicon Valley",
+      "SJC"
     ]
   },
   {
@@ -542,7 +600,8 @@
     "timeZone": "America/Los_Angeles",
     "population": 1386932,
     "aliases": [
-      "SD"
+      "SD",
+      "SAN"
     ]
   },
   {
@@ -580,7 +639,8 @@
     "population": 641903,
     "aliases": [
       "Vegas",
-      "Sin City"
+      "Sin City",
+      "LAS"
     ]
   },
   {
@@ -591,7 +651,9 @@
     "state": "California",
     "timeZone": "America/Los_Angeles",
     "population": 524943,
-    "aliases": []
+    "aliases": [
+      "SMF"
+    ]
   },
   {
     "id": "oakland-us",
@@ -602,7 +664,8 @@
     "timeZone": "America/Los_Angeles",
     "population": 440646,
     "aliases": [
-      "East Bay"
+      "East Bay",
+      "OAK"
     ]
   },
   {
@@ -633,7 +696,9 @@
     "state": "Alaska",
     "timeZone": "America/Anchorage",
     "population": 291247,
-    "aliases": []
+    "aliases": [
+      "ANC"
+    ]
   },
   {
     "id": "honolulu-us",
@@ -645,7 +710,8 @@
     "population": 350964,
     "aliases": [
       "Oahu",
-      "Hawaii"
+      "Hawaii",
+      "HNL"
     ]
   },
   {
@@ -658,7 +724,10 @@
     "population": 2794356,
     "aliases": [
       "GTA",
-      "The 6ix"
+      "The 6ix",
+      "TOR",
+      "YYZ",
+      "YTZ"
     ]
   },
   {
@@ -670,7 +739,8 @@
     "timeZone": "America/Toronto",
     "population": 1762949,
     "aliases": [
-      "Montréal"
+      "Montréal",
+      "YUL"
     ]
   },
   {
@@ -705,7 +775,9 @@
     "state": "Alberta",
     "timeZone": "America/Edmonton",
     "population": 1010899,
-    "aliases": []
+    "aliases": [
+      "YEG"
+    ]
   },
   {
     "id": "ottawa-ca",
@@ -716,7 +788,8 @@
     "timeZone": "America/Toronto",
     "population": 1017449,
     "aliases": [
-      "Capital"
+      "Capital",
+      "YOW"
     ]
   },
   {
@@ -727,7 +800,9 @@
     "state": "Manitoba",
     "timeZone": "America/Winnipeg",
     "population": 749607,
-    "aliases": []
+    "aliases": [
+      "YWG"
+    ]
   },
   {
     "id": "quebec-city-ca",
@@ -738,7 +813,8 @@
     "timeZone": "America/Toronto",
     "population": 549459,
     "aliases": [
-      "Québec"
+      "Québec",
+      "YQB"
     ]
   },
   {
@@ -749,7 +825,9 @@
     "state": "Nova Scotia",
     "timeZone": "America/Halifax",
     "population": 439819,
-    "aliases": []
+    "aliases": [
+      "YHZ"
+    ]
   },
   {
     "id": "st-john-s-ca",
@@ -760,7 +838,10 @@
     "timeZone": "America/St_Johns",
     "population": 110525,
     "aliases": [
-      "Newfoundland"
+      "Newfoundland",
+      "YYT",
+      "St Johns",
+      "Saint Johns"
     ]
   },
   {
@@ -795,7 +876,8 @@
     "population": 9209944,
     "aliases": [
       "CDMX",
-      "Ciudad de México"
+      "Ciudad de México",
+      "MEX"
     ]
   },
   {
@@ -806,7 +888,9 @@
     "state": "Jalisco",
     "timeZone": "America/Mexico_City",
     "population": 1385629,
-    "aliases": []
+    "aliases": [
+      "GDL"
+    ]
   },
   {
     "id": "monterrey-mx",
@@ -816,7 +900,9 @@
     "state": "Nuevo Leon",
     "timeZone": "America/Monterrey",
     "population": 1142994,
-    "aliases": []
+    "aliases": [
+      "MTY"
+    ]
   },
   {
     "id": "tijuana-mx",
@@ -826,10 +912,12 @@
     "state": "Baja California",
     "timeZone": "America/Tijuana",
     "population": 1810645,
-    "aliases": []
+    "aliases": [
+      "TIJ"
+    ]
   },
   {
-    "id": "canc-n-mx",
+    "id": "cancun-mx",
     "name": "Cancún",
     "country": "Mexico",
     "countryCode": "MX",
@@ -837,7 +925,8 @@
     "timeZone": "America/Cancun",
     "population": 888797,
     "aliases": [
-      "Cancun"
+      "Cancun",
+      "CUN"
     ]
   },
   {
@@ -849,11 +938,12 @@
     "timeZone": "America/Panama",
     "population": 880691,
     "aliases": [
-      "Panamá"
+      "Panamá",
+      "PTY"
     ]
   },
   {
-    "id": "san-jos--cr",
+    "id": "san-jose-cr",
     "name": "San José",
     "country": "Costa Rica",
     "countryCode": "CR",
@@ -861,7 +951,8 @@
     "timeZone": "America/Costa_Rica",
     "population": 342188,
     "aliases": [
-      "San Jose"
+      "San Jose",
+      "SJO"
     ]
   },
   {
@@ -872,10 +963,12 @@
     "state": "",
     "timeZone": "America/Guatemala",
     "population": 2934841,
-    "aliases": []
+    "aliases": [
+      "GUA"
+    ]
   },
   {
-    "id": "s-o-paulo-br",
+    "id": "sao-paulo-br",
     "name": "São Paulo",
     "country": "Brazil",
     "countryCode": "BR",
@@ -884,7 +977,9 @@
     "population": 12396372,
     "aliases": [
       "Sao Paulo",
-      "Sampa"
+      "Sampa",
+      "GRU",
+      "CGH"
     ]
   },
   {
@@ -896,11 +991,13 @@
     "timeZone": "America/Sao_Paulo",
     "population": 6775561,
     "aliases": [
-      "Rio"
+      "Rio",
+      "GIG",
+      "SDU"
     ]
   },
   {
-    "id": "bras-lia-br",
+    "id": "brasilia-br",
     "name": "Brasília",
     "country": "Brazil",
     "countryCode": "BR",
@@ -908,7 +1005,8 @@
     "timeZone": "America/Sao_Paulo",
     "population": 3094325,
     "aliases": [
-      "Brasilia"
+      "Brasilia",
+      "BSB"
     ]
   },
   {
@@ -919,7 +1017,9 @@
     "state": "Bahia",
     "timeZone": "America/Bahia",
     "population": 2900319,
-    "aliases": []
+    "aliases": [
+      "SSA"
+    ]
   },
   {
     "id": "belo-horizonte-br",
@@ -930,7 +1030,8 @@
     "timeZone": "America/Sao_Paulo",
     "population": 2521564,
     "aliases": [
-      "BH"
+      "BH",
+      "CNF"
     ]
   },
   {
@@ -941,7 +1042,9 @@
     "state": "Parana",
     "timeZone": "America/Sao_Paulo",
     "population": 1963726,
-    "aliases": []
+    "aliases": [
+      "CWB"
+    ]
   },
   {
     "id": "buenos-aires-ar",
@@ -953,11 +1056,13 @@
     "population": 3120612,
     "aliases": [
       "Baires",
-      "CABA"
+      "CABA",
+      "EZE",
+      "AEP"
     ]
   },
   {
-    "id": "c-rdoba-ar",
+    "id": "cordoba-ar",
     "name": "Córdoba",
     "country": "Argentina",
     "countryCode": "AR",
@@ -965,7 +1070,8 @@
     "timeZone": "America/Argentina/Cordoba",
     "population": 1391000,
     "aliases": [
-      "Cordoba"
+      "Cordoba",
+      "COR"
     ]
   },
   {
@@ -976,7 +1082,9 @@
     "state": "Mendoza",
     "timeZone": "America/Argentina/Mendoza",
     "population": 115041,
-    "aliases": []
+    "aliases": [
+      "MDZ"
+    ]
   },
   {
     "id": "santiago-cl",
@@ -987,11 +1095,12 @@
     "timeZone": "America/Santiago",
     "population": 6257516,
     "aliases": [
-      "Santiago de Chile"
+      "Santiago de Chile",
+      "SCL"
     ]
   },
   {
-    "id": "bogot--co",
+    "id": "bogota-co",
     "name": "Bogotá",
     "country": "Colombia",
     "countryCode": "CO",
@@ -999,11 +1108,12 @@
     "timeZone": "America/Bogota",
     "population": 7181469,
     "aliases": [
-      "Bogota"
+      "Bogota",
+      "BOG"
     ]
   },
   {
-    "id": "medell-n-co",
+    "id": "medellin-co",
     "name": "Medellín",
     "country": "Colombia",
     "countryCode": "CO",
@@ -1011,7 +1121,8 @@
     "timeZone": "America/Bogota",
     "population": 2529403,
     "aliases": [
-      "Medellin"
+      "Medellin",
+      "MDE"
     ]
   },
   {
@@ -1022,7 +1133,9 @@
     "state": "Lima",
     "timeZone": "America/Lima",
     "population": 9751717,
-    "aliases": []
+    "aliases": [
+      "LIM"
+    ]
   },
   {
     "id": "quito-ec",
@@ -1032,7 +1145,9 @@
     "state": "Pichincha",
     "timeZone": "America/Guayaquil",
     "population": 2011388,
-    "aliases": []
+    "aliases": [
+      "UIO"
+    ]
   },
   {
     "id": "montevideo-uy",
@@ -1042,7 +1157,9 @@
     "state": "Montevideo",
     "timeZone": "America/Montevideo",
     "population": 1319108,
-    "aliases": []
+    "aliases": [
+      "MVD"
+    ]
   },
   {
     "id": "caracas-ve",
@@ -1052,7 +1169,9 @@
     "state": "Capital District",
     "timeZone": "America/Caracas",
     "population": 2245744,
-    "aliases": []
+    "aliases": [
+      "CCS"
+    ]
   },
   {
     "id": "london-gb",
@@ -1064,7 +1183,10 @@
     "population": 8982000,
     "aliases": [
       "LON",
-      "Greater London"
+      "Greater London",
+      "LHR",
+      "LGW",
+      "STN"
     ]
   },
   {
@@ -1076,7 +1198,8 @@
     "timeZone": "Europe/London",
     "population": 553230,
     "aliases": [
-      "MCR"
+      "MCR",
+      "MAN"
     ]
   },
   {
@@ -1088,7 +1211,8 @@
     "timeZone": "Europe/London",
     "population": 1144900,
     "aliases": [
-      "Brum"
+      "Brum",
+      "BHX"
     ]
   },
   {
@@ -1099,7 +1223,9 @@
     "state": "Scotland",
     "timeZone": "Europe/London",
     "population": 635640,
-    "aliases": []
+    "aliases": [
+      "GLA"
+    ]
   },
   {
     "id": "edinburgh-gb",
@@ -1109,7 +1235,9 @@
     "state": "Scotland",
     "timeZone": "Europe/London",
     "population": 548280,
-    "aliases": []
+    "aliases": [
+      "EDI"
+    ]
   },
   {
     "id": "leeds-gb",
@@ -1139,7 +1267,9 @@
     "state": "England",
     "timeZone": "Europe/London",
     "population": 467099,
-    "aliases": []
+    "aliases": [
+      "BRS"
+    ]
   },
   {
     "id": "belfast-gb",
@@ -1149,7 +1279,9 @@
     "state": "Northern Ireland",
     "timeZone": "Europe/London",
     "population": 343542,
-    "aliases": []
+    "aliases": [
+      "BFS"
+    ]
   },
   {
     "id": "cardiff-gb",
@@ -1159,7 +1291,9 @@
     "state": "Wales",
     "timeZone": "Europe/London",
     "population": 362756,
-    "aliases": []
+    "aliases": [
+      "CWL"
+    ]
   },
   {
     "id": "cambridge-gb",
@@ -1203,7 +1337,9 @@
     "state": "Munster",
     "timeZone": "Europe/Dublin",
     "population": 222333,
-    "aliases": []
+    "aliases": [
+      "ORK"
+    ]
   },
   {
     "id": "paris-fr",
@@ -1214,7 +1350,10 @@
     "timeZone": "Europe/Paris",
     "population": 2161000,
     "aliases": [
-      "City of Light"
+      "City of Light",
+      "PAR",
+      "CDG",
+      "ORY"
     ]
   },
   {
@@ -1225,7 +1364,9 @@
     "state": "Auvergne-Rhône-Alpes",
     "timeZone": "Europe/Paris",
     "population": 522969,
-    "aliases": []
+    "aliases": [
+      "LYS"
+    ]
   },
   {
     "id": "marseille-fr",
@@ -1235,7 +1376,9 @@
     "state": "Provence-Alpes-Côte d'Azur",
     "timeZone": "Europe/Paris",
     "population": 870731,
-    "aliases": []
+    "aliases": [
+      "MRS"
+    ]
   },
   {
     "id": "toulouse-fr",
@@ -1245,7 +1388,9 @@
     "state": "Occitanie",
     "timeZone": "Europe/Paris",
     "population": 493465,
-    "aliases": []
+    "aliases": [
+      "TLS"
+    ]
   },
   {
     "id": "nice-fr",
@@ -1256,7 +1401,8 @@
     "timeZone": "Europe/Paris",
     "population": 342669,
     "aliases": [
-      "French Riviera"
+      "French Riviera",
+      "NCE"
     ]
   },
   {
@@ -1305,7 +1451,9 @@
     "state": "Hamburg",
     "timeZone": "Europe/Berlin",
     "population": 1852478,
-    "aliases": []
+    "aliases": [
+      "HAM"
+    ]
   },
   {
     "id": "cologne-de",
@@ -1316,7 +1464,8 @@
     "timeZone": "Europe/Berlin",
     "population": 1083498,
     "aliases": [
-      "Köln"
+      "Köln",
+      "CGN"
     ]
   },
   {
@@ -1327,10 +1476,12 @@
     "state": "Baden-Württemberg",
     "timeZone": "Europe/Berlin",
     "population": 630305,
-    "aliases": []
+    "aliases": [
+      "STR"
+    ]
   },
   {
-    "id": "d-sseldorf-de",
+    "id": "dusseldorf-de",
     "name": "Düsseldorf",
     "country": "Germany",
     "countryCode": "DE",
@@ -1338,7 +1489,8 @@
     "timeZone": "Europe/Berlin",
     "population": 620523,
     "aliases": [
-      "Dusseldorf"
+      "Dusseldorf",
+      "DUS"
     ]
   },
   {
@@ -1361,7 +1513,9 @@
     "state": "South Holland",
     "timeZone": "Europe/Amsterdam",
     "population": 664311,
-    "aliases": []
+    "aliases": [
+      "RTM"
+    ]
   },
   {
     "id": "the-hague-nl",
@@ -1394,7 +1548,8 @@
     "timeZone": "Europe/Brussels",
     "population": 1222637,
     "aliases": [
-      "Bruxelles"
+      "Bruxelles",
+      "BRU"
     ]
   },
   {
@@ -1418,7 +1573,8 @@
     "timeZone": "Europe/Vienna",
     "population": 1982000,
     "aliases": [
-      "Wien"
+      "Wien",
+      "VIE"
     ]
   },
   {
@@ -1443,7 +1599,8 @@
     "timeZone": "Europe/Zurich",
     "population": 203856,
     "aliases": [
-      "Genève"
+      "Genève",
+      "GVA"
     ]
   },
   {
@@ -1454,7 +1611,9 @@
     "state": "Basel-City",
     "timeZone": "Europe/Zurich",
     "population": 173863,
-    "aliases": []
+    "aliases": [
+      "BSL"
+    ]
   },
   {
     "id": "stockholm-se",
@@ -1465,7 +1624,8 @@
     "timeZone": "Europe/Stockholm",
     "population": 975551,
     "aliases": [
-      "ARN"
+      "ARN",
+      "STO"
     ]
   },
   {
@@ -1477,7 +1637,8 @@
     "timeZone": "Europe/Stockholm",
     "population": 579281,
     "aliases": [
-      "Göteborg"
+      "Göteborg",
+      "GOT"
     ]
   },
   {
@@ -1488,7 +1649,9 @@
     "state": "Oslo",
     "timeZone": "Europe/Oslo",
     "population": 699827,
-    "aliases": []
+    "aliases": [
+      "OSL"
+    ]
   },
   {
     "id": "copenhagen-dk",
@@ -1547,7 +1710,9 @@
     "state": "Valencia",
     "timeZone": "Europe/Madrid",
     "population": 792492,
-    "aliases": []
+    "aliases": [
+      "VLC"
+    ]
   },
   {
     "id": "seville-es",
@@ -1558,7 +1723,8 @@
     "timeZone": "Europe/Madrid",
     "population": 688711,
     "aliases": [
-      "Sevilla"
+      "Sevilla",
+      "SVQ"
     ]
   },
   {
@@ -1570,7 +1736,8 @@
     "timeZone": "Europe/Lisbon",
     "population": 545923,
     "aliases": [
-      "Lisboa"
+      "Lisboa",
+      "LIS"
     ]
   },
   {
@@ -1581,7 +1748,9 @@
     "state": "Porto",
     "timeZone": "Europe/Lisbon",
     "population": 231800,
-    "aliases": []
+    "aliases": [
+      "OPO"
+    ]
   },
   {
     "id": "rome-it",
@@ -1593,7 +1762,9 @@
     "population": 2761632,
     "aliases": [
       "Roma",
-      "Eternal City"
+      "Eternal City",
+      "ROM",
+      "FCO"
     ]
   },
   {
@@ -1605,7 +1776,10 @@
     "timeZone": "Europe/Rome",
     "population": 1371498,
     "aliases": [
-      "Milano"
+      "Milano",
+      "MIL",
+      "MXP",
+      "LIN"
     ]
   },
   {
@@ -1617,7 +1791,8 @@
     "timeZone": "Europe/Rome",
     "population": 913462,
     "aliases": [
-      "Napoli"
+      "Napoli",
+      "NAP"
     ]
   },
   {
@@ -1629,7 +1804,8 @@
     "timeZone": "Europe/Rome",
     "population": 367150,
     "aliases": [
-      "Firenze"
+      "Firenze",
+      "FLR"
     ]
   },
   {
@@ -1641,7 +1817,8 @@
     "timeZone": "Europe/Rome",
     "population": 254661,
     "aliases": [
-      "Venezia"
+      "Venezia",
+      "VCE"
     ]
   },
   {
@@ -1653,7 +1830,8 @@
     "timeZone": "Europe/Athens",
     "population": 664046,
     "aliases": [
-      "Athina"
+      "Athina",
+      "ATH"
     ]
   },
   {
@@ -1665,11 +1843,12 @@
     "timeZone": "Europe/Warsaw",
     "population": 1795569,
     "aliases": [
-      "Warszawa"
+      "Warszawa",
+      "WAW"
     ]
   },
   {
-    "id": "krak-w-pl",
+    "id": "krakow-pl",
     "name": "Kraków",
     "country": "Poland",
     "countryCode": "PL",
@@ -1678,7 +1857,8 @@
     "population": 779115,
     "aliases": [
       "Krakow",
-      "Cracow"
+      "Cracow",
+      "KRK"
     ]
   },
   {
@@ -1690,7 +1870,8 @@
     "timeZone": "Europe/Prague",
     "population": 1335084,
     "aliases": [
-      "Praha"
+      "Praha",
+      "PRG"
     ]
   },
   {
@@ -1701,7 +1882,9 @@
     "state": "Budapest",
     "timeZone": "Europe/Budapest",
     "population": 1752286,
-    "aliases": []
+    "aliases": [
+      "BUD"
+    ]
   },
   {
     "id": "bucharest-ro",
@@ -1712,7 +1895,8 @@
     "timeZone": "Europe/Bucharest",
     "population": 1883425,
     "aliases": [
-      "București"
+      "București",
+      "OTP"
     ]
   },
   {
@@ -1724,7 +1908,9 @@
     "timeZone": "Europe/Kyiv",
     "population": 2962180,
     "aliases": [
-      "Kiev"
+      "Kiev",
+      "KBP",
+      "IEV"
     ]
   },
   {
@@ -1736,7 +1922,9 @@
     "timeZone": "Europe/Istanbul",
     "population": 15462452,
     "aliases": [
-      "Constantinople"
+      "Constantinople",
+      "IST",
+      "SAW"
     ]
   },
   {
@@ -1747,7 +1935,9 @@
     "state": "Ankara",
     "timeZone": "Europe/Istanbul",
     "population": 5747325,
-    "aliases": []
+    "aliases": [
+      "ESB"
+    ]
   },
   {
     "id": "dubai-ae",
@@ -1781,7 +1971,9 @@
     "state": "Riyadh",
     "timeZone": "Asia/Riyadh",
     "population": 7676654,
-    "aliases": []
+    "aliases": [
+      "RUH"
+    ]
   },
   {
     "id": "jeddah-sa",
@@ -1791,7 +1983,9 @@
     "state": "Makkah",
     "timeZone": "Asia/Riyadh",
     "population": 4697000,
-    "aliases": []
+    "aliases": [
+      "JED"
+    ]
   },
   {
     "id": "doha-qa",
@@ -1801,7 +1995,9 @@
     "state": "Doha",
     "timeZone": "Asia/Qatar",
     "population": 2382000,
-    "aliases": []
+    "aliases": [
+      "DOH"
+    ]
   },
   {
     "id": "tel-aviv-il",
@@ -1834,7 +2030,9 @@
     "state": "Al Asimah",
     "timeZone": "Asia/Kuwait",
     "population": 2989000,
-    "aliases": []
+    "aliases": [
+      "KWI"
+    ]
   },
   {
     "id": "muscat-om",
@@ -1844,7 +2042,9 @@
     "state": "Muscat",
     "timeZone": "Asia/Muscat",
     "population": 1560000,
-    "aliases": []
+    "aliases": [
+      "MCT"
+    ]
   },
   {
     "id": "tokyo-jp",
@@ -1856,7 +2056,9 @@
     "population": 13960000,
     "aliases": [
       "TYO",
-      "Edo"
+      "Edo",
+      "NRT",
+      "HND"
     ]
   },
   {
@@ -1868,7 +2070,9 @@
     "timeZone": "Asia/Tokyo",
     "population": 2752412,
     "aliases": [
-      "Kansai"
+      "Kansai",
+      "KIX",
+      "ITM"
     ]
   },
   {
@@ -1899,7 +2103,9 @@
     "state": "Aichi",
     "timeZone": "Asia/Tokyo",
     "population": 2332176,
-    "aliases": []
+    "aliases": [
+      "NGO"
+    ]
   },
   {
     "id": "fukuoka-jp",
@@ -1909,7 +2115,9 @@
     "state": "Fukuoka",
     "timeZone": "Asia/Tokyo",
     "population": 1612392,
-    "aliases": []
+    "aliases": [
+      "FUK"
+    ]
   },
   {
     "id": "sapporo-jp",
@@ -1919,7 +2127,9 @@
     "state": "Hokkaido",
     "timeZone": "Asia/Tokyo",
     "population": 1973395,
-    "aliases": []
+    "aliases": [
+      "CTS"
+    ]
   },
   {
     "id": "seoul-kr",
@@ -1930,7 +2140,9 @@
     "timeZone": "Asia/Seoul",
     "population": 9733509,
     "aliases": [
-      "SEL"
+      "SEL",
+      "ICN",
+      "GMP"
     ]
   },
   {
@@ -1942,7 +2154,8 @@
     "timeZone": "Asia/Seoul",
     "population": 3413841,
     "aliases": [
-      "Pusan"
+      "Pusan",
+      "PUS"
     ]
   },
   {
@@ -1966,7 +2179,8 @@
     "timeZone": "Asia/Shanghai",
     "population": 24870895,
     "aliases": [
-      "SHA"
+      "SHA",
+      "PVG"
     ]
   },
   {
@@ -1979,7 +2193,8 @@
     "population": 21893095,
     "aliases": [
       "Peking",
-      "PEK"
+      "PEK",
+      "PKX"
     ]
   },
   {
@@ -2015,7 +2230,9 @@
     "state": "Zhejiang",
     "timeZone": "Asia/Shanghai",
     "population": 11936010,
-    "aliases": []
+    "aliases": [
+      "HGH"
+    ]
   },
   {
     "id": "hong-kong-hk",
@@ -2039,7 +2256,8 @@
     "timeZone": "Asia/Taipei",
     "population": 2602418,
     "aliases": [
-      "TPE"
+      "TPE",
+      "TSA"
     ]
   },
   {
@@ -2050,7 +2268,9 @@
     "state": "Kaohsiung",
     "timeZone": "Asia/Taipei",
     "population": 2773127,
-    "aliases": []
+    "aliases": [
+      "KHH"
+    ]
   },
   {
     "id": "singapore-sg",
@@ -2062,7 +2282,8 @@
     "population": 5685807,
     "aliases": [
       "SIN",
-      "Lion City"
+      "Lion City",
+      "SGP"
     ]
   },
   {
@@ -2164,7 +2385,9 @@
     "state": "Gujarat",
     "timeZone": "Asia/Kolkata",
     "population": 5577940,
-    "aliases": []
+    "aliases": [
+      "AMD"
+    ]
   },
   {
     "id": "jaipur-in",
@@ -2175,7 +2398,8 @@
     "timeZone": "Asia/Kolkata",
     "population": 3046163,
     "aliases": [
-      "Pink City"
+      "Pink City",
+      "JAI"
     ]
   },
   {
@@ -2212,7 +2436,8 @@
     "timeZone": "Asia/Kolkata",
     "population": 602046,
     "aliases": [
-      "Cochin"
+      "Cochin",
+      "COK"
     ]
   },
   {
@@ -2223,7 +2448,9 @@
     "state": "Chandigarh",
     "timeZone": "Asia/Kolkata",
     "population": 1055450,
-    "aliases": []
+    "aliases": [
+      "IXC"
+    ]
   },
   {
     "id": "kathmandu-np",
@@ -2245,7 +2472,9 @@
     "state": "Western",
     "timeZone": "Asia/Colombo",
     "population": 752993,
-    "aliases": []
+    "aliases": [
+      "CMB"
+    ]
   },
   {
     "id": "dhaka-bd",
@@ -2255,7 +2484,9 @@
     "state": "Dhaka",
     "timeZone": "Asia/Dhaka",
     "population": 8906039,
-    "aliases": []
+    "aliases": [
+      "DAC"
+    ]
   },
   {
     "id": "karachi-pk",
@@ -2277,7 +2508,9 @@
     "state": "Punjab",
     "timeZone": "Asia/Karachi",
     "population": 11126285,
-    "aliases": []
+    "aliases": [
+      "LHE"
+    ]
   },
   {
     "id": "bangkok-th",
@@ -2288,7 +2521,8 @@
     "timeZone": "Asia/Bangkok",
     "population": 10539000,
     "aliases": [
-      "BKK"
+      "BKK",
+      "DMK"
     ]
   },
   {
@@ -2325,7 +2559,8 @@
     "timeZone": "Asia/Jakarta",
     "population": 10562088,
     "aliases": [
-      "JKT"
+      "JKT",
+      "CGK"
     ]
   },
   {
@@ -2363,7 +2598,8 @@
     "timeZone": "Asia/Kuala_Lumpur",
     "population": 708127,
     "aliases": [
-      "George Town"
+      "George Town",
+      "PEN"
     ]
   },
   {
@@ -2459,7 +2695,8 @@
     "timeZone": "Australia/Hobart",
     "population": 238541,
     "aliases": [
-      "Tasmania"
+      "Tasmania",
+      "HBA"
     ]
   },
   {
@@ -2470,7 +2707,9 @@
     "state": "Northern Territory",
     "timeZone": "Australia/Darwin",
     "population": 147255,
-    "aliases": []
+    "aliases": [
+      "DRW"
+    ]
   },
   {
     "id": "gold-coast-au",
@@ -2480,7 +2719,9 @@
     "state": "Queensland",
     "timeZone": "Australia/Brisbane",
     "population": 679127,
-    "aliases": []
+    "aliases": [
+      "OOL"
+    ]
   },
   {
     "id": "auckland-nz",
@@ -2528,7 +2769,8 @@
     "population": 5635127,
     "aliases": [
       "Joburg",
-      "JHB"
+      "JHB",
+      "JNB"
     ]
   },
   {
@@ -2589,7 +2831,8 @@
     "timeZone": "Africa/Casablanca",
     "population": 3711158,
     "aliases": [
-      "Casa"
+      "Casa",
+      "CMN"
     ]
   },
   {
@@ -2612,11 +2855,461 @@
     "state": "",
     "timeZone": "Africa/Addis_Ababa",
     "population": 3040740,
-    "aliases": []
+    "aliases": [
+      "ADD"
+    ]
+  },
+  {
+    "id": "port-louis-mu",
+    "name": "Port Louis",
+    "country": "Mauritius",
+    "countryCode": "MU",
+    "state": "Port Louis",
+    "timeZone": "Indian/Mauritius",
+    "population": 149194,
+    "aliases": [
+      "MRU",
+      "Mauritius"
+    ]
+  },
+  {
+    "id": "kampala-ug",
+    "name": "Kampala",
+    "country": "Uganda",
+    "countryCode": "UG",
+    "state": "Central",
+    "timeZone": "Africa/Kampala",
+    "population": 1680600,
+    "aliases": [
+      "EBB"
+    ]
+  },
+  {
+    "id": "dar-es-salaam-tz",
+    "name": "Dar es Salaam",
+    "country": "Tanzania",
+    "countryCode": "TZ",
+    "state": "Dar es Salaam",
+    "timeZone": "Africa/Dar_es_Salaam",
+    "population": 7405000,
+    "aliases": [
+      "DAR"
+    ]
+  },
+  {
+    "id": "algiers-dz",
+    "name": "Algiers",
+    "country": "Algeria",
+    "countryCode": "DZ",
+    "state": "Algiers",
+    "timeZone": "Africa/Algiers",
+    "population": 2854000,
+    "aliases": [
+      "ALG"
+    ]
+  },
+  {
+    "id": "tunis-tn",
+    "name": "Tunis",
+    "country": "Tunisia",
+    "countryCode": "TN",
+    "state": "Tunis",
+    "timeZone": "Africa/Tunis",
+    "population": 1056247,
+    "aliases": [
+      "TUN"
+    ]
+  },
+  {
+    "id": "suva-fj",
+    "name": "Suva",
+    "country": "Fiji",
+    "countryCode": "FJ",
+    "state": "Central",
+    "timeZone": "Pacific/Fiji",
+    "population": 93970,
+    "aliases": [
+      "NAN",
+      "Nadi",
+      "Fiji"
+    ]
+  },
+  {
+    "id": "phnom-penh-kh",
+    "name": "Phnom Penh",
+    "country": "Cambodia",
+    "countryCode": "KH",
+    "state": "Phnom Penh",
+    "timeZone": "Asia/Phnom_Penh",
+    "population": 2281951,
+    "aliases": [
+      "PNH"
+    ]
+  },
+  {
+    "id": "yangon-mm",
+    "name": "Yangon",
+    "country": "Myanmar",
+    "countryCode": "MM",
+    "state": "Yangon",
+    "timeZone": "Asia/Yangon",
+    "population": 5430000,
+    "aliases": [
+      "RGN",
+      "Rangoon"
+    ]
+  },
+  {
+    "id": "islamabad-pk",
+    "name": "Islamabad",
+    "country": "Pakistan",
+    "countryCode": "PK",
+    "state": "Islamabad",
+    "timeZone": "Asia/Karachi",
+    "population": 1232000,
+    "aliases": [
+      "ISB"
+    ]
+  },
+  {
+    "id": "tashkent-uz",
+    "name": "Tashkent",
+    "country": "Uzbekistan",
+    "countryCode": "UZ",
+    "state": "Tashkent",
+    "timeZone": "Asia/Tashkent",
+    "population": 2956384,
+    "aliases": [
+      "TAS"
+    ]
+  },
+  {
+    "id": "almaty-kz",
+    "name": "Almaty",
+    "country": "Kazakhstan",
+    "countryCode": "KZ",
+    "state": "Almaty",
+    "timeZone": "Asia/Almaty",
+    "population": 2161902,
+    "aliases": [
+      "ALA"
+    ]
+  },
+  {
+    "id": "baku-az",
+    "name": "Baku",
+    "country": "Azerbaijan",
+    "countryCode": "AZ",
+    "state": "Baku",
+    "timeZone": "Asia/Baku",
+    "population": 2303100,
+    "aliases": [
+      "GYD"
+    ]
+  },
+  {
+    "id": "yerevan-am",
+    "name": "Yerevan",
+    "country": "Armenia",
+    "countryCode": "AM",
+    "state": "Yerevan",
+    "timeZone": "Asia/Yerevan",
+    "population": 1092795,
+    "aliases": [
+      "EVN"
+    ]
+  },
+  {
+    "id": "tbilisi-ge",
+    "name": "Tbilisi",
+    "country": "Georgia",
+    "countryCode": "GE",
+    "state": "Tbilisi",
+    "timeZone": "Asia/Tbilisi",
+    "population": 1241700,
+    "aliases": [
+      "TBS"
+    ]
+  },
+  {
+    "id": "beirut-lb",
+    "name": "Beirut",
+    "country": "Lebanon",
+    "countryCode": "LB",
+    "state": "Beirut",
+    "timeZone": "Asia/Beirut",
+    "population": 2421354,
+    "aliases": [
+      "BEY"
+    ]
+  },
+  {
+    "id": "amman-jo",
+    "name": "Amman",
+    "country": "Jordan",
+    "countryCode": "JO",
+    "state": "Amman",
+    "timeZone": "Asia/Amman",
+    "population": 4007526,
+    "aliases": [
+      "AMM"
+    ]
+  },
+  {
+    "id": "asuncion-py",
+    "name": "Asunción",
+    "country": "Paraguay",
+    "countryCode": "PY",
+    "state": "Asunción",
+    "timeZone": "America/Asuncion",
+    "population": 521559,
+    "aliases": [
+      "ASU",
+      "Asuncion"
+    ]
+  },
+  {
+    "id": "la-paz-bo",
+    "name": "La Paz",
+    "country": "Bolivia",
+    "countryCode": "BO",
+    "state": "La Paz",
+    "timeZone": "America/La_Paz",
+    "population": 816044,
+    "aliases": [
+      "LPB"
+    ]
+  },
+  {
+    "id": "havana-cu",
+    "name": "Havana",
+    "country": "Cuba",
+    "countryCode": "CU",
+    "state": "La Habana",
+    "timeZone": "America/Havana",
+    "population": 2132183,
+    "aliases": [
+      "HAV",
+      "La Habana"
+    ]
+  },
+  {
+    "id": "santo-domingo-do",
+    "name": "Santo Domingo",
+    "country": "Dominican Republic",
+    "countryCode": "DO",
+    "state": "Distrito Nacional",
+    "timeZone": "America/Santo_Domingo",
+    "population": 1029110,
+    "aliases": [
+      "SDQ"
+    ]
+  },
+  {
+    "id": "san-juan-pr",
+    "name": "San Juan",
+    "country": "Puerto Rico",
+    "countryCode": "PR",
+    "state": "San Juan",
+    "timeZone": "America/Puerto_Rico",
+    "population": 342259,
+    "aliases": [
+      "SJU"
+    ]
+  },
+  {
+    "id": "luxembourg-lu",
+    "name": "Luxembourg",
+    "country": "Luxembourg",
+    "countryCode": "LU",
+    "state": "Luxembourg",
+    "timeZone": "Europe/Luxembourg",
+    "population": 132778,
+    "aliases": [
+      "LUX"
+    ]
+  },
+  {
+    "id": "sofia-bg",
+    "name": "Sofia",
+    "country": "Bulgaria",
+    "countryCode": "BG",
+    "state": "Sofia",
+    "timeZone": "Europe/Sofia",
+    "population": 1280331,
+    "aliases": [
+      "SOF"
+    ]
+  },
+  {
+    "id": "zagreb-hr",
+    "name": "Zagreb",
+    "country": "Croatia",
+    "countryCode": "HR",
+    "state": "Zagreb",
+    "timeZone": "Europe/Zagreb",
+    "population": 767131,
+    "aliases": [
+      "ZAG"
+    ]
+  },
+  {
+    "id": "belgrade-rs",
+    "name": "Belgrade",
+    "country": "Serbia",
+    "countryCode": "RS",
+    "state": "Belgrade",
+    "timeZone": "Europe/Belgrade",
+    "population": 1681405,
+    "aliases": [
+      "BEG",
+      "Beograd"
+    ]
+  },
+  {
+    "id": "vilnius-lt",
+    "name": "Vilnius",
+    "country": "Lithuania",
+    "countryCode": "LT",
+    "state": "Vilnius",
+    "timeZone": "Europe/Vilnius",
+    "population": 581475,
+    "aliases": [
+      "VNO"
+    ]
+  },
+  {
+    "id": "riga-lv",
+    "name": "Riga",
+    "country": "Latvia",
+    "countryCode": "LV",
+    "state": "Riga",
+    "timeZone": "Europe/Riga",
+    "population": 605802,
+    "aliases": [
+      "RIX"
+    ]
+  },
+  {
+    "id": "tallinn-ee",
+    "name": "Tallinn",
+    "country": "Estonia",
+    "countryCode": "EE",
+    "state": "Harju",
+    "timeZone": "Europe/Tallinn",
+    "population": 453864,
+    "aliases": [
+      "TLL"
+    ]
+  },
+  {
+    "id": "moscow-ru",
+    "name": "Moscow",
+    "country": "Russia",
+    "countryCode": "RU",
+    "state": "Moscow",
+    "timeZone": "Europe/Moscow",
+    "population": 13010112,
+    "aliases": [
+      "MOW",
+      "SVO",
+      "DME",
+      "Moskva"
+    ]
+  },
+  {
+    "id": "nanjing-cn",
+    "name": "Nanjing",
+    "country": "China",
+    "countryCode": "CN",
+    "state": "Jiangsu",
+    "timeZone": "Asia/Shanghai",
+    "population": 9314685,
+    "aliases": [
+      "NKG"
+    ]
+  },
+  {
+    "id": "tianjin-cn",
+    "name": "Tianjin",
+    "country": "China",
+    "countryCode": "CN",
+    "state": "Tianjin",
+    "timeZone": "Asia/Shanghai",
+    "population": 13866009,
+    "aliases": [
+      "TSN"
+    ]
+  },
+  {
+    "id": "wuhan-cn",
+    "name": "Wuhan",
+    "country": "China",
+    "countryCode": "CN",
+    "state": "Hubei",
+    "timeZone": "Asia/Shanghai",
+    "population": 12326518,
+    "aliases": [
+      "WUH"
+    ]
+  },
+  {
+    "id": "chongqing-cn",
+    "name": "Chongqing",
+    "country": "China",
+    "countryCode": "CN",
+    "state": "Chongqing",
+    "timeZone": "Asia/Shanghai",
+    "population": 32054159,
+    "aliases": [
+      "CKG"
+    ]
+  },
+  {
+    "id": "chengdu-cn",
+    "name": "Chengdu",
+    "country": "China",
+    "countryCode": "CN",
+    "state": "Sichuan",
+    "timeZone": "Asia/Shanghai",
+    "population": 20937757,
+    "aliases": [
+      "CTU",
+      "TFU"
+    ]
+  },
+  {
+    "id": "xian-cn",
+    "name": "Xi'an",
+    "country": "China",
+    "countryCode": "CN",
+    "state": "Shaanxi",
+    "timeZone": "Asia/Shanghai",
+    "population": 12952907,
+    "aliases": [
+      "Xian",
+      "Sian",
+      "XIY"
+    ]
+  },
+  {
+    "id": "reykjavik-is",
+    "name": "Reykjavik",
+    "country": "Iceland",
+    "countryCode": "IS",
+    "state": "Capital Region",
+    "timeZone": "Atlantic/Reykjavik",
+    "population": 139875,
+    "aliases": [
+      "Reykjavík",
+      "KEF",
+      "RKV",
+      "Iceland"
+    ]
   },
   {
     "id": "utc-gmt",
-    "name": "UTC / GMT",
+    "name": "UTC",
     "country": "Coordinated Universal Time",
     "countryCode": "",
     "state": "",
@@ -2625,9 +3318,2337 @@
     "aliases": [
       "UTC",
       "GMT",
+      "UTC / GMT",
       "Universal Time",
       "Z",
       "Zulu"
+    ]
+  },
+  {
+    "id": "durham-us",
+    "name": "Durham",
+    "country": "United States",
+    "countryCode": "US",
+    "state": "North Carolina",
+    "timeZone": "America/New_York",
+    "population": 296000,
+    "aliases": [
+      "RDU",
+      "Research Triangle"
+    ]
+  },
+  {
+    "id": "boulder-us",
+    "name": "Boulder",
+    "country": "United States",
+    "countryCode": "US",
+    "state": "Colorado",
+    "timeZone": "America/Denver",
+    "population": 105000,
+    "aliases": [
+      "CU Boulder"
+    ]
+  },
+  {
+    "id": "fort-collins-us",
+    "name": "Fort Collins",
+    "country": "United States",
+    "countryCode": "US",
+    "state": "Colorado",
+    "timeZone": "America/Denver",
+    "population": 170000,
+    "aliases": []
+  },
+  {
+    "id": "provo-us",
+    "name": "Provo",
+    "country": "United States",
+    "countryCode": "US",
+    "state": "Utah",
+    "timeZone": "America/Denver",
+    "population": 115000,
+    "aliases": [
+      "Silicon Slopes",
+      "Orem"
+    ]
+  },
+  {
+    "id": "santa-fe-us",
+    "name": "Santa Fe",
+    "country": "United States",
+    "countryCode": "US",
+    "state": "New Mexico",
+    "timeZone": "America/Denver",
+    "population": 89000,
+    "aliases": []
+  },
+  {
+    "id": "scottsdale-us",
+    "name": "Scottsdale",
+    "country": "United States",
+    "countryCode": "US",
+    "state": "Arizona",
+    "timeZone": "America/Phoenix",
+    "population": 244000,
+    "aliases": []
+  },
+  {
+    "id": "tempe-us",
+    "name": "Tempe",
+    "country": "United States",
+    "countryCode": "US",
+    "state": "Arizona",
+    "timeZone": "America/Phoenix",
+    "population": 189000,
+    "aliases": []
+  },
+  {
+    "id": "reno-us",
+    "name": "Reno",
+    "country": "United States",
+    "countryCode": "US",
+    "state": "Nevada",
+    "timeZone": "America/Los_Angeles",
+    "population": 274000,
+    "aliases": [
+      "RNO"
+    ]
+  },
+  {
+    "id": "palo-alto-us",
+    "name": "Palo Alto",
+    "country": "United States",
+    "countryCode": "US",
+    "state": "California",
+    "timeZone": "America/Los_Angeles",
+    "population": 68000,
+    "aliases": [
+      "Stanford",
+      "Silicon Valley"
+    ]
+  },
+  {
+    "id": "mountain-view-us",
+    "name": "Mountain View",
+    "country": "United States",
+    "countryCode": "US",
+    "state": "California",
+    "timeZone": "America/Los_Angeles",
+    "population": 82000,
+    "aliases": [
+      "MTV",
+      "Silicon Valley"
+    ]
+  },
+  {
+    "id": "cupertino-us",
+    "name": "Cupertino",
+    "country": "United States",
+    "countryCode": "US",
+    "state": "California",
+    "timeZone": "America/Los_Angeles",
+    "population": 60000,
+    "aliases": [
+      "Silicon Valley"
+    ]
+  },
+  {
+    "id": "sunnyvale-us",
+    "name": "Sunnyvale",
+    "country": "United States",
+    "countryCode": "US",
+    "state": "California",
+    "timeZone": "America/Los_Angeles",
+    "population": 155000,
+    "aliases": [
+      "Silicon Valley"
+    ]
+  },
+  {
+    "id": "santa-clara-us",
+    "name": "Santa Clara",
+    "country": "United States",
+    "countryCode": "US",
+    "state": "California",
+    "timeZone": "America/Los_Angeles",
+    "population": 131000,
+    "aliases": [
+      "Silicon Valley"
+    ]
+  },
+  {
+    "id": "berkeley-us",
+    "name": "Berkeley",
+    "country": "United States",
+    "countryCode": "US",
+    "state": "California",
+    "timeZone": "America/Los_Angeles",
+    "population": 124000,
+    "aliases": [
+      "UC Berkeley"
+    ]
+  },
+  {
+    "id": "irvine-us",
+    "name": "Irvine",
+    "country": "United States",
+    "countryCode": "US",
+    "state": "California",
+    "timeZone": "America/Los_Angeles",
+    "population": 314000,
+    "aliases": [
+      "SNA",
+      "Orange County"
+    ]
+  },
+  {
+    "id": "santa-monica-us",
+    "name": "Santa Monica",
+    "country": "United States",
+    "countryCode": "US",
+    "state": "California",
+    "timeZone": "America/Los_Angeles",
+    "population": 93000,
+    "aliases": [
+      "Silicon Beach"
+    ]
+  },
+  {
+    "id": "santa-barbara-us",
+    "name": "Santa Barbara",
+    "country": "United States",
+    "countryCode": "US",
+    "state": "California",
+    "timeZone": "America/Los_Angeles",
+    "population": 88000,
+    "aliases": [
+      "SBA"
+    ]
+  },
+  {
+    "id": "bellevue-us",
+    "name": "Bellevue",
+    "country": "United States",
+    "countryCode": "US",
+    "state": "Washington",
+    "timeZone": "America/Los_Angeles",
+    "population": 151000,
+    "aliases": []
+  },
+  {
+    "id": "redmond-us",
+    "name": "Redmond",
+    "country": "United States",
+    "countryCode": "US",
+    "state": "Washington",
+    "timeZone": "America/Los_Angeles",
+    "population": 77000,
+    "aliases": []
+  },
+  {
+    "id": "tacoma-us",
+    "name": "Tacoma",
+    "country": "United States",
+    "countryCode": "US",
+    "state": "Washington",
+    "timeZone": "America/Los_Angeles",
+    "population": 222000,
+    "aliases": []
+  },
+  {
+    "id": "spokane-us",
+    "name": "Spokane",
+    "country": "United States",
+    "countryCode": "US",
+    "state": "Washington",
+    "timeZone": "America/Los_Angeles",
+    "population": 229000,
+    "aliases": [
+      "GEG"
+    ]
+  },
+  {
+    "id": "eugene-us",
+    "name": "Eugene",
+    "country": "United States",
+    "countryCode": "US",
+    "state": "Oregon",
+    "timeZone": "America/Los_Angeles",
+    "population": 177000,
+    "aliases": [
+      "EUG"
+    ]
+  },
+  {
+    "id": "bend-us",
+    "name": "Bend",
+    "country": "United States",
+    "countryCode": "US",
+    "state": "Oregon",
+    "timeZone": "America/Los_Angeles",
+    "population": 104000,
+    "aliases": []
+  },
+  {
+    "id": "juneau-us",
+    "name": "Juneau",
+    "country": "United States",
+    "countryCode": "US",
+    "state": "Alaska",
+    "timeZone": "America/Juneau",
+    "population": 32000,
+    "aliases": [
+      "JNU"
+    ]
+  },
+  {
+    "id": "plano-us",
+    "name": "Plano",
+    "country": "United States",
+    "countryCode": "US",
+    "state": "Texas",
+    "timeZone": "America/Chicago",
+    "population": 290000,
+    "aliases": []
+  },
+  {
+    "id": "baton-rouge-us",
+    "name": "Baton Rouge",
+    "country": "United States",
+    "countryCode": "US",
+    "state": "Louisiana",
+    "timeZone": "America/Chicago",
+    "population": 221000,
+    "aliases": [
+      "BTR"
+    ]
+  },
+  {
+    "id": "knoxville-us",
+    "name": "Knoxville",
+    "country": "United States",
+    "countryCode": "US",
+    "state": "Tennessee",
+    "timeZone": "America/New_York",
+    "population": 198000,
+    "aliases": [
+      "TYS"
+    ]
+  },
+  {
+    "id": "chattanooga-us",
+    "name": "Chattanooga",
+    "country": "United States",
+    "countryCode": "US",
+    "state": "Tennessee",
+    "timeZone": "America/New_York",
+    "population": 187000,
+    "aliases": [
+      "CHA"
+    ]
+  },
+  {
+    "id": "birmingham-al-us",
+    "name": "Birmingham",
+    "country": "United States",
+    "countryCode": "US",
+    "state": "Alabama",
+    "timeZone": "America/Chicago",
+    "population": 196000,
+    "aliases": [
+      "BHM"
+    ]
+  },
+  {
+    "id": "huntsville-us",
+    "name": "Huntsville",
+    "country": "United States",
+    "countryCode": "US",
+    "state": "Alabama",
+    "timeZone": "America/Chicago",
+    "population": 225000,
+    "aliases": [
+      "HSV"
+    ]
+  },
+  {
+    "id": "fort-lauderdale-us",
+    "name": "Fort Lauderdale",
+    "country": "United States",
+    "countryCode": "US",
+    "state": "Florida",
+    "timeZone": "America/New_York",
+    "population": 184000,
+    "aliases": [
+      "FLL"
+    ]
+  },
+  {
+    "id": "tallahassee-us",
+    "name": "Tallahassee",
+    "country": "United States",
+    "countryCode": "US",
+    "state": "Florida",
+    "timeZone": "America/New_York",
+    "population": 202000,
+    "aliases": [
+      "TLH"
+    ]
+  },
+  {
+    "id": "savannah-us",
+    "name": "Savannah",
+    "country": "United States",
+    "countryCode": "US",
+    "state": "Georgia",
+    "timeZone": "America/New_York",
+    "population": 148000,
+    "aliases": [
+      "SAV"
+    ]
+  },
+  {
+    "id": "charleston-sc-us",
+    "name": "Charleston",
+    "country": "United States",
+    "countryCode": "US",
+    "state": "South Carolina",
+    "timeZone": "America/New_York",
+    "population": 155000,
+    "aliases": [
+      "CHS"
+    ]
+  },
+  {
+    "id": "greenville-sc-us",
+    "name": "Greenville",
+    "country": "United States",
+    "countryCode": "US",
+    "state": "South Carolina",
+    "timeZone": "America/New_York",
+    "population": 73000,
+    "aliases": [
+      "GSP"
+    ]
+  },
+  {
+    "id": "columbia-sc-us",
+    "name": "Columbia",
+    "country": "United States",
+    "countryCode": "US",
+    "state": "South Carolina",
+    "timeZone": "America/New_York",
+    "population": 142000,
+    "aliases": [
+      "CAE"
+    ]
+  },
+  {
+    "id": "virginia-beach-us",
+    "name": "Virginia Beach",
+    "country": "United States",
+    "countryCode": "US",
+    "state": "Virginia",
+    "timeZone": "America/New_York",
+    "population": 453000,
+    "aliases": [
+      "ORF",
+      "Norfolk"
+    ]
+  },
+  {
+    "id": "arlington-va-us",
+    "name": "Arlington",
+    "country": "United States",
+    "countryCode": "US",
+    "state": "Virginia",
+    "timeZone": "America/New_York",
+    "population": 234000,
+    "aliases": [
+      "DCA",
+      "NoVA"
+    ]
+  },
+  {
+    "id": "wilmington-de-us",
+    "name": "Wilmington",
+    "country": "United States",
+    "countryCode": "US",
+    "state": "Delaware",
+    "timeZone": "America/New_York",
+    "population": 71000,
+    "aliases": [
+      "ILG"
+    ]
+  },
+  {
+    "id": "newark-us",
+    "name": "Newark",
+    "country": "United States",
+    "countryCode": "US",
+    "state": "New Jersey",
+    "timeZone": "America/New_York",
+    "population": 304000,
+    "aliases": [
+      "EWR"
+    ]
+  },
+  {
+    "id": "jersey-city-us",
+    "name": "Jersey City",
+    "country": "United States",
+    "countryCode": "US",
+    "state": "New Jersey",
+    "timeZone": "America/New_York",
+    "population": 291000,
+    "aliases": []
+  },
+  {
+    "id": "princeton-us",
+    "name": "Princeton",
+    "country": "United States",
+    "countryCode": "US",
+    "state": "New Jersey",
+    "timeZone": "America/New_York",
+    "population": 31000,
+    "aliases": []
+  },
+  {
+    "id": "buffalo-us",
+    "name": "Buffalo",
+    "country": "United States",
+    "countryCode": "US",
+    "state": "New York",
+    "timeZone": "America/New_York",
+    "population": 274000,
+    "aliases": [
+      "BUF"
+    ]
+  },
+  {
+    "id": "rochester-ny-us",
+    "name": "Rochester",
+    "country": "United States",
+    "countryCode": "US",
+    "state": "New York",
+    "timeZone": "America/New_York",
+    "population": 207000,
+    "aliases": [
+      "ROC"
+    ]
+  },
+  {
+    "id": "albany-ny-us",
+    "name": "Albany",
+    "country": "United States",
+    "countryCode": "US",
+    "state": "New York",
+    "timeZone": "America/New_York",
+    "population": 101000,
+    "aliases": [
+      "ALB"
+    ]
+  },
+  {
+    "id": "syracuse-us",
+    "name": "Syracuse",
+    "country": "United States",
+    "countryCode": "US",
+    "state": "New York",
+    "timeZone": "America/New_York",
+    "population": 145000,
+    "aliases": [
+      "SYR"
+    ]
+  },
+  {
+    "id": "ithaca-us",
+    "name": "Ithaca",
+    "country": "United States",
+    "countryCode": "US",
+    "state": "New York",
+    "timeZone": "America/New_York",
+    "population": 32000,
+    "aliases": [
+      "Cornell"
+    ]
+  },
+  {
+    "id": "stamford-us",
+    "name": "Stamford",
+    "country": "United States",
+    "countryCode": "US",
+    "state": "Connecticut",
+    "timeZone": "America/New_York",
+    "population": 136000,
+    "aliases": []
+  },
+  {
+    "id": "hartford-us",
+    "name": "Hartford",
+    "country": "United States",
+    "countryCode": "US",
+    "state": "Connecticut",
+    "timeZone": "America/New_York",
+    "population": 120000,
+    "aliases": [
+      "BDL"
+    ]
+  },
+  {
+    "id": "new-haven-us",
+    "name": "New Haven",
+    "country": "United States",
+    "countryCode": "US",
+    "state": "Connecticut",
+    "timeZone": "America/New_York",
+    "population": 139000,
+    "aliases": [
+      "Yale"
+    ]
+  },
+  {
+    "id": "providence-us",
+    "name": "Providence",
+    "country": "United States",
+    "countryCode": "US",
+    "state": "Rhode Island",
+    "timeZone": "America/New_York",
+    "population": 190000,
+    "aliases": [
+      "PVD"
+    ]
+  },
+  {
+    "id": "cambridge-ma-us",
+    "name": "Cambridge",
+    "country": "United States",
+    "countryCode": "US",
+    "state": "Massachusetts",
+    "timeZone": "America/New_York",
+    "population": 118000,
+    "aliases": [
+      "MIT",
+      "Harvard"
+    ]
+  },
+  {
+    "id": "worcester-us",
+    "name": "Worcester",
+    "country": "United States",
+    "countryCode": "US",
+    "state": "Massachusetts",
+    "timeZone": "America/New_York",
+    "population": 207000,
+    "aliases": []
+  },
+  {
+    "id": "portland-me-us",
+    "name": "Portland ME",
+    "country": "United States",
+    "countryCode": "US",
+    "state": "Maine",
+    "timeZone": "America/New_York",
+    "population": 69000,
+    "aliases": [
+      "PWM"
+    ]
+  },
+  {
+    "id": "burlington-vt-us",
+    "name": "Burlington",
+    "country": "United States",
+    "countryCode": "US",
+    "state": "Vermont",
+    "timeZone": "America/New_York",
+    "population": 44000,
+    "aliases": [
+      "BTV"
+    ]
+  },
+  {
+    "id": "manchester-nh-us",
+    "name": "Manchester NH",
+    "country": "United States",
+    "countryCode": "US",
+    "state": "New Hampshire",
+    "timeZone": "America/New_York",
+    "population": 115000,
+    "aliases": [
+      "MHT"
+    ]
+  },
+  {
+    "id": "ann-arbor-us",
+    "name": "Ann Arbor",
+    "country": "United States",
+    "countryCode": "US",
+    "state": "Michigan",
+    "timeZone": "America/Detroit",
+    "population": 119000,
+    "aliases": [
+      "UMich"
+    ]
+  },
+  {
+    "id": "grand-rapids-us",
+    "name": "Grand Rapids",
+    "country": "United States",
+    "countryCode": "US",
+    "state": "Michigan",
+    "timeZone": "America/Detroit",
+    "population": 196000,
+    "aliases": [
+      "GRR"
+    ]
+  },
+  {
+    "id": "louisville-us",
+    "name": "Louisville",
+    "country": "United States",
+    "countryCode": "US",
+    "state": "Kentucky",
+    "timeZone": "America/Kentucky/Louisville",
+    "population": 622000,
+    "aliases": [
+      "SDF"
+    ]
+  },
+  {
+    "id": "lexington-us",
+    "name": "Lexington",
+    "country": "United States",
+    "countryCode": "US",
+    "state": "Kentucky",
+    "timeZone": "America/New_York",
+    "population": 320000,
+    "aliases": [
+      "LEX"
+    ]
+  },
+  {
+    "id": "madison-us",
+    "name": "Madison",
+    "country": "United States",
+    "countryCode": "US",
+    "state": "Wisconsin",
+    "timeZone": "America/Chicago",
+    "population": 280000,
+    "aliases": [
+      "MSN"
+    ]
+  },
+  {
+    "id": "des-moines-us",
+    "name": "Des Moines",
+    "country": "United States",
+    "countryCode": "US",
+    "state": "Iowa",
+    "timeZone": "America/Chicago",
+    "population": 210000,
+    "aliases": [
+      "DSM"
+    ]
+  },
+  {
+    "id": "lincoln-ne-us",
+    "name": "Lincoln",
+    "country": "United States",
+    "countryCode": "US",
+    "state": "Nebraska",
+    "timeZone": "America/Chicago",
+    "population": 294000,
+    "aliases": [
+      "LNK"
+    ]
+  },
+  {
+    "id": "wichita-us",
+    "name": "Wichita",
+    "country": "United States",
+    "countryCode": "US",
+    "state": "Kansas",
+    "timeZone": "America/Chicago",
+    "population": 396000,
+    "aliases": [
+      "ICT"
+    ]
+  },
+  {
+    "id": "tulsa-us",
+    "name": "Tulsa",
+    "country": "United States",
+    "countryCode": "US",
+    "state": "Oklahoma",
+    "timeZone": "America/Chicago",
+    "population": 411000,
+    "aliases": [
+      "TUL"
+    ]
+  },
+  {
+    "id": "little-rock-us",
+    "name": "Little Rock",
+    "country": "United States",
+    "countryCode": "US",
+    "state": "Arkansas",
+    "timeZone": "America/Chicago",
+    "population": 203000,
+    "aliases": [
+      "LIT"
+    ]
+  },
+  {
+    "id": "fayetteville-ar-us",
+    "name": "Fayetteville",
+    "country": "United States",
+    "countryCode": "US",
+    "state": "Arkansas",
+    "timeZone": "America/Chicago",
+    "population": 101000,
+    "aliases": [
+      "XNA",
+      "Bentonville"
+    ]
+  },
+  {
+    "id": "fargo-us",
+    "name": "Fargo",
+    "country": "United States",
+    "countryCode": "US",
+    "state": "North Dakota",
+    "timeZone": "America/Chicago",
+    "population": 133000,
+    "aliases": [
+      "FAR"
+    ]
+  },
+  {
+    "id": "sioux-falls-us",
+    "name": "Sioux Falls",
+    "country": "United States",
+    "countryCode": "US",
+    "state": "South Dakota",
+    "timeZone": "America/Chicago",
+    "population": 206000,
+    "aliases": [
+      "FSD"
+    ]
+  },
+  {
+    "id": "bozeman-us",
+    "name": "Bozeman",
+    "country": "United States",
+    "countryCode": "US",
+    "state": "Montana",
+    "timeZone": "America/Denver",
+    "population": 57000,
+    "aliases": [
+      "BZN"
+    ]
+  },
+  {
+    "id": "cheyenne-us",
+    "name": "Cheyenne",
+    "country": "United States",
+    "countryCode": "US",
+    "state": "Wyoming",
+    "timeZone": "America/Denver",
+    "population": 65000,
+    "aliases": [
+      "CYS"
+    ]
+  },
+  {
+    "id": "waterloo-ca",
+    "name": "Waterloo",
+    "country": "Canada",
+    "countryCode": "CA",
+    "state": "Ontario",
+    "timeZone": "America/Toronto",
+    "population": 150000,
+    "aliases": [
+      "Kitchener",
+      "Kitchener-Waterloo",
+      "KW",
+      "UWaterloo"
+    ]
+  },
+  {
+    "id": "kitchener-ca",
+    "name": "Kitchener",
+    "country": "Canada",
+    "countryCode": "CA",
+    "state": "Ontario",
+    "timeZone": "America/Toronto",
+    "population": 256000,
+    "aliases": [
+      "Waterloo",
+      "KW"
+    ]
+  },
+  {
+    "id": "hamilton-ca",
+    "name": "Hamilton",
+    "country": "Canada",
+    "countryCode": "CA",
+    "state": "Ontario",
+    "timeZone": "America/Toronto",
+    "population": 569000,
+    "aliases": [
+      "YHM"
+    ]
+  },
+  {
+    "id": "london-on-ca",
+    "name": "London ON",
+    "country": "Canada",
+    "countryCode": "CA",
+    "state": "Ontario",
+    "timeZone": "America/Toronto",
+    "population": 422000,
+    "aliases": [
+      "YXU"
+    ]
+  },
+  {
+    "id": "mississauga-ca",
+    "name": "Mississauga",
+    "country": "Canada",
+    "countryCode": "CA",
+    "state": "Ontario",
+    "timeZone": "America/Toronto",
+    "population": 717000,
+    "aliases": [
+      "YYZ"
+    ]
+  },
+  {
+    "id": "markham-ca",
+    "name": "Markham",
+    "country": "Canada",
+    "countryCode": "CA",
+    "state": "Ontario",
+    "timeZone": "America/Toronto",
+    "population": 338000,
+    "aliases": []
+  },
+  {
+    "id": "kelowna-ca",
+    "name": "Kelowna",
+    "country": "Canada",
+    "countryCode": "CA",
+    "state": "British Columbia",
+    "timeZone": "America/Vancouver",
+    "population": 144000,
+    "aliases": [
+      "YLW"
+    ]
+  },
+  {
+    "id": "burnaby-ca",
+    "name": "Burnaby",
+    "country": "Canada",
+    "countryCode": "CA",
+    "state": "British Columbia",
+    "timeZone": "America/Vancouver",
+    "population": 249000,
+    "aliases": []
+  },
+  {
+    "id": "saskatoon-ca",
+    "name": "Saskatoon",
+    "country": "Canada",
+    "countryCode": "CA",
+    "state": "Saskatchewan",
+    "timeZone": "America/Regina",
+    "population": 266000,
+    "aliases": [
+      "YXE"
+    ]
+  },
+  {
+    "id": "regina-ca",
+    "name": "Regina",
+    "country": "Canada",
+    "countryCode": "CA",
+    "state": "Saskatchewan",
+    "timeZone": "America/Regina",
+    "population": 226000,
+    "aliases": [
+      "YQR"
+    ]
+  },
+  {
+    "id": "st-johns-ca",
+    "name": "St. John's",
+    "country": "Canada",
+    "countryCode": "CA",
+    "state": "Newfoundland",
+    "timeZone": "America/St_Johns",
+    "population": 114000,
+    "aliases": [
+      "YYT",
+      "Newfoundland"
+    ]
+  },
+  {
+    "id": "queretaro-mx",
+    "name": "Querétaro",
+    "country": "Mexico",
+    "countryCode": "MX",
+    "state": "Querétaro",
+    "timeZone": "America/Mexico_City",
+    "population": 1049000,
+    "aliases": [
+      "QRO"
+    ]
+  },
+  {
+    "id": "merida-mx",
+    "name": "Mérida",
+    "country": "Mexico",
+    "countryCode": "MX",
+    "state": "Yucatán",
+    "timeZone": "America/Merida",
+    "population": 921000,
+    "aliases": [
+      "MID"
+    ]
+  },
+  {
+    "id": "cali-co",
+    "name": "Cali",
+    "country": "Colombia",
+    "countryCode": "CO",
+    "state": "Valle del Cauca",
+    "timeZone": "America/Bogota",
+    "population": 2227000,
+    "aliases": [
+      "CLO"
+    ]
+  },
+  {
+    "id": "barranquilla-co",
+    "name": "Barranquilla",
+    "country": "Colombia",
+    "countryCode": "CO",
+    "state": "Atlántico",
+    "timeZone": "America/Bogota",
+    "population": 1274000,
+    "aliases": [
+      "BAQ"
+    ]
+  },
+  {
+    "id": "guayaquil-ec",
+    "name": "Guayaquil",
+    "country": "Ecuador",
+    "countryCode": "EC",
+    "state": "Guayas",
+    "timeZone": "America/Guayaquil",
+    "population": 2698000,
+    "aliases": [
+      "GYE"
+    ]
+  },
+  {
+    "id": "rosario-ar",
+    "name": "Rosario",
+    "country": "Argentina",
+    "countryCode": "AR",
+    "state": "Santa Fe",
+    "timeZone": "America/Argentina/Cordoba",
+    "population": 1342000,
+    "aliases": [
+      "ROS"
+    ]
+  },
+  {
+    "id": "porto-alegre-br",
+    "name": "Porto Alegre",
+    "country": "Brazil",
+    "countryCode": "BR",
+    "state": "Rio Grande do Sul",
+    "timeZone": "America/Sao_Paulo",
+    "population": 1332000,
+    "aliases": [
+      "POA"
+    ]
+  },
+  {
+    "id": "recife-br",
+    "name": "Recife",
+    "country": "Brazil",
+    "countryCode": "BR",
+    "state": "Pernambuco",
+    "timeZone": "America/Recife",
+    "population": 1488000,
+    "aliases": [
+      "REC"
+    ]
+  },
+  {
+    "id": "florianopolis-br",
+    "name": "Florianópolis",
+    "country": "Brazil",
+    "countryCode": "BR",
+    "state": "Santa Catarina",
+    "timeZone": "America/Sao_Paulo",
+    "population": 537000,
+    "aliases": [
+      "FLN",
+      "Florianopolis"
+    ]
+  },
+  {
+    "id": "campinas-br",
+    "name": "Campinas",
+    "country": "Brazil",
+    "countryCode": "BR",
+    "state": "São Paulo",
+    "timeZone": "America/Sao_Paulo",
+    "population": 1139000,
+    "aliases": [
+      "VCP"
+    ]
+  },
+  {
+    "id": "eindhoven-nl",
+    "name": "Eindhoven",
+    "country": "Netherlands",
+    "countryCode": "NL",
+    "state": "North Brabant",
+    "timeZone": "Europe/Amsterdam",
+    "population": 243000,
+    "aliases": [
+      "EIN",
+      "Brainport"
+    ]
+  },
+  {
+    "id": "groningen-nl",
+    "name": "Groningen",
+    "country": "Netherlands",
+    "countryCode": "NL",
+    "state": "Groningen",
+    "timeZone": "Europe/Amsterdam",
+    "population": 238000,
+    "aliases": []
+  },
+  {
+    "id": "delft-nl",
+    "name": "Delft",
+    "country": "Netherlands",
+    "countryCode": "NL",
+    "state": "South Holland",
+    "timeZone": "Europe/Amsterdam",
+    "population": 106000,
+    "aliases": [
+      "TU Delft"
+    ]
+  },
+  {
+    "id": "ghent-be",
+    "name": "Ghent",
+    "country": "Belgium",
+    "countryCode": "BE",
+    "state": "Flanders",
+    "timeZone": "Europe/Brussels",
+    "population": 268000,
+    "aliases": [
+      "Gent"
+    ]
+  },
+  {
+    "id": "leuven-be",
+    "name": "Leuven",
+    "country": "Belgium",
+    "countryCode": "BE",
+    "state": "Flanders",
+    "timeZone": "Europe/Brussels",
+    "population": 103000,
+    "aliases": [
+      "KU Leuven"
+    ]
+  },
+  {
+    "id": "bern-ch",
+    "name": "Bern",
+    "country": "Switzerland",
+    "countryCode": "CH",
+    "state": "Bern",
+    "timeZone": "Europe/Zurich",
+    "population": 134000,
+    "aliases": [
+      "BRN",
+      "Berne"
+    ]
+  },
+  {
+    "id": "lausanne-ch",
+    "name": "Lausanne",
+    "country": "Switzerland",
+    "countryCode": "CH",
+    "state": "Vaud",
+    "timeZone": "Europe/Zurich",
+    "population": 141000,
+    "aliases": [
+      "EPFL"
+    ]
+  },
+  {
+    "id": "zug-ch",
+    "name": "Zug",
+    "country": "Switzerland",
+    "countryCode": "CH",
+    "state": "Zug",
+    "timeZone": "Europe/Zurich",
+    "population": 31000,
+    "aliases": [
+      "Crypto Valley"
+    ]
+  },
+  {
+    "id": "graz-at",
+    "name": "Graz",
+    "country": "Austria",
+    "countryCode": "AT",
+    "state": "Styria",
+    "timeZone": "Europe/Vienna",
+    "population": 298000,
+    "aliases": [
+      "GRZ"
+    ]
+  },
+  {
+    "id": "linz-at",
+    "name": "Linz",
+    "country": "Austria",
+    "countryCode": "AT",
+    "state": "Upper Austria",
+    "timeZone": "Europe/Vienna",
+    "population": 210000,
+    "aliases": [
+      "LNZ"
+    ]
+  },
+  {
+    "id": "salzburg-at",
+    "name": "Salzburg",
+    "country": "Austria",
+    "countryCode": "AT",
+    "state": "Salzburg",
+    "timeZone": "Europe/Vienna",
+    "population": 156000,
+    "aliases": [
+      "SZG"
+    ]
+  },
+  {
+    "id": "innsbruck-at",
+    "name": "Innsbruck",
+    "country": "Austria",
+    "countryCode": "AT",
+    "state": "Tyrol",
+    "timeZone": "Europe/Vienna",
+    "population": 131000,
+    "aliases": [
+      "INN"
+    ]
+  },
+  {
+    "id": "leipzig-de",
+    "name": "Leipzig",
+    "country": "Germany",
+    "countryCode": "DE",
+    "state": "Saxony",
+    "timeZone": "Europe/Berlin",
+    "population": 616000,
+    "aliases": [
+      "LEJ"
+    ]
+  },
+  {
+    "id": "dresden-de",
+    "name": "Dresden",
+    "country": "Germany",
+    "countryCode": "DE",
+    "state": "Saxony",
+    "timeZone": "Europe/Berlin",
+    "population": 563000,
+    "aliases": [
+      "DRS"
+    ]
+  },
+  {
+    "id": "hanover-de",
+    "name": "Hanover",
+    "country": "Germany",
+    "countryCode": "DE",
+    "state": "Lower Saxony",
+    "timeZone": "Europe/Berlin",
+    "population": 545000,
+    "aliases": [
+      "HAJ",
+      "Hannover"
+    ]
+  },
+  {
+    "id": "nuremberg-de",
+    "name": "Nuremberg",
+    "country": "Germany",
+    "countryCode": "DE",
+    "state": "Bavaria",
+    "timeZone": "Europe/Berlin",
+    "population": 523000,
+    "aliases": [
+      "NUE",
+      "Nürnberg"
+    ]
+  },
+  {
+    "id": "bonn-de",
+    "name": "Bonn",
+    "country": "Germany",
+    "countryCode": "DE",
+    "state": "North Rhine-Westphalia",
+    "timeZone": "Europe/Berlin",
+    "population": 336000,
+    "aliases": []
+  },
+  {
+    "id": "karlsruhe-de",
+    "name": "Karlsruhe",
+    "country": "Germany",
+    "countryCode": "DE",
+    "state": "Baden-Württemberg",
+    "timeZone": "Europe/Berlin",
+    "population": 309000,
+    "aliases": [
+      "KIT"
+    ]
+  },
+  {
+    "id": "heidelberg-de",
+    "name": "Heidelberg",
+    "country": "Germany",
+    "countryCode": "DE",
+    "state": "Baden-Württemberg",
+    "timeZone": "Europe/Berlin",
+    "population": 162000,
+    "aliases": []
+  },
+  {
+    "id": "darmstadt-de",
+    "name": "Darmstadt",
+    "country": "Germany",
+    "countryCode": "DE",
+    "state": "Hesse",
+    "timeZone": "Europe/Berlin",
+    "population": 164000,
+    "aliases": []
+  },
+  {
+    "id": "aachen-de",
+    "name": "Aachen",
+    "country": "Germany",
+    "countryCode": "DE",
+    "state": "North Rhine-Westphalia",
+    "timeZone": "Europe/Berlin",
+    "population": 252000,
+    "aliases": [
+      "RWTH"
+    ]
+  },
+  {
+    "id": "nantes-fr",
+    "name": "Nantes",
+    "country": "France",
+    "countryCode": "FR",
+    "state": "Pays de la Loire",
+    "timeZone": "Europe/Paris",
+    "population": 323000,
+    "aliases": [
+      "NTE"
+    ]
+  },
+  {
+    "id": "montpellier-fr",
+    "name": "Montpellier",
+    "country": "France",
+    "countryCode": "FR",
+    "state": "Occitanie",
+    "timeZone": "Europe/Paris",
+    "population": 302000,
+    "aliases": [
+      "MPL"
+    ]
+  },
+  {
+    "id": "strasbourg-fr",
+    "name": "Strasbourg",
+    "country": "France",
+    "countryCode": "FR",
+    "state": "Grand Est",
+    "timeZone": "Europe/Paris",
+    "population": 291000,
+    "aliases": [
+      "SXB"
+    ]
+  },
+  {
+    "id": "bordeaux-fr",
+    "name": "Bordeaux",
+    "country": "France",
+    "countryCode": "FR",
+    "state": "Nouvelle-Aquitaine",
+    "timeZone": "Europe/Paris",
+    "population": 261000,
+    "aliases": [
+      "BOD"
+    ]
+  },
+  {
+    "id": "lille-fr",
+    "name": "Lille",
+    "country": "France",
+    "countryCode": "FR",
+    "state": "Hauts-de-France",
+    "timeZone": "Europe/Paris",
+    "population": 236000,
+    "aliases": [
+      "LIL"
+    ]
+  },
+  {
+    "id": "grenoble-fr",
+    "name": "Grenoble",
+    "country": "France",
+    "countryCode": "FR",
+    "state": "Auvergne-Rhône-Alpes",
+    "timeZone": "Europe/Paris",
+    "population": 158000,
+    "aliases": []
+  },
+  {
+    "id": "malaga-es",
+    "name": "Málaga",
+    "country": "Spain",
+    "countryCode": "ES",
+    "state": "Andalusia",
+    "timeZone": "Europe/Madrid",
+    "population": 586000,
+    "aliases": [
+      "AGP",
+      "Malaga"
+    ]
+  },
+  {
+    "id": "bilbao-es",
+    "name": "Bilbao",
+    "country": "Spain",
+    "countryCode": "ES",
+    "state": "Basque Country",
+    "timeZone": "Europe/Madrid",
+    "population": 346000,
+    "aliases": [
+      "BIO"
+    ]
+  },
+  {
+    "id": "braga-pt",
+    "name": "Braga",
+    "country": "Portugal",
+    "countryCode": "PT",
+    "state": "",
+    "timeZone": "Europe/Lisbon",
+    "population": 193000,
+    "aliases": []
+  },
+  {
+    "id": "turin-it",
+    "name": "Turin",
+    "country": "Italy",
+    "countryCode": "IT",
+    "state": "Piedmont",
+    "timeZone": "Europe/Rome",
+    "population": 841000,
+    "aliases": [
+      "TRN",
+      "Torino"
+    ]
+  },
+  {
+    "id": "bologna-it",
+    "name": "Bologna",
+    "country": "Italy",
+    "countryCode": "IT",
+    "state": "Emilia-Romagna",
+    "timeZone": "Europe/Rome",
+    "population": 390000,
+    "aliases": [
+      "BLQ"
+    ]
+  },
+  {
+    "id": "newcastle-gb",
+    "name": "Newcastle",
+    "country": "United Kingdom",
+    "countryCode": "GB",
+    "state": "England",
+    "timeZone": "Europe/London",
+    "population": 300000,
+    "aliases": [
+      "NCL",
+      "Newcastle upon Tyne"
+    ]
+  },
+  {
+    "id": "sheffield-gb",
+    "name": "Sheffield",
+    "country": "United Kingdom",
+    "countryCode": "GB",
+    "state": "England",
+    "timeZone": "Europe/London",
+    "population": 556000,
+    "aliases": []
+  },
+  {
+    "id": "nottingham-gb",
+    "name": "Nottingham",
+    "country": "United Kingdom",
+    "countryCode": "GB",
+    "state": "England",
+    "timeZone": "Europe/London",
+    "population": 323000,
+    "aliases": []
+  },
+  {
+    "id": "brighton-gb",
+    "name": "Brighton",
+    "country": "United Kingdom",
+    "countryCode": "GB",
+    "state": "England",
+    "timeZone": "Europe/London",
+    "population": 277000,
+    "aliases": []
+  },
+  {
+    "id": "galway-ie",
+    "name": "Galway",
+    "country": "Ireland",
+    "countryCode": "IE",
+    "state": "Connacht",
+    "timeZone": "Europe/Dublin",
+    "population": 85000,
+    "aliases": []
+  },
+  {
+    "id": "limerick-ie",
+    "name": "Limerick",
+    "country": "Ireland",
+    "countryCode": "IE",
+    "state": "Munster",
+    "timeZone": "Europe/Dublin",
+    "population": 102000,
+    "aliases": [
+      "SNN"
+    ]
+  },
+  {
+    "id": "malmo-se",
+    "name": "Malmö",
+    "country": "Sweden",
+    "countryCode": "SE",
+    "state": "",
+    "timeZone": "Europe/Stockholm",
+    "population": 362000,
+    "aliases": [
+      "MMX",
+      "Malmo"
+    ]
+  },
+  {
+    "id": "uppsala-se",
+    "name": "Uppsala",
+    "country": "Sweden",
+    "countryCode": "SE",
+    "state": "",
+    "timeZone": "Europe/Stockholm",
+    "population": 177000,
+    "aliases": []
+  },
+  {
+    "id": "lund-se",
+    "name": "Lund",
+    "country": "Sweden",
+    "countryCode": "SE",
+    "state": "",
+    "timeZone": "Europe/Stockholm",
+    "population": 94000,
+    "aliases": []
+  },
+  {
+    "id": "bergen-no",
+    "name": "Bergen",
+    "country": "Norway",
+    "countryCode": "NO",
+    "state": "",
+    "timeZone": "Europe/Oslo",
+    "population": 291000,
+    "aliases": [
+      "BGO"
+    ]
+  },
+  {
+    "id": "trondheim-no",
+    "name": "Trondheim",
+    "country": "Norway",
+    "countryCode": "NO",
+    "state": "",
+    "timeZone": "Europe/Oslo",
+    "population": 214000,
+    "aliases": [
+      "TRD",
+      "NTNU"
+    ]
+  },
+  {
+    "id": "stavanger-no",
+    "name": "Stavanger",
+    "country": "Norway",
+    "countryCode": "NO",
+    "state": "",
+    "timeZone": "Europe/Oslo",
+    "population": 149000,
+    "aliases": [
+      "SVG"
+    ]
+  },
+  {
+    "id": "aarhus-dk",
+    "name": "Aarhus",
+    "country": "Denmark",
+    "countryCode": "DK",
+    "state": "",
+    "timeZone": "Europe/Copenhagen",
+    "population": 290000,
+    "aliases": [
+      "AAR"
+    ]
+  },
+  {
+    "id": "odense-dk",
+    "name": "Odense",
+    "country": "Denmark",
+    "countryCode": "DK",
+    "state": "",
+    "timeZone": "Europe/Copenhagen",
+    "population": 182000,
+    "aliases": []
+  },
+  {
+    "id": "espoo-fi",
+    "name": "Espoo",
+    "country": "Finland",
+    "countryCode": "FI",
+    "state": "",
+    "timeZone": "Europe/Helsinki",
+    "population": 314000,
+    "aliases": [
+      "Aalto"
+    ]
+  },
+  {
+    "id": "tampere-fi",
+    "name": "Tampere",
+    "country": "Finland",
+    "countryCode": "FI",
+    "state": "",
+    "timeZone": "Europe/Helsinki",
+    "population": 255000,
+    "aliases": [
+      "TMP"
+    ]
+  },
+  {
+    "id": "turku-fi",
+    "name": "Turku",
+    "country": "Finland",
+    "countryCode": "FI",
+    "state": "",
+    "timeZone": "Europe/Helsinki",
+    "population": 202000,
+    "aliases": [
+      "TKU"
+    ]
+  },
+  {
+    "id": "oulu-fi",
+    "name": "Oulu",
+    "country": "Finland",
+    "countryCode": "FI",
+    "state": "",
+    "timeZone": "Europe/Helsinki",
+    "population": 214000,
+    "aliases": [
+      "OUL"
+    ]
+  },
+  {
+    "id": "wroclaw-pl",
+    "name": "Wrocław",
+    "country": "Poland",
+    "countryCode": "PL",
+    "state": "",
+    "timeZone": "Europe/Warsaw",
+    "population": 674000,
+    "aliases": [
+      "WRO",
+      "Wroclaw"
+    ]
+  },
+  {
+    "id": "poznan-pl",
+    "name": "Poznań",
+    "country": "Poland",
+    "countryCode": "PL",
+    "state": "",
+    "timeZone": "Europe/Warsaw",
+    "population": 540000,
+    "aliases": [
+      "POZ",
+      "Poznan"
+    ]
+  },
+  {
+    "id": "gdansk-pl",
+    "name": "Gdańsk",
+    "country": "Poland",
+    "countryCode": "PL",
+    "state": "",
+    "timeZone": "Europe/Warsaw",
+    "population": 487000,
+    "aliases": [
+      "GDN",
+      "Gdansk"
+    ]
+  },
+  {
+    "id": "katowice-pl",
+    "name": "Katowice",
+    "country": "Poland",
+    "countryCode": "PL",
+    "state": "",
+    "timeZone": "Europe/Warsaw",
+    "population": 280000,
+    "aliases": [
+      "KTW"
+    ]
+  },
+  {
+    "id": "lodz-pl",
+    "name": "Łódź",
+    "country": "Poland",
+    "countryCode": "PL",
+    "state": "",
+    "timeZone": "Europe/Warsaw",
+    "population": 655000,
+    "aliases": [
+      "LCJ",
+      "Lodz"
+    ]
+  },
+  {
+    "id": "brno-cz",
+    "name": "Brno",
+    "country": "Czechia",
+    "countryCode": "CZ",
+    "state": "",
+    "timeZone": "Europe/Prague",
+    "population": 400000,
+    "aliases": [
+      "BRQ"
+    ]
+  },
+  {
+    "id": "bratislava-sk",
+    "name": "Bratislava",
+    "country": "Slovakia",
+    "countryCode": "SK",
+    "state": "",
+    "timeZone": "Europe/Bratislava",
+    "population": 475000,
+    "aliases": [
+      "BTS"
+    ]
+  },
+  {
+    "id": "cluj-napoca-ro",
+    "name": "Cluj-Napoca",
+    "country": "Romania",
+    "countryCode": "RO",
+    "state": "",
+    "timeZone": "Europe/Bucharest",
+    "population": 328000,
+    "aliases": [
+      "CLJ",
+      "Cluj"
+    ]
+  },
+  {
+    "id": "timisoara-ro",
+    "name": "Timișoara",
+    "country": "Romania",
+    "countryCode": "RO",
+    "state": "",
+    "timeZone": "Europe/Bucharest",
+    "population": 250000,
+    "aliases": [
+      "TSR",
+      "Timisoara"
+    ]
+  },
+  {
+    "id": "iasi-ro",
+    "name": "Iași",
+    "country": "Romania",
+    "countryCode": "RO",
+    "state": "",
+    "timeZone": "Europe/Bucharest",
+    "population": 271000,
+    "aliases": [
+      "IAS",
+      "Iasi"
+    ]
+  },
+  {
+    "id": "novi-sad-rs",
+    "name": "Novi Sad",
+    "country": "Serbia",
+    "countryCode": "RS",
+    "state": "",
+    "timeZone": "Europe/Belgrade",
+    "population": 306000,
+    "aliases": []
+  },
+  {
+    "id": "split-hr",
+    "name": "Split",
+    "country": "Croatia",
+    "countryCode": "HR",
+    "state": "",
+    "timeZone": "Europe/Zagreb",
+    "population": 160000,
+    "aliases": [
+      "SPU"
+    ]
+  },
+  {
+    "id": "ljubljana-si",
+    "name": "Ljubljana",
+    "country": "Slovenia",
+    "countryCode": "SI",
+    "state": "",
+    "timeZone": "Europe/Ljubljana",
+    "population": 296000,
+    "aliases": [
+      "LJU"
+    ]
+  },
+  {
+    "id": "tartu-ee",
+    "name": "Tartu",
+    "country": "Estonia",
+    "countryCode": "EE",
+    "state": "",
+    "timeZone": "Europe/Tallinn",
+    "population": 97000,
+    "aliases": []
+  },
+  {
+    "id": "kaunas-lt",
+    "name": "Kaunas",
+    "country": "Lithuania",
+    "countryCode": "LT",
+    "state": "",
+    "timeZone": "Europe/Vilnius",
+    "population": 304000,
+    "aliases": [
+      "KUN"
+    ]
+  },
+  {
+    "id": "thessaloniki-gr",
+    "name": "Thessaloniki",
+    "country": "Greece",
+    "countryCode": "GR",
+    "state": "",
+    "timeZone": "Europe/Athens",
+    "population": 319000,
+    "aliases": [
+      "SKG"
+    ]
+  },
+  {
+    "id": "nicosia-cy",
+    "name": "Nicosia",
+    "country": "Cyprus",
+    "countryCode": "CY",
+    "state": "",
+    "timeZone": "Asia/Nicosia",
+    "population": 330000,
+    "aliases": [
+      "LCA",
+      "Cyprus"
+    ]
+  },
+  {
+    "id": "limassol-cy",
+    "name": "Limassol",
+    "country": "Cyprus",
+    "countryCode": "CY",
+    "state": "",
+    "timeZone": "Asia/Nicosia",
+    "population": 235000,
+    "aliases": []
+  },
+  {
+    "id": "haifa-il",
+    "name": "Haifa",
+    "country": "Israel",
+    "countryCode": "IL",
+    "state": "",
+    "timeZone": "Asia/Jerusalem",
+    "population": 290000,
+    "aliases": []
+  },
+  {
+    "id": "sharjah-ae",
+    "name": "Sharjah",
+    "country": "United Arab Emirates",
+    "countryCode": "AE",
+    "state": "",
+    "timeZone": "Asia/Dubai",
+    "population": 1800000,
+    "aliases": [
+      "SHJ"
+    ]
+  },
+  {
+    "id": "manama-bh",
+    "name": "Manama",
+    "country": "Bahrain",
+    "countryCode": "BH",
+    "state": "",
+    "timeZone": "Asia/Bahrain",
+    "population": 727000,
+    "aliases": [
+      "BAH",
+      "Bahrain"
+    ]
+  },
+  {
+    "id": "izmir-tr",
+    "name": "Izmir",
+    "country": "Turkey",
+    "countryCode": "TR",
+    "state": "",
+    "timeZone": "Europe/Istanbul",
+    "population": 2948000,
+    "aliases": [
+      "ADB",
+      "İzmir"
+    ]
+  },
+  {
+    "id": "astana-kz",
+    "name": "Astana",
+    "country": "Kazakhstan",
+    "countryCode": "KZ",
+    "state": "",
+    "timeZone": "Asia/Almaty",
+    "population": 1423000,
+    "aliases": [
+      "NQZ"
+    ]
+  },
+  {
+    "id": "gurugram-in",
+    "name": "Gurugram",
+    "country": "India",
+    "countryCode": "IN",
+    "state": "Haryana",
+    "timeZone": "Asia/Kolkata",
+    "population": 1153000,
+    "aliases": [
+      "Gurgaon",
+      "NCR"
+    ]
+  },
+  {
+    "id": "trivandrum-in",
+    "name": "Trivandrum",
+    "country": "India",
+    "countryCode": "IN",
+    "state": "Kerala",
+    "timeZone": "Asia/Kolkata",
+    "population": 957000,
+    "aliases": [
+      "TRV",
+      "Thiruvananthapuram"
+    ]
+  },
+  {
+    "id": "coimbatore-in",
+    "name": "Coimbatore",
+    "country": "India",
+    "countryCode": "IN",
+    "state": "Tamil Nadu",
+    "timeZone": "Asia/Kolkata",
+    "population": 1601000,
+    "aliases": [
+      "CJB"
+    ]
+  },
+  {
+    "id": "indore-in",
+    "name": "Indore",
+    "country": "India",
+    "countryCode": "IN",
+    "state": "Madhya Pradesh",
+    "timeZone": "Asia/Kolkata",
+    "population": 1964000,
+    "aliases": [
+      "IDR"
+    ]
+  },
+  {
+    "id": "lucknow-in",
+    "name": "Lucknow",
+    "country": "India",
+    "countryCode": "IN",
+    "state": "Uttar Pradesh",
+    "timeZone": "Asia/Kolkata",
+    "population": 2817000,
+    "aliases": [
+      "LKO"
+    ]
+  },
+  {
+    "id": "surat-in",
+    "name": "Surat",
+    "country": "India",
+    "countryCode": "IN",
+    "state": "Gujarat",
+    "timeZone": "Asia/Kolkata",
+    "population": 4467000,
+    "aliases": [
+      "STV"
+    ]
+  },
+  {
+    "id": "nagpur-in",
+    "name": "Nagpur",
+    "country": "India",
+    "countryCode": "IN",
+    "state": "Maharashtra",
+    "timeZone": "Asia/Kolkata",
+    "population": 2405000,
+    "aliases": [
+      "NAG"
+    ]
+  },
+  {
+    "id": "visakhapatnam-in",
+    "name": "Visakhapatnam",
+    "country": "India",
+    "countryCode": "IN",
+    "state": "Andhra Pradesh",
+    "timeZone": "Asia/Kolkata",
+    "population": 1728000,
+    "aliases": [
+      "VTZ",
+      "Vizag"
+    ]
+  },
+  {
+    "id": "bhubaneswar-in",
+    "name": "Bhubaneswar",
+    "country": "India",
+    "countryCode": "IN",
+    "state": "Odisha",
+    "timeZone": "Asia/Kolkata",
+    "population": 885000,
+    "aliases": [
+      "BBI"
+    ]
+  },
+  {
+    "id": "kobe-jp",
+    "name": "Kobe",
+    "country": "Japan",
+    "countryCode": "JP",
+    "state": "Hyogo",
+    "timeZone": "Asia/Tokyo",
+    "population": 1504000,
+    "aliases": [
+      "UKB"
+    ]
+  },
+  {
+    "id": "hiroshima-jp",
+    "name": "Hiroshima",
+    "country": "Japan",
+    "countryCode": "JP",
+    "state": "Hiroshima",
+    "timeZone": "Asia/Tokyo",
+    "population": 1190000,
+    "aliases": [
+      "HIJ"
+    ]
+  },
+  {
+    "id": "sendai-jp",
+    "name": "Sendai",
+    "country": "Japan",
+    "countryCode": "JP",
+    "state": "Miyagi",
+    "timeZone": "Asia/Tokyo",
+    "population": 1096000,
+    "aliases": [
+      "SDJ"
+    ]
+  },
+  {
+    "id": "naha-jp",
+    "name": "Naha",
+    "country": "Japan",
+    "countryCode": "JP",
+    "state": "Okinawa",
+    "timeZone": "Asia/Tokyo",
+    "population": 314000,
+    "aliases": [
+      "OKA",
+      "Okinawa"
+    ]
+  },
+  {
+    "id": "daejeon-kr",
+    "name": "Daejeon",
+    "country": "South Korea",
+    "countryCode": "KR",
+    "state": "",
+    "timeZone": "Asia/Seoul",
+    "population": 1444000,
+    "aliases": [
+      "KAIST"
+    ]
+  },
+  {
+    "id": "pangyo-kr",
+    "name": "Pangyo",
+    "country": "South Korea",
+    "countryCode": "KR",
+    "state": "Gyeonggi",
+    "timeZone": "Asia/Seoul",
+    "population": 940000,
+    "aliases": [
+      "Seongnam",
+      "Bundang"
+    ]
+  },
+  {
+    "id": "hsinchu-tw",
+    "name": "Hsinchu",
+    "country": "Taiwan",
+    "countryCode": "TW",
+    "state": "",
+    "timeZone": "Asia/Taipei",
+    "population": 456000,
+    "aliases": [
+      "TSMC"
+    ]
+  },
+  {
+    "id": "taichung-tw",
+    "name": "Taichung",
+    "country": "Taiwan",
+    "countryCode": "TW",
+    "state": "",
+    "timeZone": "Asia/Taipei",
+    "population": 2845000,
+    "aliases": [
+      "RMQ"
+    ]
+  },
+  {
+    "id": "tainan-tw",
+    "name": "Tainan",
+    "country": "Taiwan",
+    "countryCode": "TW",
+    "state": "",
+    "timeZone": "Asia/Taipei",
+    "population": 1859000,
+    "aliases": [
+      "TNN"
+    ]
+  },
+  {
+    "id": "suzhou-cn",
+    "name": "Suzhou",
+    "country": "China",
+    "countryCode": "CN",
+    "state": "Jiangsu",
+    "timeZone": "Asia/Shanghai",
+    "population": 12911000,
+    "aliases": []
+  },
+  {
+    "id": "da-nang-vn",
+    "name": "Da Nang",
+    "country": "Vietnam",
+    "countryCode": "VN",
+    "state": "",
+    "timeZone": "Asia/Ho_Chi_Minh",
+    "population": 1220000,
+    "aliases": [
+      "DAD"
+    ]
+  },
+  {
+    "id": "chiang-mai-th",
+    "name": "Chiang Mai",
+    "country": "Thailand",
+    "countryCode": "TH",
+    "state": "",
+    "timeZone": "Asia/Bangkok",
+    "population": 1198000,
+    "aliases": [
+      "CNX"
+    ]
+  },
+  {
+    "id": "phuket-th",
+    "name": "Phuket",
+    "country": "Thailand",
+    "countryCode": "TH",
+    "state": "",
+    "timeZone": "Asia/Bangkok",
+    "population": 416000,
+    "aliases": [
+      "HKT"
+    ]
+  },
+  {
+    "id": "johor-bahru-my",
+    "name": "Johor Bahru",
+    "country": "Malaysia",
+    "countryCode": "MY",
+    "state": "Johor",
+    "timeZone": "Asia/Kuala_Lumpur",
+    "population": 858000,
+    "aliases": [
+      "JHB",
+      "JB"
+    ]
+  },
+  {
+    "id": "surabaya-id",
+    "name": "Surabaya",
+    "country": "Indonesia",
+    "countryCode": "ID",
+    "state": "East Java",
+    "timeZone": "Asia/Jakarta",
+    "population": 2896000,
+    "aliases": [
+      "SUB"
+    ]
+  },
+  {
+    "id": "bandung-id",
+    "name": "Bandung",
+    "country": "Indonesia",
+    "countryCode": "ID",
+    "state": "West Java",
+    "timeZone": "Asia/Jakarta",
+    "population": 2506000,
+    "aliases": [
+      "BDO"
+    ]
+  },
+  {
+    "id": "cebu-ph",
+    "name": "Cebu City",
+    "country": "Philippines",
+    "countryCode": "PH",
+    "state": "Cebu",
+    "timeZone": "Asia/Manila",
+    "population": 964000,
+    "aliases": [
+      "CEB",
+      "Cebu"
+    ]
+  },
+  {
+    "id": "davao-ph",
+    "name": "Davao City",
+    "country": "Philippines",
+    "countryCode": "PH",
+    "state": "Davao",
+    "timeZone": "Asia/Manila",
+    "population": 1776000,
+    "aliases": [
+      "DVO",
+      "Davao"
+    ]
+  },
+  {
+    "id": "queenstown-nz",
+    "name": "Queenstown",
+    "country": "New Zealand",
+    "countryCode": "NZ",
+    "state": "",
+    "timeZone": "Pacific/Auckland",
+    "population": 29000,
+    "aliases": [
+      "ZQN"
+    ]
+  },
+  {
+    "id": "durban-za",
+    "name": "Durban",
+    "country": "South Africa",
+    "countryCode": "ZA",
+    "state": "KwaZulu-Natal",
+    "timeZone": "Africa/Johannesburg",
+    "population": 3199000,
+    "aliases": [
+      "DUR"
+    ]
+  },
+  {
+    "id": "pretoria-za",
+    "name": "Pretoria",
+    "country": "South Africa",
+    "countryCode": "ZA",
+    "state": "Gauteng",
+    "timeZone": "Africa/Johannesburg",
+    "population": 2740000,
+    "aliases": []
+  },
+  {
+    "id": "kigali-rw",
+    "name": "Kigali",
+    "country": "Rwanda",
+    "countryCode": "RW",
+    "state": "",
+    "timeZone": "Africa/Kigali",
+    "population": 1208000,
+    "aliases": [
+      "KGL",
+      "Rwanda"
     ]
   }
 ]

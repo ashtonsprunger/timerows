@@ -3,17 +3,20 @@ import { useEffect } from 'react';
 /**
  * useKeyboardNav Hook
  * 
- * Provides global keyboard navigation for TimeRows:
- * - ArrowLeft / ArrowRight: Scrub hour columns
+ * Global keyboard navigation for TimeRows:
+ * - ArrowLeft / ArrowRight: Scrub or move selected slot backward / forward
+ * - Shift + ArrowLeft / ArrowRight: Expand / contract selected multi-hour range
  * - [ / ]: Previous / Next calendar day
  * - T: Jump to Today
  * - /: Open City Search modal
  * - S: Open Share modal
- * - Escape: Clear selection or close modals
+ * - Escape: Clear locked selection or close modals
  */
 export function useKeyboardNav({
-  activeHoverIndex,
-  setActiveHoverIndex,
+  selectedRange,
+  setSelectedRange,
+  hoveredIndex,
+  setHoveredIndex,
   onPrevDay,
   onNextDay,
   onToday,
@@ -25,41 +28,58 @@ export function useKeyboardNav({
 }) {
   useEffect(() => {
     function handleKeyDown(e) {
-      // Ignore shortcut keys when typing inside input elements or modals
       const activeElement = document.activeElement;
       const isInput =
         activeElement &&
         (activeElement.tagName === 'INPUT' ||
           activeElement.tagName === 'TEXTAREA' ||
+          activeElement.tagName === 'SELECT' ||
           activeElement.isContentEditable);
 
       if (e.key === 'Escape') {
         if (isModalOpen) {
           onCloseModals();
         } else {
-          setActiveHoverIndex(null);
+          setSelectedRange(null);
+          setHoveredIndex(null);
         }
         return;
       }
 
-      if (isInput) return;
+      if (isInput || isModalOpen) return;
 
       switch (e.key) {
-        case 'ArrowLeft':
+        case 'ArrowLeft': {
           e.preventDefault();
-          setActiveHoverIndex((prev) => {
-            if (prev === null || prev === undefined) return 12;
-            return Math.max(0, prev - 1);
-          });
+          const currentStart = selectedRange?.startIndex ?? hoveredIndex ?? 12;
+          const currentEnd = selectedRange?.endIndex ?? currentStart;
+          const duration = currentEnd - currentStart + 1;
+          if (e.shiftKey) {
+            const nextEnd = Math.max(currentStart - 0.5, currentEnd - 0.5);
+            setSelectedRange({ startIndex: currentStart, endIndex: nextEnd });
+          } else {
+            const nextStart = Math.max(0, currentStart - 0.5);
+            const nextEnd = nextStart + duration - 1;
+            setSelectedRange({ startIndex: nextStart, endIndex: nextEnd });
+          }
           break;
+        }
 
-        case 'ArrowRight':
+        case 'ArrowRight': {
           e.preventDefault();
-          setActiveHoverIndex((prev) => {
-            if (prev === null || prev === undefined) return 12;
-            return Math.min(totalColumns - 1, prev + 1);
-          });
+          const currentStart = selectedRange?.startIndex ?? hoveredIndex ?? 12;
+          const currentEnd = selectedRange?.endIndex ?? currentStart;
+          const duration = currentEnd - currentStart + 1;
+          if (e.shiftKey) {
+            const nextEnd = Math.min(totalColumns - 1, currentEnd + 0.5);
+            setSelectedRange({ startIndex: currentStart, endIndex: nextEnd });
+          } else {
+            const nextEnd = Math.min(totalColumns - 1, currentEnd + 0.5);
+            const nextStart = Math.max(0, nextEnd - duration + 1);
+            setSelectedRange({ startIndex: nextStart, endIndex: nextEnd });
+          }
           break;
+        }
 
         case '[':
           e.preventDefault();
@@ -96,8 +116,10 @@ export function useKeyboardNav({
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [
-    activeHoverIndex,
-    setActiveHoverIndex,
+    selectedRange,
+    setSelectedRange,
+    hoveredIndex,
+    setHoveredIndex,
     onPrevDay,
     onNextDay,
     onToday,
