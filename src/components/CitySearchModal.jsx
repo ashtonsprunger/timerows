@@ -9,6 +9,7 @@ export function CitySearchModal({
   onSelectCity,
   pinnedCities = [],
   liveTimestamp,
+  referenceTimestamp,
   use24Hour = false,
 }) {
   const [query, setQuery] = useState('');
@@ -61,6 +62,7 @@ export function CitySearchModal({
   };
 
   const nowDate = new Date(liveTimestamp || Date.now());
+  const offsetDate = new Date(referenceTimestamp || liveTimestamp || Date.now());
 
   return (
     <div className="modal-backdrop" onClick={onClose}>
@@ -94,7 +96,7 @@ export function CitySearchModal({
             let offsetStr = '';
             let liveTimeStr = '';
             try {
-              const offsetMins = getTimezoneOffset(city.timeZone, nowDate);
+              const offsetMins = getTimezoneOffset(city.timeZone, offsetDate);
               offsetStr = `UTC${formatTimezoneOffset(offsetMins)}`;
               liveTimeStr = new Intl.DateTimeFormat('en-US', {
                 timeZone: city.timeZone,

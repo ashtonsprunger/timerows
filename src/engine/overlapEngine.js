@@ -46,6 +46,7 @@ function normalizeCityRow(cityInput, index) {
       id: `city-${index}`,
       name: firstSlot.timeZone || `City ${index + 1}`,
       timeZone: firstSlot.timeZone || 'UTC',
+      isPrimary: index === 0,
       slots: cityInput,
     };
   }
@@ -54,6 +55,7 @@ function normalizeCityRow(cityInput, index) {
     id: cityInput.id || `city-${index}`,
     name: cityInput.name || cityInput.cityName || cityInput.timeZone || `City ${index + 1}`,
     timeZone: cityInput.timeZone || (cityInput.slots?.[0]?.timeZone) || 'UTC',
+    isPrimary: Boolean(cityInput.isPrimary),
     slots: cityInput.slots || [],
   };
 }
@@ -98,6 +100,9 @@ export function evaluateColumnOverlap(columnSlots, columnIndex = 0) {
       cityId: slot.cityId,
       cityName: slot.cityName,
       timeZone: slot.timeZone,
+      isPrimary: Boolean(slot.isPrimary),
+      hour: slot.hour,
+      decimalHour: slot.decimalHour,
       phase,
       isWorkingHour: phase === PHASE_TYPES.WORK,
       isSleepHour: phase === PHASE_TYPES.SLEEP,
@@ -170,6 +175,7 @@ export function calculateTimelineOverlaps(cityRows) {
         ...slot,
         cityId: city.id,
         cityName: city.name,
+        isPrimary: city.isPrimary,
       };
     });
 
@@ -189,6 +195,8 @@ export function calculateTimelineOverlaps(cityRows) {
  * @param {number} [options.maxDurationHours=4] - Maximum window size to consider
  * @param {number} [options.targetDurationHours] - If specified, returns windows of exact duration
  * @param {number} [options.maxResults=3] - Maximum number of top windows to return
+ * @param {string} [options.referenceCityId] - Optional ID of reference city
+ * @param {string} [options.referenceTimezone] - Optional IANA timezone of reference city
  * @returns {Array<Object>} Ranked meeting window objects
  */
 export function findBestMeetingWindows(evaluatedColumns, options = {}) {
@@ -197,6 +205,8 @@ export function findBestMeetingWindows(evaluatedColumns, options = {}) {
     maxDurationHours = 4,
     targetDurationHours = null,
     maxResults = 3,
+    referenceCityId = null,
+    referenceTimezone = null,
   } = options;
 
   if (!evaluatedColumns || evaluatedColumns.length === 0) return [];
@@ -234,8 +244,44 @@ export function findBestMeetingWindows(evaluatedColumns, options = {}) {
       else if (allGoodOrGolden) windowScore += 10;
 
       // Small bonus for reasonable local meeting hours (10:00 to 16:00 in reference city)
-      const refHour = new Date(windowSlots[0].timestamp).getUTCHours();
-      if (refHour >= 14 && refHour <= 20) {
+      const firstSlot = windowSlots[0];
+      const matchedById = referenceCityId
+        ? firstSlot.cityStatuses?.find((c) => c.cityId === referenceCityId)
+        : null;
+      const matchedByTz = referenceTimezone
+        ? firstSlot.cityStatuses?.find((c) => c.timeZone === referenceTimezone)
+        : null;
+      const refStatus =
+        matchedById ||
+        matchedByTz ||
+        (!referenceTimezone &&
+          (firstSlot.cityStatuses?.find((c) => c.isPrimary) || firstSlot.cityStatuses?.[0])) ||
+        null;
+
+      let refHour;
+      if (typeof refStatus?.decimalHour === 'number') {
+        refHour = refStatus.decimalHour;
+      } else if (typeof refStatus?.hour === 'number') {
+        refHour = refStatus.hour;
+      } else {
+        const fallbackTz =
+          refStatus?.timeZone ||
+          referenceTimezone ||
+          firstSlot.cityStatuses?.find((c) => c.isPrimary)?.timeZone ||
+          firstSlot.cityStatuses?.[0]?.timeZone;
+        if (fallbackTz && firstSlot.timestamp) {
+          try {
+            const parts = getTimeParts(firstSlot.timestamp, fallbackTz);
+            refHour = parts.hour + parts.minute / 60;
+          } catch {
+            refHour = new Date(firstSlot.timestamp).getUTCHours();
+          }
+        } else {
+          refHour = new Date(firstSlot.timestamp).getUTCHours();
+        }
+      }
+
+      if (refHour >= 10 && refHour <= 16) {
         windowScore += 2;
       }
 

@@ -11,7 +11,13 @@ import {
 import { searchCities } from '../engine/citySearch.js';
 import { isSameCitySet } from '../engine/cityPresets.js';
 import { formatSmartTimeSpan } from '../engine/overlapFormat.js';
-import { getTimezoneOffset, formatTimezoneOffset, getTimeParts } from '../engine/timezoneEngine.js';
+import {
+  getTimezoneOffset,
+  formatTimezoneOffset,
+  getTimeParts,
+  getRepresentativeSlotIndex,
+  getRepresentativeSlot,
+} from '../engine/timezoneEngine.js';
 
 const SHORT_MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 const FULL_WEEKDAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
@@ -125,8 +131,43 @@ export function TimelineGrid({
   }, [anchorIso, selectedDate]);
 
   const referenceSlots = slotsByCity[referenceCityId] || [];
-  const referenceOffsetMinutes = referenceSlots[0]?.offsetMinutes ?? 0;
   const totalCols = referenceSlots.length || 24;
+
+  // Determine current real-time hour column and exact minute offset for the live "Now" indicator
+  const nowMarker = useMemo(() => {
+    if (!isToday || referenceSlots.length === 0) return null;
+    const nowMs = liveTimestamp || Date.now();
+    for (let i = 0; i < referenceSlots.length; i++) {
+      const slotStart = referenceSlots[i].timestamp;
+      if (nowMs >= slotStart && nowMs < slotStart + 3600000) {
+        const fraction = Math.max(0, Math.min(1, (nowMs - slotStart) / 3600000));
+        const colOffset = i + fraction;
+        return {
+          columnIndex: i,
+          leftCalc: `calc(var(--city-col-width, 296px) + ${colOffset.toFixed(4)} * var(--slot-width, 32px))`,
+        };
+      }
+    }
+    return null;
+  }, [isToday, referenceSlots, liveTimestamp]);
+
+  const activeColumnIndex = useMemo(
+    () =>
+      getRepresentativeSlotIndex(referenceSlots.length, {
+        hoveredIndex,
+        selectedRange,
+        nowColumnIndex: nowMarker ? nowMarker.columnIndex : null,
+      }),
+    [referenceSlots.length, hoveredIndex, selectedRange, nowMarker]
+  );
+
+  const referenceSlot = getRepresentativeSlot(referenceSlots, {
+    activeColumnIndex,
+    nowColumnIndex: nowMarker ? nowMarker.columnIndex : null,
+  });
+  const referenceOffsetMinutes = referenceSlot?.offsetMinutes ?? 0;
+  const offsetReferenceTimestamp =
+    referenceSlot?.timestamp ?? (liveTimestamp || Date.now());
 
   const referenceCityObj = useMemo(
     () => cities.find((c) => c.id === referenceCityId) || cities[0],
@@ -289,24 +330,6 @@ export function TimelineGrid({
       window.removeEventListener('touchcancel', finishDragSession);
     };
   }, [isDragging, totalCols, selectedRange, onSelectRange]);
-
-  // Determine current real-time hour column and exact minute offset for the live "Now" indicator
-  const nowMarker = useMemo(() => {
-    if (!isToday || referenceSlots.length === 0) return null;
-    const nowMs = liveTimestamp || Date.now();
-    for (let i = 0; i < referenceSlots.length; i++) {
-      const slotStart = referenceSlots[i].timestamp;
-      if (nowMs >= slotStart && nowMs < slotStart + 3600000) {
-        const fraction = Math.max(0, Math.min(1, (nowMs - slotStart) / 3600000));
-        const colOffset = i + fraction;
-        return {
-          columnIndex: i,
-          leftCalc: `calc(var(--city-col-width, 296px) + ${colOffset.toFixed(4)} * var(--slot-width, 32px))`,
-        };
-      }
-    }
-    return null;
-  }, [isToday, referenceSlots, liveTimestamp]);
 
   // On narrow screens the grid scrolls horizontally: bring the overlap (or the current hour)
   // into view next to the sticky city column instead of always opening at midnight.
@@ -494,7 +517,7 @@ export function TimelineGrid({
                     );
                     let offsetTag = '';
                     try {
-                      const mins = getTimezoneOffset(city.timeZone, Date.now());
+                      const mins = getTimezoneOffset(city.timeZone, offsetReferenceTimestamp);
                       offsetTag = `UTC${formatTimezoneOffset(mins)}`;
                     } catch {
                       // ignore
@@ -696,6 +719,7 @@ export function TimelineGrid({
                   isReferenceCity={isReference}
                   timelineOverlaps={timelineOverlaps}
                   nowColumnIndex={nowMarker ? nowMarker.columnIndex : null}
+                  activeColumnIndex={activeColumnIndex}
                 />
               );
             })}

@@ -1,6 +1,12 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { HomePinIcon, CloseIcon, ChevronUpIcon } from './Icons.jsx';
-import { PHASE_TYPES, getTimeParts, formatRelativeOffset } from '../engine/timezoneEngine.js';
+import {
+  PHASE_TYPES,
+  getTimeParts,
+  formatRelativeOffset,
+  isMidnightSlot,
+  getRepresentativeSlot,
+} from '../engine/timezoneEngine.js';
 import { formatHourOption } from './Header.jsx';
 
 const SHORT_MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -38,6 +44,7 @@ export function TimeRow({
   isReferenceCity,
   timelineOverlaps,
   nowColumnIndex = null,
+  activeColumnIndex = null,
 }) {
   const [isWorkPopoverOpen, setIsWorkPopoverOpen] = useState(false);
   const [isDraggingRow, setIsDraggingRow] = useState(false);
@@ -96,8 +103,12 @@ export function TimeRow({
     }
   }, [city.timeZone, liveTimestamp, use24Hour, isReferenceCity, referenceLiveIsoDate]);
 
-  const cityOffsetMinutes = slots[0]?.offsetMinutes ?? 0;
-  const abbreviation = slots[0]?.abbreviation || '';
+  const representativeSlot = getRepresentativeSlot(slots, {
+    activeColumnIndex,
+    nowColumnIndex,
+  });
+  const cityOffsetMinutes = representativeSlot?.offsetMinutes ?? 0;
+  const abbreviation = representativeSlot?.abbreviation || '';
   const displayName = city.name === 'UTC / GMT' ? 'UTC' : city.name;
   const showTzLabel =
     Boolean(abbreviation) &&
@@ -117,14 +128,6 @@ export function TimeRow({
     const diffMins = cityOffsetMinutes - referenceOffsetMinutes;
     return formatRelativeOffset(diffMins);
   }, [isReferenceCity, cityOffsetMinutes, referenceOffsetMinutes]);
-
-  // Helper to check if a slot is a midnight date-change cell
-  const isMidnightSlot = (slot, idx) => {
-    if (!slot) return false;
-    if (slot.hour === 0) return true;
-    if (idx > 0 && slots[idx - 1] && slots[idx - 1].dateStr !== slot.dateStr) return true;
-    return false;
-  };
 
   return (
     <div
@@ -331,7 +334,7 @@ export function TimeRow({
       <div className="wtb-ribbon-wrap">
         <div className="wtb-ribbon-track">
           {slots.map((slot, index) => {
-            const isMidnight = isMidnightSlot(slot, index);
+            const isMidnight = isMidnightSlot(slot, index, slots);
             const isFirst = index === 0;
             const isLast = index === slots.length - 1;
 
@@ -384,7 +387,7 @@ export function TimeRow({
                     <span className={hasMinutes ? 'wtb-cell-num-fractional' : 'wtb-cell-num'}>
                       {hasMinutes ? `${slotHour12}:${minStr}` : slotHour12}
                     </span>
-                    {(slotHour === 12 || index === 0 || hasMinutes) && (
+                    {(slotHour === 12 || slotHour === 0 || index === 0 || hasMinutes) && (
                       <span className="wtb-cell-sub">{slotAmpm}</span>
                     )}
                   </>

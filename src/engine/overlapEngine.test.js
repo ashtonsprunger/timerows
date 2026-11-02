@@ -268,6 +268,112 @@ describe('overlapEngine', () => {
         });
       });
     });
+
+    test('awards 10:00–16:00 local-hour bonus in the reference city across EST/EDT and non-US timezones', () => {
+      // 1. Tokyo (Asia/Tokyo, UTC+9) as reference city: 10:00 JST is 01:00 UTC (outside 14..20 UTC)
+      const tyoDate = '2026-01-15';
+      const tyoTimestamps = generateDayIntervals(tyoDate, 'Asia/Tokyo');
+      const tyoSlots = generateCityRowSlots({
+        targetTimezone: 'Asia/Tokyo',
+        timestamps: tyoTimestamps,
+        referenceDate: tyoDate,
+      });
+
+      const tyoTimeline = calculateTimelineOverlaps([
+        { id: 'tyo', name: 'Tokyo', timeZone: 'Asia/Tokyo', isPrimary: true, slots: tyoSlots },
+      ]);
+      const tyoWindows = findBestMeetingWindows(tyoTimeline, {
+        targetDurationHours: 1,
+        maxResults: 24,
+      });
+
+      const slot9Window = tyoWindows.find((w) => w.startIndex === 9);   // 09:00 JST (no bonus -> 125)
+      const slot10Window = tyoWindows.find((w) => w.startIndex === 10); // 10:00 JST (+2 bonus -> 127)
+      expect(slot10Window.score).toBe(127);
+      expect(slot9Window.score).toBe(125);
+
+      // 2. New York in Winter (EST, UTC-5): 09:00 EST is 14:00 UTC (must NOT get bonus),
+      // while 16:00 EST is 21:00 UTC (MUST get bonus)
+      const nyWinterDate = '2026-01-15';
+      const nyWinterTimestamps = generateDayIntervals(nyWinterDate, 'America/New_York');
+      const nyWinterSlots = generateCityRowSlots({
+        targetTimezone: 'America/New_York',
+        timestamps: nyWinterTimestamps,
+        referenceDate: nyWinterDate,
+      });
+      const nyWinterTimeline = calculateTimelineOverlaps([
+        { id: 'nyc', name: 'New York', timeZone: 'America/New_York', isPrimary: true, slots: nyWinterSlots },
+      ]);
+      const nyWinterWindows = findBestMeetingWindows(nyWinterTimeline, {
+        targetDurationHours: 1,
+        maxResults: 24,
+      });
+
+      const ny9amEst = nyWinterWindows.find((w) => w.startIndex === 9);   // 09:00 EST (14:00 UTC) -> 125
+      const ny10amEst = nyWinterWindows.find((w) => w.startIndex === 10); // 10:00 EST (15:00 UTC) -> 127
+      const ny4pmEst = nyWinterWindows.find((w) => w.startIndex === 16);  // 16:00 EST (21:00 UTC) -> 127
+      expect(ny9amEst.score).toBe(125);
+      expect(ny10amEst.score).toBe(127);
+      expect(ny4pmEst.score).toBe(127);
+
+      // 3. Explicit referenceTimezone option is honored even when cityStatuses belong to another timezone
+      const explicitTzWindows = findBestMeetingWindows(nyWinterTimeline, {
+        targetDurationHours: 1,
+        maxResults: 24,
+        referenceTimezone: 'Europe/London', // 5 hours ahead of EST
+      });
+      // At NY index 5 (05:00 EST = 10:00 GMT in London), London is at 10:00 AM (+2 bonus),
+      // whereas at NY index 4 (04:00 EST = 09:00 GMT in London), London is at 09:00 AM (no bonus).
+      // Make two synthetic Golden columns at 09:00 GMT and 10:00 GMT to isolate the +2 bonus:
+      const syntheticCols = [
+        {
+          slotIndex: 0,
+          timestamp: Date.UTC(2026, 0, 15, 9, 0, 0), // 09:00 GMT / 04:00 EST
+          isViable: true,
+          isGolden: true,
+          quality: OVERLAP_QUALITY.GOLDEN,
+          score: 100,
+          cityStatuses: [
+            {
+              cityId: 'nyc',
+              cityName: 'New York',
+              timeZone: 'America/New_York',
+              hour: 4,
+              decimalHour: 4,
+              formattedTime12: '4:00 AM',
+              isWorkingHour: true,
+            },
+          ],
+        },
+        {
+          slotIndex: 1,
+          timestamp: Date.UTC(2026, 0, 15, 10, 0, 0), // 10:00 GMT / 05:00 EST
+          isViable: true,
+          isGolden: true,
+          quality: OVERLAP_QUALITY.GOLDEN,
+          score: 100,
+          cityStatuses: [
+            {
+              cityId: 'nyc',
+              cityName: 'New York',
+              timeZone: 'America/New_York',
+              hour: 5,
+              decimalHour: 5,
+              formattedTime12: '5:00 AM',
+              isWorkingHour: true,
+            },
+          ],
+        },
+      ];
+      const rankedWithLondonRef = findBestMeetingWindows(syntheticCols, {
+        targetDurationHours: 1,
+        maxResults: 2,
+        referenceTimezone: 'Europe/London',
+      });
+      expect(rankedWithLondonRef.find((w) => w.startIndex === 0).score).toBe(125);
+      expect(rankedWithLondonRef.find((w) => w.startIndex === 1).score).toBe(127);
+      expect(explicitTzWindows.length).toBeGreaterThan(0);
+    });
   });
 
   describe('Meeting Formatting & Slack Export', () => {

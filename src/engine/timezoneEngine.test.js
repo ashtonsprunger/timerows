@@ -17,6 +17,10 @@ import {
   generateDayIntervals,
   generateSlot,
   generateCityRowSlots,
+  isMidnightSlot,
+  getRepresentativeSlotIndex,
+  getRepresentativeSlot,
+  sortCitiesByOffset,
   PHASE_TYPES,
   DEFAULT_WORKING_HOURS,
   DEFAULT_SLEEP_HOURS,
@@ -502,6 +506,213 @@ describe('timezoneEngine', () => {
         expect(parts.hour).toBe(0);
       }
     });
+
+    test('detects mid-year / Ramadan clock transitions where Jan 1 and Jul 1 have identical offsets (Africa/Casablanca)', () => {
+      // In 2026, Morocco (Africa/Casablanca) is UTC+1 on both Jan 1 and Jul 1,
+      // but drops to UTC+0 during Ramadan (mid-Feb to mid-March 2026).
+      const jan2026 = Date.UTC(2026, 0, 15, 12, 0, 0);
+      const ramadanMar2026 = Date.UTC(2026, 2, 1, 12, 0, 0);
+      const jul2026 = Date.UTC(2026, 6, 15, 12, 0, 0);
+
+      const janOff = getTimezoneOffset('Africa/Casablanca', jan2026);
+      const ramadanOff = getTimezoneOffset('Africa/Casablanca', ramadanMar2026);
+      const julOff = getTimezoneOffset('Africa/Casablanca', jul2026);
+
+      // Verify Jan and Jul are identical (+60), while March Ramadan is lower (0)
+      expect(janOff).toBe(julOff);
+      if (ramadanOff < janOff) {
+        expect(isDST('Africa/Casablanca', jan2026)).toBe(true);
+        expect(isDST('Africa/Casablanca', jul2026)).toBe(true);
+        expect(isDST('Africa/Casablanca', ramadanMar2026)).toBe(false);
+      }
+
+      // Also verify Europe/Dublin (GMT in winter, IST in summer)
+      expect(isDST('Europe/Dublin', jan2026)).toBe(false);
+      expect(isDST('Europe/Dublin', jul2026)).toBe(true);
+      expect(getTimezoneAbbreviation('Europe/Dublin', jan2026)).toBe('GMT');
+      expect(getTimezoneAbbreviation('Europe/Dublin', jul2026)).toBe('IST');
+    });
+
+    test('handles midnight DST transitions (America/Havana and Asia/Beirut) for both 23h Spring Forward and 25h Fall Back', () => {
+      // America/Havana transitions at 00:00 midnight local time
+      // Spring Forward 2026-03-08: 00:00 CST jumps to 01:00 CDT -> 23 hours
+      const havanaSpringIntervals = generateDayIntervals('2026-03-08', 'America/Havana');
+      expect(havanaSpringIntervals.length).toBe(23);
+      const havanaSpringFirstParts = getTimeParts(havanaSpringIntervals[0], 'America/Havana');
+      expect(havanaSpringFirstParts.isoDate).toBe('2026-03-08');
+      expect(havanaSpringFirstParts.hour).toBe(1);
+
+      // Fall Back 2026-11-01: 00:00 occurs twice (00:00 CDT then 00:00 CST) -> 25 hours
+      const havanaFallIntervals = generateDayIntervals('2026-11-01', 'America/Havana');
+      expect(havanaFallIntervals.length).toBe(25);
+      const havanaFallSlots = generateCityRowSlots({
+        targetTimezone: 'America/Havana',
+        timestamps: havanaFallIntervals,
+        referenceDate: '2026-11-01',
+      });
+      expect(havanaFallSlots[0].hour).toBe(0);
+      expect(havanaFallSlots[1].hour).toBe(0);
+      expect(havanaFallSlots[0].offsetMinutes).toBe(-240); // CDT
+      expect(havanaFallSlots[1].offsetMinutes).toBe(-300); // CST
+
+      // Asia/Beirut (East of UTC):
+      // Spring Forward 2026-03-29 at 00:00 EET -> 01:00 EEST (23-hour day starting at 01:00)
+      const beirutSpringIntervals = generateDayIntervals('2026-03-29', 'Asia/Beirut');
+      expect(beirutSpringIntervals.length).toBe(23);
+      expect(getTimeParts(beirutSpringIntervals[0], 'Asia/Beirut').isoDate).toBe('2026-03-29');
+      expect(getTimeParts(beirutSpringIntervals[0], 'Asia/Beirut').hour).toBe(1);
+
+      // Fall Back at 2026-10-24 24:00 EEST -> 2026-10-24 23:00 EET (25-hour Saturday with two 23:00 hours)
+      const beirutFallIntervals = generateDayIntervals('2026-10-24', 'Asia/Beirut');
+      expect(beirutFallIntervals.length).toBe(25);
+      expect(getTimeParts(beirutFallIntervals[23], 'Asia/Beirut').hour).toBe(23);
+      expect(getTimeParts(beirutFallIntervals[24], 'Asia/Beirut').hour).toBe(23);
+    });
+
+    test('isMidnightSlot prevents duplicate date cells on midnight Fall Back days and detects date change on midnight Spring Forward', () => {
+      // On 2026-11-01 in America/Havana (when London is reference city), 00:00 occurs twice on 2026-11-01
+      const lonTimestamps = generateDayIntervals('2026-11-01', 'Europe/London');
+      const havanaSlots = generateCityRowSlots({
+        targetTimezone: 'America/Havana',
+        timestamps: lonTimestamps,
+        referenceDate: '2026-11-01',
+      });
+
+      const midnightIndices = havanaSlots
+        .map((slot, idx) => (isMidnightSlot(slot, idx, havanaSlots) ? idx : -1))
+        .filter((idx) => idx !== -1);
+
+      // Even though slot.hour === 0 occurs twice on 2026-11-01, only the first one is a date transition
+      const zeroHourIndices = havanaSlots
+        .map((slot, idx) => (slot.hour === 0 ? idx : -1))
+        .filter((idx) => idx !== -1);
+      expect(zeroHourIndices.length).toBe(2);
+      expect(midnightIndices.length).toBe(1);
+      expect(midnightIndices[0]).toBe(zeroHourIndices[0]);
+
+      // Also when Havana is the reference city on 2026-11-01 (idx 0 and idx 1 both have hour === 0)
+      const havanaRefSlots = generateCityRowSlots({
+        targetTimezone: 'America/Havana',
+        referenceDate: '2026-11-01',
+        referenceTimezone: 'America/New_York',
+      });
+      const havanaRefMidnightCount = havanaRefSlots.filter((s, idx) =>
+        isMidnightSlot(s, idx, havanaRefSlots)
+      ).length;
+      expect(havanaRefMidnightCount).toBe(1);
+
+      // Column 0 on a midnight Spring Forward day (where 00:00 is skipped to 01:00) must still be detected as midnight/date-start
+      const havanaSpringSlots = generateCityRowSlots({
+        targetTimezone: 'America/Havana',
+        referenceDate: '2026-03-08',
+        referenceTimezone: 'America/Havana',
+      });
+      expect(havanaSpringSlots[0].hour).toBe(1);
+      expect(isMidnightSlot(havanaSpringSlots[0], 0, havanaSpringSlots)).toBe(true);
+
+      const beirutSpringSlots = generateCityRowSlots({
+        targetTimezone: 'Asia/Beirut',
+        referenceDate: '2026-03-29',
+        referenceTimezone: 'Asia/Beirut',
+      });
+      expect(beirutSpringSlots[0].hour).toBe(1);
+      expect(isMidnightSlot(beirutSpringSlots[0], 0, beirutSpringSlots)).toBe(true);
+
+      // Column 0 on a midnight Fall Back day when a secondary city is already on its SECOND 00:00 hour
+      // (Bogota is UTC-5 year-round; at 2026-11-01 00:00 in Bogota / 05:00 UTC, Havana is on its second 00:00 of 2026-11-01)
+      const bogotaFallIntervals = generateDayIntervals('2026-11-01', 'America/Bogota');
+      const havanaSecondaryFallSlots = generateCityRowSlots({
+        targetTimezone: 'America/Havana',
+        timestamps: bogotaFallIntervals,
+        referenceDate: '2026-11-01',
+      });
+      expect(havanaSecondaryFallSlots[0].hour).toBe(0);
+      expect(isMidnightSlot(havanaSecondaryFallSlots[0], 0, havanaSecondaryFallSlots)).toBe(false);
+    });
+
+    test('getRepresentativeSlot and getRepresentativeSlotIndex reflect post-transition daytime or active slot on DST transition days', () => {
+      // On US Fall Back day (2026-11-01), slot 0 is 00:00 EDT (-240), while daytime/noon is EST (-300)
+      const nyFallSlots = generateCityRowSlots({
+        targetTimezone: 'America/New_York',
+        referenceDate: '2026-11-01',
+        referenceTimezone: 'America/New_York',
+      });
+      expect(nyFallSlots[0].abbreviation).toBe('EDT');
+      expect(nyFallSlots[0].offsetMinutes).toBe(-240);
+
+      // Idle board (no hover, selection, or live now): picks midday slot -> EST (-300)
+      const idleRep = getRepresentativeSlot(nyFallSlots);
+      expect(idleRep.abbreviation).toBe('EST');
+      expect(idleRep.offsetMinutes).toBe(-300);
+
+      // Hovering slot 0 (12:00 AM before transition): reflects EDT (-240)
+      const hoverMidnightRep = getRepresentativeSlot(nyFallSlots, { hoveredIndex: 0 });
+      expect(hoverMidnightRep.abbreviation).toBe('EDT');
+      expect(hoverMidnightRep.offsetMinutes).toBe(-240);
+
+      // Hovering slot 10 (9:00 AM after transition): reflects EST (-300)
+      const hoverDayRep = getRepresentativeSlot(nyFallSlots, { hoveredIndex: 10 });
+      expect(hoverDayRep.abbreviation).toBe('EST');
+      expect(hoverDayRep.offsetMinutes).toBe(-300);
+
+      // Locked selection takes precedence over hover
+      const selectedRep = getRepresentativeSlot(nyFallSlots, {
+        selectedRange: { startIndex: 0, endIndex: 1 },
+        hoveredIndex: 15,
+      });
+      expect(selectedRep.abbreviation).toBe('EDT');
+
+      // On US Spring Forward day (2026-03-08), slot 0 is 00:00 EST (-300), while daytime is EDT (-240)
+      const nySpringSlots = generateCityRowSlots({
+        targetTimezone: 'America/New_York',
+        referenceDate: '2026-03-08',
+        referenceTimezone: 'America/New_York',
+      });
+      expect(nySpringSlots[0].abbreviation).toBe('EST');
+      const springIdleRep = getRepresentativeSlot(nySpringSlots);
+      expect(springIdleRep.abbreviation).toBe('EDT');
+      expect(springIdleRep.offsetMinutes).toBe(-240);
+
+      expect(getRepresentativeSlotIndex(0)).toBe(0);
+      expect(getRepresentativeSlot([])).toBeNull();
+    });
+
+    test('sortCitiesByOffset sorts cities using the active selectedDate timestamp across DST transitions', () => {
+      // Halifax (Northern Hemisphere: UTC-4 in Jan, UTC-3 in Jul)
+      // vs Santiago (Southern Hemisphere: UTC-3 in Jan, UTC-4 in Jul)
+      const cities = [
+        { id: 'santiago-cl', name: 'Santiago', timeZone: 'America/Santiago', isPrimary: true },
+        { id: 'halifax-ca', name: 'Halifax', timeZone: 'America/Halifax', isPrimary: false },
+      ];
+
+      // In January (2026-01-15): Halifax is UTC-4 (-240), Santiago is UTC-3 (-180)
+      const janTs = Date.UTC(2026, 0, 15, 16, 0, 0);
+      const sortedJanAsc = sortCitiesByOffset(cities, 'asc', janTs);
+      expect(sortedJanAsc.map((c) => c.id)).toEqual(['halifax-ca', 'santiago-cl']);
+      // Primary flag is preserved on Santiago
+      expect(sortedJanAsc.find((c) => c.id === 'santiago-cl').isPrimary).toBe(true);
+      expect(sortedJanAsc.find((c) => c.id === 'halifax-ca').isPrimary).toBe(false);
+
+      // In July (2026-07-15): Santiago is UTC-4 (-240), Halifax is UTC-3 (-180)
+      const julTs = Date.UTC(2026, 6, 15, 16, 0, 0);
+      const sortedJulAsc = sortCitiesByOffset(cities, 'asc', julTs);
+      expect(sortedJulAsc.map((c) => c.id)).toEqual(['santiago-cl', 'halifax-ca']);
+
+      const sortedJulDesc = sortCitiesByOffset(cities, 'desc', julTs);
+      expect(sortedJulDesc.map((c) => c.id)).toEqual(['halifax-ca', 'santiago-cl']);
+
+      // US–Europe March DST gap (2026-03-15): Phoenix (MST, UTC-7) vs Los Angeles (PDT, UTC-7)
+      // vs Winter (2026-01-15): Los Angeles (PST, UTC-8) vs Phoenix (MST, UTC-7)
+      const westCities = [
+        { id: 'phx', name: 'Phoenix', timeZone: 'America/Phoenix', isPrimary: true },
+        { id: 'lax', name: 'Los Angeles', timeZone: 'America/Los_Angeles', isPrimary: false },
+      ];
+      expect(sortCitiesByOffset(westCities, 'asc', janTs).map((c) => c.id)).toEqual(['lax', 'phx']);
+      // On 2026-03-15 (after US Spring Forward), both are UTC-7 so original tie-order is preserved
+      const marGapTs = Date.UTC(2026, 2, 15, 18, 0, 0);
+      expect(sortCitiesByOffset(westCities, 'asc', marGapTs).map((c) => c.id)).toEqual(['phx', 'lax']);
+    });
   });
 });
+
 

@@ -111,7 +111,13 @@ export function buildCorridorSeoData(fromSlug, toSlug, referenceDate = '2026-10-
   });
 
   const timelineOverlaps = calculateTimelineOverlaps([
-    { id: fromCity.id, name: fromCity.name, timeZone: fromCity.timeZone, slots: fromSlots },
+    {
+      id: fromCity.id,
+      name: fromCity.name,
+      timeZone: fromCity.timeZone,
+      isPrimary: true,
+      slots: fromSlots,
+    },
     { id: toCity.id, name: toCity.name, timeZone: toCity.timeZone, slots: toSlots },
   ]);
 
@@ -155,6 +161,8 @@ export function buildCorridorSeoData(fromSlug, toSlug, referenceDate = '2026-10-
   const bestWindows = findBestMeetingWindows(timelineOverlaps, {
     maxResults: 1,
     minDurationHours: 1,
+    referenceCityId: fromCity.id,
+    referenceTimezone: fromCity.timeZone,
   });
   const compromiseWindow = findBestCompromiseWindow(timelineOverlaps);
   const primaryWindow = goldenWindow || bestWindows[0] || compromiseWindow;

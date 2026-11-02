@@ -10,6 +10,8 @@ import {
   getTimezoneOffset,
   generateDayIntervals,
   generateCityRowSlots,
+  getRepresentativeSlotIndex,
+  sortCitiesByOffset,
   DEFAULT_WORKING_HOURS,
 } from './engine/timezoneEngine.js';
 import {
@@ -274,15 +276,36 @@ export default function App() {
     return result;
   }, [cities, referenceTimestamps, selectedDate, referenceCity.timeZone, workingHours]);
 
+  const activeBoardTimestamp = useMemo(() => {
+    if (!referenceTimestamps || referenceTimestamps.length === 0) {
+      return liveTimestamp || Date.now();
+    }
+    let nowColIdx = null;
+    if (isToday) {
+      const nowMs = liveTimestamp || Date.now();
+      const foundIdx = referenceTimestamps.findIndex(
+        (ts) => nowMs >= ts && nowMs < ts + 3600000
+      );
+      if (foundIdx !== -1) nowColIdx = foundIdx;
+    }
+    const repIdx = getRepresentativeSlotIndex(referenceTimestamps.length, {
+      hoveredIndex,
+      selectedRange,
+      nowColumnIndex: nowColIdx,
+    });
+    return referenceTimestamps[repIdx] ?? (liveTimestamp || Date.now());
+  }, [referenceTimestamps, isToday, liveTimestamp, hoveredIndex, selectedRange]);
+
   const timelineOverlaps = useMemo(() => {
     const cityRows = cities.map((city) => ({
       id: city.id,
       name: city.name,
       timeZone: city.timeZone,
+      isPrimary: city.id === referenceCity.id,
       slots: slotsByCity[city.id] || [],
     }));
     return calculateTimelineOverlaps(cityRows);
-  }, [cities, slotsByCity]);
+  }, [cities, slotsByCity, referenceCity.id]);
 
   // Clamp selectedRange and hoveredIndex when switching from a 25h Fall Back day to a 24h or 23h day
   useEffect(() => {
@@ -307,8 +330,10 @@ export default function App() {
     return findBestMeetingWindows(timelineOverlaps, {
       maxResults: 3,
       minDurationHours: 1,
+      referenceCityId: referenceCity.id,
+      referenceTimezone: referenceCity.timeZone,
     });
-  }, [timelineOverlaps]);
+  }, [timelineOverlaps, referenceCity.id, referenceCity.timeZone]);
 
   // Full contiguous golden overlap windows (so a 5h or 6h overlap is shown in full)
   const goldenWindows = useMemo(() => {
@@ -472,36 +497,8 @@ export default function App() {
   };
 
   const handleSortCities = (direction) => {
-    setCities((prev) => {
-      if (prev.length <= 1) return prev;
-      const currentPrimaryId = (prev.find((c) => c.isPrimary) || prev[0])?.id;
-      const nowMs = liveTimestamp || Date.now();
-      const sorted = prev
-        .map((c, idx) => {
-          let offset = 0;
-          try {
-            offset = getTimezoneOffset(c.timeZone, nowMs);
-          } catch {
-            offset = 0;
-          }
-          return {
-            city: {
-              ...c,
-              isPrimary: c.id === currentPrimaryId,
-            },
-            offset,
-            idx,
-          };
-        })
-        .sort((a, b) => {
-          const diff = direction === 'desc' ? b.offset - a.offset : a.offset - b.offset;
-          if (diff !== 0) return diff;
-          return a.idx - b.idx;
-        })
-        .map((item) => item.city);
-
-      return sorted;
-    });
+    const sortTimestamp = activeBoardTimestamp || liveTimestamp || Date.now();
+    setCities((prev) => sortCitiesByOffset(prev, direction, sortTimestamp));
   };
 
   const handleUpdateCityWorkingHours = (cityId, customHours) => {
@@ -635,6 +632,7 @@ export default function App() {
         onSelectCity={handleAddCity}
         pinnedCities={cities}
         liveTimestamp={liveTimestamp}
+        referenceTimestamp={activeBoardTimestamp}
         use24Hour={use24Hour}
       />
 

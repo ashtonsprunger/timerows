@@ -270,11 +270,14 @@ const TIMEZONE_ABBREVIATIONS = {
   'America/Anchorage': { standard: 'AKST', daylight: 'AKDT' },
   'Pacific/Honolulu': { standard: 'HST', daylight: 'HST' },
   'America/Halifax': { standard: 'AST', daylight: 'ADT' },
+  'America/Havana': { standard: 'CST', daylight: 'CDT' },
   'America/St_Johns': { standard: 'NST', daylight: 'NDT' },
   'America/Sao_Paulo': { standard: 'BRT', daylight: 'BRT' },
   'America/Buenos_Aires': { standard: 'ART', daylight: 'ART' },
+  'America/Santiago': { standard: 'CLT', daylight: 'CLST' },
   'Europe/London': { standard: 'GMT', daylight: 'BST' },
   'Europe/Dublin': { standard: 'GMT', daylight: 'IST' },
+  'Europe/Lisbon': { standard: 'WET', daylight: 'WEST' },
   'Europe/Paris': { standard: 'CET', daylight: 'CEST' },
   'Europe/Berlin': { standard: 'CET', daylight: 'CEST' },
   'Europe/Amsterdam': { standard: 'CET', daylight: 'CEST' },
@@ -293,6 +296,9 @@ const TIMEZONE_ABBREVIATIONS = {
   'Europe/Kyiv': { standard: 'EET', daylight: 'EEST' },
   'Europe/Istanbul': { standard: 'TRT', daylight: 'TRT' },
   'Europe/Moscow': { standard: 'MSK', daylight: 'MSK' },
+  'Africa/Cairo': { standard: 'EET', daylight: 'EEST' },
+  'Asia/Beirut': { standard: 'EET', daylight: 'EEST' },
+  'Asia/Jerusalem': { standard: 'IST', daylight: 'IDT' },
   'Asia/Dubai': { standard: 'GST', daylight: 'GST' },
   'Asia/Tokyo': { standard: 'JST', daylight: 'JST' },
   'Asia/Seoul': { standard: 'KST', daylight: 'KST' },
@@ -307,6 +313,7 @@ const TIMEZONE_ABBREVIATIONS = {
   'Asia/Kathmandu': { standard: 'NPT', daylight: 'NPT' },
   'Australia/Sydney': { standard: 'AEST', daylight: 'AEDT' },
   'Australia/Melbourne': { standard: 'AEST', daylight: 'AEDT' },
+  'Australia/Hobart': { standard: 'AEST', daylight: 'AEDT' },
   'Australia/Brisbane': { standard: 'AEST', daylight: 'AEST' },
   'Australia/Adelaide': { standard: 'ACST', daylight: 'ACDT' },
   'Australia/Darwin': { standard: 'ACST', daylight: 'ACST' },
@@ -363,8 +370,42 @@ export function getTimezoneAbbreviation(timeZone, dateOrTimestamp) {
 }
 
 /**
- * Determine if Daylight Saving Time (DST) is active for the timezone at the given timestamp.
- * Detects whether the current offset is shifted ahead of the timezone's standard baseline offset.
+ * Cache for yearly timezone offset profiles (min/max offset across the calendar year)
+ */
+const yearOffsetCache = new Map();
+
+function getYearOffsetProfile(timeZone, year) {
+  const canonical = canonicalizeTimezone(timeZone);
+  const cacheKey = `${canonical}|${year}`;
+  let profile = yearOffsetCache.get(cacheKey);
+  if (!profile) {
+    let minOffset = Infinity;
+    let maxOffset = -Infinity;
+    // Sample the 1st, 10th, and 20th of all 12 months (36 samples/year) so timezones
+    // whose transitions do not span Jan 1 vs Jul 1 (e.g. Africa/Casablanca Ramadan shifts)
+    // are accurately detected.
+    const sampleDays = [1, 10, 20];
+    for (let month = 0; month < 12; month++) {
+      for (let i = 0; i < sampleDays.length; i++) {
+        const sampleUtc = Date.UTC(year, month, sampleDays[i], 12, 0, 0);
+        const offset = getTimezoneOffset(canonical, sampleUtc);
+        if (offset < minOffset) minOffset = offset;
+        if (offset > maxOffset) maxOffset = offset;
+      }
+    }
+    profile = {
+      minOffset,
+      maxOffset,
+      hasDST: minOffset !== maxOffset,
+    };
+    yearOffsetCache.set(cacheKey, profile);
+  }
+  return profile;
+}
+
+/**
+ * Determine if Daylight Saving Time (DST) / advanced offset is active for the timezone at the given timestamp.
+ * Detects whether the current offset is shifted ahead of the timezone's minimum baseline offset for that year.
  * 
  * @param {string} timeZone
  * @param {Date|number|string} dateOrTimestamp
@@ -373,19 +414,15 @@ export function getTimezoneAbbreviation(timeZone, dateOrTimestamp) {
 export function isDST(timeZone, dateOrTimestamp) {
   const parts = getTimeParts(dateOrTimestamp, timeZone);
   const currentOffset = getTimezoneOffset(timeZone, dateOrTimestamp);
-
-  // Compare offsets across January 1 and July 1 of that calendar year in UTC
-  const janOffset = getTimezoneOffset(timeZone, Date.UTC(parts.year, 0, 1, 12, 0, 0));
-  const julOffset = getTimezoneOffset(timeZone, Date.UTC(parts.year, 6, 1, 12, 0, 0));
+  const profile = getYearOffsetProfile(timeZone, parts.year);
 
   // If the offset is constant year-round, timezone does not observe DST
-  if (janOffset === julOffset) {
+  if (!profile.hasDST) {
     return false;
   }
 
-  // In all hemispheres, DST shifts the clock forward (greater offset) relative to standard time
-  const standardOffset = Math.min(janOffset, julOffset);
-  return currentOffset > standardOffset;
+  // DST shifts the clock forward (greater offset) relative to the baseline offset
+  return currentOffset > profile.minOffset;
 }
 
 /**
@@ -468,7 +505,8 @@ export function formatDateDifference(diffDays) {
 }
 
 /**
- * Get the UTC timestamp corresponding to local midnight (00:00:00) for a date in a timezone.
+ * Get the UTC timestamp corresponding to the start of a local calendar day (00:00:00, or 01:00:00
+ * if a midnight Spring Forward transition skips 00:00) for a date in a timezone.
  * 
  * @param {string} dateStr - 'YYYY-MM-DD'
  * @param {string} timeZone - IANA timezone identifier
@@ -485,7 +523,7 @@ export function getZonedMidnight(dateStr, timeZone) {
   }
 
   // Initial guess assuming UTC midnight
-  let utcGuess = Date.UTC(y, m - 1, d, 0, 0, 0);
+  const utcGuess = Date.UTC(y, m - 1, d, 0, 0, 0);
 
   // Compute offset at this guess
   const offset1 = getTimezoneOffset(timeZone, utcGuess);
@@ -494,7 +532,28 @@ export function getZonedMidnight(dateStr, timeZone) {
   // Re-check offset at the resolved time to ensure consistency across DST jumps near midnight
   const offset2 = getTimezoneOffset(timeZone, resolvedUtc);
   if (offset2 !== offset1) {
-    resolvedUtc = utcGuess - offset2 * 60000;
+    const candidate2 = utcGuess - offset2 * 60000;
+    // Adopt candidate2 if it falls on dateStr; in West-of-UTC midnight Spring Forward zones
+    // (e.g. America/Havana jumping 00:00 -> 01:00), subtracting the post-transition offset
+    // would land at 23:00 on the previous day.
+    if (getTimeParts(candidate2, timeZone).isoDate === dateStr) {
+      resolvedUtc = candidate2;
+    }
+  }
+
+  // If resolvedUtc landed on the previous calendar day (e.g. East-of-UTC midnight Spring Forward),
+  // step forward to the first hour of dateStr.
+  let safety = 0;
+  while (getTimeParts(resolvedUtc, timeZone).isoDate < dateStr && safety < 4) {
+    resolvedUtc += 3600000;
+    safety++;
+  }
+
+  // If there is an earlier hour on the same calendar date (e.g. East-of-UTC midnight Fall Back
+  // where 00:00 occurs twice), step back to the very first hour of dateStr.
+  while (getTimeParts(resolvedUtc - 3600000, timeZone).isoDate === dateStr && safety < 8) {
+    resolvedUtc -= 3600000;
+    safety++;
   }
 
   return resolvedUtc;
@@ -695,3 +754,142 @@ export function generateCityRowSlots({
     })
   );
 }
+
+/**
+ * Determines whether a slot in a city row should be rendered as a midnight date-change cell.
+ *
+ * Rules:
+ * - Subsequent columns (`idx > 0`) with a preceding slot: true if and only if the local
+ *   calendar date changed from the preceding slot (`slots[idx - 1].dateStr !== slot.dateStr`).
+ * - Column 0 (`idx === 0`, or when `prevSlot` is unavailable): if `slot.timestamp`,
+ *   `slot.timeZone`, and `slot.dateStr` are present, true if and only if the preceding
+ *   physical hour (`slot.timestamp - 3600000`) fell on a different local calendar date.
+ *   This handles both midnight Spring Forward transitions at column 0 (where `00:00` is
+ *   skipped to `01:00`, e.g. America/Havana on 2026-03-08 or Asia/Beirut on 2026-03-29)
+ *   and midnight Fall Back transitions at column 0 (where a secondary city is on the
+ *   second `00:00` of a date that already started an hour earlier).
+ *   Falls back to `slot.hour === 0` for lightweight mock objects without timestamps.
+ *
+ * @param {Object} slot
+ * @param {number} [idx=0]
+ * @param {Array<Object>} [slots=[]]
+ * @returns {boolean}
+ */
+export function isMidnightSlot(slot, idx = 0, slots = []) {
+  if (!slot) return false;
+  if (idx > 0) {
+    const prevSlot = slots?.[idx - 1];
+    if (prevSlot && prevSlot.dateStr && slot.dateStr) {
+      return prevSlot.dateStr !== slot.dateStr;
+    }
+  }
+  if (typeof slot.timestamp === 'number' && slot.timeZone && slot.dateStr) {
+    try {
+      const prevHourDateStr = getTimeParts(slot.timestamp - 3600000, slot.timeZone).isoDate;
+      return prevHourDateStr !== slot.dateStr;
+    } catch {
+      // fall through to slot.hour === 0
+    }
+  }
+  return slot.hour === 0;
+}
+
+/**
+ * Resolves the active/representative column index for header badges, relative offsets,
+ * and timezone abbreviations across a city row.
+ *
+ * Priority:
+ * 1. Explicit `activeColumnIndex` if provided
+ * 2. Locked `selectedRange.startIndex`
+ * 3. Active `hoveredIndex`
+ * 4. Live `nowColumnIndex` (when viewing Today)
+ * 5. Midday slot (`Math.floor(totalSlots / 2)`, i.e. ~12:00 PM in the reference city,
+ *    which is safely past early-morning 00:00/01:00/02:00 DST transitions)
+ *
+ * @param {number} totalSlots
+ * @param {Object} [options]
+ * @param {number|null} [options.activeColumnIndex]
+ * @param {number|null} [options.hoveredIndex]
+ * @param {{ startIndex: number, endIndex?: number }|null} [options.selectedRange]
+ * @param {number|null} [options.nowColumnIndex]
+ * @returns {number} Clamped slot index in [0, Math.max(0, totalSlots - 1)]
+ */
+export function getRepresentativeSlotIndex(totalSlots, options = {}) {
+  if (!totalSlots || totalSlots <= 0) return 0;
+  const maxIdx = totalSlots - 1;
+  const { activeColumnIndex, hoveredIndex, selectedRange, nowColumnIndex } = options;
+
+  if (typeof activeColumnIndex === 'number' && !Number.isNaN(activeColumnIndex)) {
+    return Math.min(maxIdx, Math.max(0, Math.floor(activeColumnIndex)));
+  }
+  if (
+    selectedRange &&
+    typeof selectedRange.startIndex === 'number' &&
+    !Number.isNaN(selectedRange.startIndex)
+  ) {
+    return Math.min(maxIdx, Math.max(0, Math.floor(selectedRange.startIndex)));
+  }
+  if (typeof hoveredIndex === 'number' && !Number.isNaN(hoveredIndex)) {
+    return Math.min(maxIdx, Math.max(0, Math.floor(hoveredIndex)));
+  }
+  if (typeof nowColumnIndex === 'number' && !Number.isNaN(nowColumnIndex)) {
+    return Math.min(maxIdx, Math.max(0, Math.floor(nowColumnIndex)));
+  }
+  return Math.min(maxIdx, Math.max(0, Math.floor(totalSlots / 2)));
+}
+
+/**
+ * Returns the representative slot object from a city's slot array for header badges
+ * (offset and timezone abbreviation).
+ *
+ * @param {Array<Object>} slots
+ * @param {Object} [options]
+ * @returns {Object|null}
+ */
+export function getRepresentativeSlot(slots, options = {}) {
+  if (!Array.isArray(slots) || slots.length === 0) return null;
+  const idx = getRepresentativeSlotIndex(slots.length, options);
+  return slots[idx] || slots[0] || null;
+}
+
+/**
+ * Sorts an array of city objects by their UTC offset at the given reference timestamp,
+ * preserving the primary/home city flag (`isPrimary`) and relative order on ties.
+ *
+ * @param {Array<Object>} cities
+ * @param {'asc'|'desc'} [direction='asc'] - 'asc' (West -> East) or 'desc' (East -> West)
+ * @param {Date|number|string} [referenceTimestamp=Date.now()]
+ * @returns {Array<Object>}
+ */
+export function sortCitiesByOffset(cities, direction = 'asc', referenceTimestamp = Date.now()) {
+  if (!Array.isArray(cities) || cities.length <= 1) {
+    return Array.isArray(cities) ? [...cities] : [];
+  }
+  const currentPrimaryId = (cities.find((c) => c.isPrimary) || cities[0])?.id;
+  const ts = referenceTimestamp ?? Date.now();
+
+  return cities
+    .map((c, idx) => {
+      let offset = 0;
+      try {
+        offset = getTimezoneOffset(c.timeZone, ts);
+      } catch {
+        offset = 0;
+      }
+      return {
+        city: {
+          ...c,
+          isPrimary: c.id === currentPrimaryId,
+        },
+        offset,
+        idx,
+      };
+    })
+    .sort((a, b) => {
+      const diff = direction === 'desc' ? b.offset - a.offset : a.offset - b.offset;
+      if (diff !== 0) return diff;
+      return a.idx - b.idx;
+    })
+    .map((item) => item.city);
+}
+
