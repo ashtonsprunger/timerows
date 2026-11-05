@@ -91,7 +91,22 @@ function injectAdSenseHead(html, adsenseClient) {
 }
 
 function buildCorridorBodyHtml(data) {
-  const { fromCity, toCity, offsetPhrase, overlapHeadline, hourlyRows, faqs } = data;
+  const {
+    fromCity,
+    toCity,
+    fromDisplayTag,
+    toDisplayTag,
+    offsetBadge,
+    offsetPhrase,
+    overlapHeadline,
+    quickConversions,
+    hourlyRows,
+    faqs,
+  } = data;
+
+  const quickListHtml = (quickConversions || [])
+    .map((q) => `          <li><strong>${escapeHtml(q.text)}</strong></li>`)
+    .join('\n');
 
   const tableRowsHtml = hourlyRows
     .map((row) => {
@@ -112,7 +127,7 @@ function buildCorridorBodyHtml(data) {
     )
     .join('\n');
 
-  const relatedLinksHtml = SEO_CORRIDORS.slice(0, 10)
+  const relatedLinksHtml = SEO_CORRIDORS.slice(0, 16)
     .map((pair) => {
       const formatSlug = (s) =>
         s
@@ -126,16 +141,22 @@ function buildCorridorBodyHtml(data) {
     .join('\n');
 
   return `      <main style="max-width: 960px; margin: 40px auto; padding: 0 20px; font-family: system-ui, -apple-system, sans-serif;">
-        <h1>${escapeHtml(fromCity.name)} to ${escapeHtml(toCity.name)} Time Converter &amp; Working-Hours Overlap</h1>
+        <h1>${escapeHtml(fromDisplayTag)} to ${escapeHtml(toDisplayTag)} Time Difference (${escapeHtml(
+    offsetBadge
+  )}) &amp; Converter</h1>
         <p>
-          Convert local time between <strong>${escapeHtml(fromCity.name)}</strong> (<code>${escapeHtml(
+          Convert local time between <strong>${escapeHtml(fromDisplayTag)}</strong> (<code>${escapeHtml(
     fromCity.timeZone
-  )}</code>) and <strong>${escapeHtml(toCity.name)}</strong> (<code>${escapeHtml(
+  )}</code>) and <strong>${escapeHtml(toDisplayTag)}</strong> (<code>${escapeHtml(
     toCity.timeZone
-  )}</code>). ${escapeHtml(toCity.name)} is ${escapeHtml(offsetPhrase)}. ${escapeHtml(
+  )}</code>). ${escapeHtml(toDisplayTag)} is ${escapeHtml(offsetPhrase)}. ${escapeHtml(
     overlapHeadline
   )}
         </p>
+        <h2>Quick Hour Reference</h2>
+        <ul>
+${quickListHtml}
+        </ul>
         <h2>24-Hour ${escapeHtml(fromCity.name)} to ${escapeHtml(toCity.name)} Time Conversion Table</h2>
         <table>
           <thead>

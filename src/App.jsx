@@ -32,7 +32,9 @@ import { Header } from './components/Header.jsx';
 import { TimelineGrid } from './components/TimelineGrid.jsx';
 import { OverlapSummary } from './components/OverlapSummary.jsx';
 import { AdSlot } from './components/AdSlot.jsx';
+import { CorridorSeoSection } from './components/CorridorSeoSection.jsx';
 import { SiteFooter } from './components/SiteFooter.jsx';
+import { buildCorridorSeoData } from './engine/seoCorridors.js';
 import { CitySearchModal } from './components/CitySearchModal.jsx';
 import { ShareModal } from './components/ShareModal.jsx';
 import { Toast } from './components/Toast.jsx';
@@ -98,6 +100,10 @@ export default function App() {
 
   const [hoveredIndex, setHoveredIndex] = useState(null);
   const [selectedRange, setSelectedRange] = useState(null);
+  const [activeCorridor, setActiveCorridor] = useState(() => {
+    if (typeof window === 'undefined') return null;
+    return parseCityPairPath(window.location.pathname);
+  });
 
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isShareOpen, setIsShareOpen] = useState(false);
@@ -153,8 +159,10 @@ export default function App() {
       ];
       const activePrimary = pairCities.find((c) => c.isPrimary) || pairCities[0];
 
+      const nextDate = queryState?.date || getTodayIsoInZone(activePrimary.timeZone);
       setCities(pairCities);
-      setSelectedDate(queryState?.date || getTodayIsoInZone(activePrimary.timeZone));
+      setSelectedDate(nextDate);
+      setActiveCorridor(cityPair);
 
       if (queryState && typeof queryState.selectedSlotIndex === 'number') {
         const startIdx = queryState.selectedSlotIndex;
@@ -168,8 +176,13 @@ export default function App() {
         setWorkingHours(queryState.workingHours);
       }
 
-      const seoTitle = `${fromResolved.name} to ${toResolved.name} Time Converter — TimeRows`;
-      const seoDesc = `Convert time between ${fromResolved.name} (${fromResolved.timeZone}) and ${toResolved.name} (${toResolved.timeZone}). View 24-hour working overlap and schedule meetings in 1 click.`;
+      const corridorSeo = buildCorridorSeoData(cityPair.fromSlug, cityPair.toSlug, nextDate);
+      const seoTitle =
+        corridorSeo?.title ||
+        `${fromResolved.name} to ${toResolved.name} Time Difference & Converter — TimeRows`;
+      const seoDesc =
+        corridorSeo?.description ||
+        `Convert time between ${fromResolved.name} (${fromResolved.timeZone}) and ${toResolved.name} (${toResolved.timeZone}). View 24-hour working overlap and schedule meetings in 1 click.`;
       updateDocumentSeo({
         title: seoTitle,
         description: seoDesc,
@@ -620,8 +633,15 @@ export default function App() {
           />
         </main>
 
-        {/* Below-Board: ad (renders only when AdSense is configured) + thin text footer */}
+        {/* Below-Board: ad (renders only when AdSense is configured) + corridor quick ref + thin text footer */}
         <AdSlot slotId="below-board-leaderboard" format="horizontal" />
+        {activeCorridor && cities.length === 2 && (
+          <CorridorSeoSection
+            fromSlug={activeCorridor.fromSlug}
+            toSlug={activeCorridor.toSlug}
+            selectedDate={selectedDate}
+          />
+        )}
         <SiteFooter />
       </div>
 
